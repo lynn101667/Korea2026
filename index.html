@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Seoul Trip 2025-26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'app-bg': '#FDFCF8',
+                        'app-card': '#FFFFFF',
+                        'app-text': '#464F41',
+                        'app-accent': '#849B87',
+                        'app-soft': '#E6EBE6',
+                        'danger': '#D48989',
+                        
+                        'cat-food': '#F97316', 'cat-trans': '#3B82F6', 'cat-shop': '#EC4899',
+                        'cat-stay': '#8B5CF6', 'cat-spot': '#10B981', 'cat-ticket': '#F59E0B', 'cat-other': '#6B7280',
+                        'payer-public': '#9CA3AF', 'payer-andy': '#60A5FA', 'payer-lynn': '#F472B6',
+                        'plan-transport': '#F0F4F8', 'plan-ticket': '#FFF9EB', 'plan-note': '#F3F0F5',
+                    },
+                    fontFamily: { sans: ['"Zen Maru Gothic"', '"Noto Sans TC"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFCF8; color: #464F41; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .custom-checkbox:checked + div { background-color: #849B87; border-color: #849B87; }
+        .custom-checkbox:checked + div:after { content: '\2714'; color: white; font-size: 14px; display: block; text-align: center; }
+        
+        .tab-active { color: #849B87; border-bottom: 2px solid #849B87; font-weight: bold; background-color: rgba(132, 155, 135, 0.1); }
+        .tab-inactive { color: #A0A0A0; border-bottom: 2px solid transparent; }
+        
+        /* Calculator */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { @apply text-xl font-bold rounded-2xl active:scale-95 transition-transform flex items-center justify-center select-none cursor-pointer shadow-sm h-14; }
+        .calc-num { @apply bg-[#F5F5F0] text-gray-600; }
+        .calc-func { @apply bg-[#E0E8E4] text-[#5A6B5D]; }
+        .calc-op { @apply bg-[#CCD5D0] text-[#464F41]; }
+        .calc-eq { @apply bg-app-accent text-white shadow-md; }
+        
+        .select-wrapper { position: relative; }
+        .select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #A0A0A0; font-size: 0.7rem; pointer-events: none; }
+
+        .drag-handle { cursor: grab; touch-action: none; }
+        .dragging { opacity: 0.5; background: #fafafa; }
+        
+        .plan-detail { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .plan-detail.expanded { max-height: 500px; transition: max-height 0.3s ease-in; }
+        .plan-arrow { transition: transform 0.3s ease; }
+        .plan-arrow.expanded { transform: rotate(180deg); }
+        
+        .map-wrapper { overflow: auto; touch-action: none; width: 100%; height: 100%; position: relative; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <header class="fixed top-0 left-0 right-0 bg-app-card shadow-sm z-40 h-14 flex items-center justify-center border-b border-[#F0F0F0]">
+        <h1 class="text-lg font-bold tracking-widest text-app-accent">SEOUL 2026</h1>
+    </header>
+
+    <main id="app" class="pt-16 px-4 max-w-md mx-auto min-h-screen">
+        <!-- Content injected by JS -->
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-gray-100 h-16 flex justify-around items-center z-50 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+        <button onclick="router('plan')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-app-accent transition-colors" data-target="plan"><i class="fa-solid fa-calendar-days text-xl mb-1"></i><span class="text-[10px]">行程</span></button>
+        <button onclick="router('map')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-app-accent transition-colors" data-target="map"><i class="fa-solid fa-map text-xl mb-1"></i><span class="text-[10px]">地圖</span></button>
+        <button onclick="router('wallet')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-app-accent transition-colors" data-target="wallet"><i class="fa-solid fa-wallet text-xl mb-1"></i><span class="text-[10px]">記帳</span></button>
+        <button onclick="router('lists')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-app-accent transition-colors" data-target="lists"><i class="fa-solid fa-list-check text-xl mb-1"></i><span class="text-[10px]">清單</span></button>
+        <button onclick="router('info')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-app-accent transition-colors" data-target="info"><i class="fa-solid fa-circle-info text-xl mb-1"></i><span class="text-[10px]">資訊</span></button>
+    </nav>
+
+    <div id="calcModal" class="fixed inset-0 bg-black/40 z-[60] hidden flex flex-col justify-end fade-in backdrop-blur-sm">
+        <div class="bg-white rounded-t-3xl p-5 shadow-2xl">
+            <div class="flex justify-between items-center mb-4"><span class="text-gray-500 font-bold ml-2">金額計算</span><button onclick="closeCalc()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="bg-[#F9F9F7] p-3 rounded-2xl mb-5 text-right text-3xl font-mono text-app-text h-16 flex items-center justify-end overflow-hidden shadow-inner border border-gray-100" id="calcDisplay">0</div>
+            <div class="calc-grid mb-safe">
+                <div class="calc-btn calc-func" onclick="calcAppend('(')">(</div><div class="calc-btn calc-func" onclick="calcAppend(')')">)</div><div class="calc-btn calc-func" onclick="calcAppend('/100')">%</div><div class="calc-btn calc-func" onclick="calcClear()">AC</div>
+                <div class="calc-btn calc-num" onclick="calcAppend('7')">7</div><div class="calc-btn calc-num" onclick="calcAppend('8')">8</div><div class="calc-btn calc-num" onclick="calcAppend('9')">9</div><div class="calc-btn calc-op" onclick="calcAppend('/')">÷</div>
+                <div class="calc-btn calc-num" onclick="calcAppend('4')">4</div><div class="calc-btn calc-num" onclick="calcAppend('5')">5</div><div class="calc-btn calc-num" onclick="calcAppend('6')">6</div><div class="calc-btn calc-op" onclick="calcAppend('*')">×</div>
+                <div class="calc-btn calc-num" onclick="calcAppend('1')">1</div><div class="calc-btn calc-num" onclick="calcAppend('2')">2</div><div class="calc-btn calc-num" onclick="calcAppend('3')">3</div><div class="calc-btn calc-op" onclick="calcAppend('-')">-</div>
+                <div class="calc-btn calc-num" onclick="calcAppend('0')">0</div><div class="calc-btn calc-num" onclick="calcAppend('.')">.</div><div class="calc-btn calc-eq" onclick="calcConfirm()">=</div><div class="calc-btn calc-op" onclick="calcAppend('+')">+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const config = { currencyRate: 0.024, currencySymbol: '₩', homeCurrency: 'NT$' };
+
+        const staticData = {
+            flights: { outbound: { date: '12/31', code: 'BR0170', time: '07:05 - 10:30' }, inbound:  { date: '01/03', code: 'BR0159', time: '19:45 - 21:40' } },
+            itinerary: [
+                {
+                    day: '12/31 (三)', title: '跨年 & 南山塔', shortTitle: 'D1 12/31', fullDate: '2025/12/31',
+                    events: [
+                        { id: 'e1', start: '04:15', end: '05:00', title: '清大搭日豪客運 1250', type: 'transport', transport: '04:00發車', note: '約1小時到二航' },
+                        { id: 'e2', start: '07:05', end: '10:30', title: '長榮 BR0170 起飛', type: 'transport', transport: '二航廈', note: '機上補眠' },
+                        { id: 'e3', start: '12:30', end: '13:30', title: '午餐: BHC炸雞', type: 'food', transport: '東大門歷史公園8號出口', note: '必點起司口味' },
+                        { id: 'e4', start: '14:00', end: '17:30', title: '南山塔 (首爾塔)', type: 'activity', transport: '明洞4號出口→南山纜車', ticket: 'Klook領票', note: '愛情鎖牆拍照、T4觀景台' },
+                        { id: 'e5', start: '18:00', end: '18:30', title: '明洞逛街 & 換錢', type: 'shopping', transport: '南山纜車下山', note: 'Kakao Friends、Money Box換錢' },
+                        { id: 'e6', start: '18:00', end: '19:00', title: '晚餐: 荒謬的生肉', type: 'food', transport: '明洞6號出口', note: '烤肉吃到飽' },
+                        { id: 'e7', start: '20:00', end: '21:30', title: '明洞亂打秀', type: 'activity', ticket: '預約確認信', note: '精彩打擊樂表演' },
+                        { id: 'e8', start: '22:00', end: '23:00', title: '回飯店休息', type: 'stay', transport: '東大門', note: '充電、放戰利品' },
+                        { id: 'e9', start: '23:30', end: '00:00', title: 'DDP 跨年燈光秀', type: 'activity', transport: '東大門1號出口', note: '人多注意安全，新年快樂！' }
+                    ]
+                },
+                {
+                    day: '01/01 (四)', title: '韓服 & 北村', shortTitle: 'D2 1/1', fullDate: '2026/01/01',
+                    events: [
+                        { id: 'e21', start: '08:30', end: '09:30', title: '早餐: Isaac', type: 'food', transport: '東大門3號出口', note: '排隊名店' },
+                        { id: 'e22', start: '10:30', end: '12:30', title: '西花韓服體驗', type: 'activity', transport: '景福宮4號出口', ticket: 'Klook已訂', note: '有台灣店員' },
+                        { id: 'e23', start: '12:30', end: '14:00', title: '景福宮', type: 'activity', note: '穿韓服免門票', transport: '步行前往' },
+                        { id: 'e24', start: '14:00', end: '16:00', title: '北村韓屋村', type: 'activity', note: '保持安靜', transport: '安國站' }
+                    ]
+                },
+                {
+                    day: '01/02 (五)', title: '南怡島一日遊', shortTitle: 'D3 1/2', fullDate: '2026/01/02',
+                    events: [
+                        { id: 'e31', start: '11:10', end: '11:20', title: '一日遊集合', type: 'important', transport: '東大門10號出口', note: '準時出發' },
+                        { id: 'e32', start: '13:00', end: '16:00', title: '南怡島', type: 'activity', note: '冬季戀歌拍攝地' },
+                        { id: 'e33', start: '17:00', end: '19:00', title: '晨靜樹木園', type: 'activity', note: '五色星光庭園展' },
+                        { id: 'e34', start: '22:00', end: '23:59', title: 'SPAREX 汗蒸幕', type: 'activity', transport: 'Goodmorning City B3', ticket: '₩15000', note: '搓澡體驗' }
+                    ]
+                },
+                {
+                    day: '01/03 (六)', title: '廣藏 & 樂天', shortTitle: 'D4 1/3', fullDate: '2026/01/03',
+                    events: [
+                        { id: 'e41', start: '09:00', end: '11:00', title: '廣藏市場', type: 'food', transport: '鍾路五街8號出口', note: '買棉被(128號)、吃綠豆煎餅' },
+                        { id: 'e42', start: '12:00', end: '14:00', title: '樂天免稅店', type: 'shopping', transport: '乙支路入口7號', note: '買保養品' },
+                        { id: 'e43', start: '15:30', end: '16:00', title: '回飯店拿行李', type: 'transport' },
+                        { id: 'e44', start: '19:45', end: '21:40', title: '回程班機 BR0159', type: 'transport', transport: '仁川機場', note: '提早2小時到' }
+                    ]
+                }
+            ],
+            categories: ['飲食', '交通', '購物逛街', '住宿', '景點', '門票', '其他'],
+            catColors: { '飲食':'cat-food', '交通':'cat-trans', '購物逛街':'cat-shop', '住宿':'cat-stay', '景點':'cat-spot', '門票':'cat-ticket', '其他':'cat-other' },
+            payers: ['公費', 'Lynn', 'Andy'],
+            payerColors: { '公費':'payer-public', 'Lynn':'payer-lynn', 'Andy':'payer-andy' },
+            paymentMethods: ['現金', '信用卡', '行動支付'],
+            splitOptions: ['平均分攤', '不平均分攤', 'Andy 個人', 'Lynn 個人']
+        };
+
+        const app = document.getElementById('app');
+        
+        function getInitialDay() {
+            const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '/');
+            const idx = staticData.itinerary.findIndex(day => day.fullDate === todayStr);
+            return idx !== -1 ? idx : 0; 
+        }
+
+        let savedItinerary = JSON.parse(localStorage.getItem('seoul_itinerary_v15'));
+        if (!savedItinerary) { savedItinerary = staticData.itinerary; localStorage.setItem('seoul_itinerary_v15', JSON.stringify(savedItinerary)); }
+
+        let state = {
+            activeTab: 'plan',
+            activeDay: getInitialDay(), 
+            walletDay: getInitialDay(),
+            expenseCurrency: 'KRW',
+            itinerary: savedItinerary,
+            expenses: JSON.parse(localStorage.getItem('seoul_expenses_v4')) || [], 
+            checklist: JSON.parse(localStorage.getItem('seoul_checklist_v3')) || [], 
+            memos: localStorage.getItem('seoul_memos') || '',
+            exchangeRate: parseFloat(localStorage.getItem('seoul_rate')) || config.currencyRate,
+            editingId: null,
+            expandedEvents: [] 
+        };
+
+        if(state.checklist.length === 0) { 
+             const groups = [
+                { category: '3C 產品', items: ['手機', '充電線', '充電器', '相機', '萬用轉接頭', '行動電源'] },
+                { category: '衣物', items: ['上衣', '褲子', '外套', '鞋子', '內衣褲', '墨鏡', '帽子', '圍巾', '手套'] },
+                { category: '盥洗及衛生用品', items: ['卸妝巾', '洗面乳', '牙膏', '牙刷', '牙線', '毛巾', '濕紙巾', '面紙'] },
+                { category: '個人藥品', items: ['暈車藥', '過敏藥', '消毒用品', '感冒藥', 'OK 繃', '蚊蟲止癢藥'] },
+                { category: '重要文件', items: ['身分證', '護照', '國際駕照', '登機證或機票', '住宿或交通票卷等預購票券'] },
+                { category: '其他用品', items: ['空水壺或環保杯', '家中鑰匙', '眼罩', '外幣現金或信用卡', '耳塞', '頸枕'] }
+            ];
+            groups.forEach(g => g.items.forEach(i => state.checklist.push({category:g.category, text:i, checked:false})));
+        }
+
+        function saveToLS() {
+            localStorage.setItem('seoul_expenses_v4', JSON.stringify(state.expenses));
+            localStorage.setItem('seoul_itinerary_v15', JSON.stringify(state.itinerary)); 
+            localStorage.setItem('seoul_checklist_v3', JSON.stringify(state.checklist));
+            localStorage.setItem('seoul_memos', state.memos);
+            localStorage.setItem('seoul_rate', state.exchangeRate);
+        }
+
+        function formatMoney(amount) {
+            return parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
+        function safeCalculate(exp) { try { if (/[^0-9+\-*/.()%]/.test(exp)) return null; return Function('"use strict";return (' + exp + ')')(); } catch { return null; } }
+        function compressImage(file, cb) { 
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const w = Math.min(img.width, 600); const h = img.height * (w/img.width); cvs.width=w; cvs.height=h; cvs.getContext('2d').drawImage(img,0,0,w,h); cb(cvs.toDataURL('image/jpeg', 0.6)); }}; 
+        }
+
+        function calculateDuration(start, end) {
+            if (!start || !end) return '';
+            const [h1, m1] = start.split(':').map(Number);
+            const [h2, m2] = end.split(':').map(Number);
+            let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+            if (diff < 0) diff += 24 * 60; 
+            const h = Math.floor(diff / 60);
+            const m = diff % 60;
+            if (h > 0 && m > 0) return `${h}h${m}m`;
+            if (h > 0) return `${h}h`;
+            return `${m}m`;
+        }
+
+        let dragSrcEl = null;
+        function handleDragStart(e) { dragSrcEl = this.closest('.draggable-item'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/html', this.innerHTML); dragSrcEl.classList.add('dragging'); }
+        function handleDragOver(e) { if (e.preventDefault) e.preventDefault(); return false; }
+        function handleDragEnter(e) { this.closest('.draggable-item').classList.add('bg-gray-50'); }
+        function handleDragLeave(e) { this.closest('.draggable-item').classList.remove('bg-gray-50'); }
+        function handleDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            const destItem = this.closest('.draggable-item');
+            if (dragSrcEl !== destItem) {
+                const srcIdx = parseInt(dragSrcEl.dataset.index);
+                const destIdx = parseInt(destItem.dataset.index);
+                const dayEvents = state.itinerary[state.activeDay].events;
+                const [movedItem] = dayEvents.splice(srcIdx, 1);
+                dayEvents.splice(destIdx, 0, movedItem);
+                saveToLS(); renderPlan();
+            }
+            return false;
+        }
+        function handleDragEnd(e) { this.closest('.draggable-item').classList.remove('dragging'); document.querySelectorAll('.draggable-item').forEach(col => col.classList.remove('bg-gray-50')); }
+
+        function toggleEventExpand(evtId) { const idx = state.expandedEvents.indexOf(evtId); if(idx !== -1) state.expandedEvents.splice(idx, 1); else state.expandedEvents.push(evtId); renderPlan(); }
+        function saveEventInline(evtId, field, value) { const dayEvents = state.itinerary[state.activeDay].events; const evt = dayEvents.find(e => e.id === evtId); if(evt) { evt[field] = value; saveToLS(); if(field === 'start' || field === 'end') renderPlan(); } }
+        function addNewEvent() { const newEvt = { id: generateId(), start: '12:00', end: '13:00', title: '新行程', type: 'activity', transport: '', ticket: '', note: '' }; state.itinerary[state.activeDay].events.push(newEvt); saveToLS(); renderPlan(); }
+        function moveEvent(evtId, dir) { const dayEvents = state.itinerary[state.activeDay].events; const idx = dayEvents.findIndex(e => e.id === evtId); if(idx === -1) return; if (dir === -1 && idx > 0) { [dayEvents[idx], dayEvents[idx-1]] = [dayEvents[idx-1], dayEvents[idx]]; } else if (dir === 1 && idx < dayEvents.length - 1) { [dayEvents[idx], dayEvents[idx+1]] = [dayEvents[idx+1], dayEvents[idx]]; } saveToLS(); renderPlan(); }
+        function deleteEvent(evtId) { if(!confirm('刪除此行程？')) return; const dayEvents = state.itinerary[state.activeDay].events; const idx = dayEvents.findIndex(e => e.id === evtId); if(idx !== -1) dayEvents.splice(idx, 1); saveToLS(); renderPlan(); }
+
+        function renderPlan() {
+            const day = state.itinerary[state.activeDay];
+            let html = `
+                <div class="sticky top-14 bg-[#FDFCF8] z-20 pb-2 pt-1 flex justify-between gap-2 overflow-x-auto no-scrollbar mb-4">
+                    ${state.itinerary.map((d, i) => `
+                        <button onclick="state.activeDay=${i};renderPlan()" class="flex-1 py-2 px-1 text-sm rounded-lg transition-all whitespace-nowrap ${i === state.activeDay ? 'tab-active' : 'tab-inactive text-gray-400'}">${d.shortTitle}</button>
+                    `).join('')}
+                </div>
+
+                <div class="fade-in pb-20 px-2">
+                    <div class="flex items-end mb-4 border-b border-gray-200 pb-2">
+                        <h2 class="text-2xl font-bold text-app-text mr-3">${day.day.split(' ')[0]}</h2>
+                        <span class="text-xs text-white bg-app-accent px-3 py-1 rounded-full shadow-sm">${day.title}</span>
+                    </div>
+                    <div class="space-y-6" id="planList">
+            `;
+
+            day.events.forEach((event, index) => {
+                const isExpanded = state.expandedEvents.includes(event.id);
+                const highlightClass = event.type === 'important' ? 'border-l-4 border-l-yellow-400 bg-yellow-50' : 'bg-white';
+                const duration = calculateDuration(event.start, event.end);
+
+                html += `
+                    <div class="flex gap-4 relative group">
+                        <div class="w-12 flex-shrink-0 text-right pt-2 font-mono text-xs font-bold text-gray-500 leading-tight">
+                            <div>${event.start}</div>
+                            <div class="h-6 border-r border-gray-300 mr-2 my-1"></div>
+                            <div class="text-gray-400">${event.end}</div>
+                        </div>
+
+                        <div class="flex-1 draggable-item relative rounded-xl shadow-sm border border-gray-100 p-3 ${highlightClass} transition" data-index="${index}">
+                            <div class="flex items-start gap-3 cursor-pointer" onclick="toggleEventExpand('${event.id}')">
+                                <div class="flex-1">
+                                    ${duration ? `<span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full mb-1 inline-block"><i class="fa-regular fa-clock mr-1"></i>${duration}</span>` : ''}
+                                    <input type="text" class="w-full font-bold text-gray-700 text-base outline-none bg-transparent" value="${event.title}" onclick="event.stopPropagation()" onchange="saveEventInline('${event.id}', 'title', this.value)">
+                                </div>
+                                <div class="drag-handle text-gray-300 p-2" draggable="true" onclick="event.stopPropagation()"><i class="fa-solid fa-bars"></i></div>
+                                <div class="text-gray-300 p-2 plan-arrow ${isExpanded?'expanded':''}" ><i class="fa-solid fa-chevron-down"></i></div>
+                            </div>
+
+                            <div class="plan-detail ${isExpanded?'expanded':''}">
+                                <div class="mt-3 space-y-3 border-t pt-3">
+                                    <div class="flex items-center gap-2 text-xs text-gray-400 bg-gray-50 p-2 rounded">
+                                        <span>修改時間:</span>
+                                        <input type="time" class="bg-white border rounded p-1" value="${event.start}" onchange="saveEventInline('${event.id}', 'start', this.value)">
+                                        <span>-</span>
+                                        <input type="time" class="bg-white border rounded p-1" value="${event.end}" onchange="saveEventInline('${event.id}', 'end', this.value)">
+                                    </div>
+                                    <div class="bg-plan-transport p-3 rounded-lg border border-blue-50">
+                                        <div class="text-[10px] font-bold text-blue-400 mb-1 uppercase tracking-wider"><i class="fa-solid fa-train-subway mr-1"></i>交通方式</div>
+                                        <textarea rows="1" class="w-full bg-transparent text-sm outline-none resize-none text-gray-600" placeholder="輸入交通資訊..." onchange="saveEventInline('${event.id}', 'transport', this.value)">${event.transport || ''}</textarea>
+                                    </div>
+                                    <div class="bg-plan-ticket p-3 rounded-lg border border-yellow-50">
+                                        <div class="text-[10px] font-bold text-amber-500 mb-1 uppercase tracking-wider"><i class="fa-solid fa-ticket mr-1"></i>營業時間/門票</div>
+                                        <textarea rows="1" class="w-full bg-transparent text-sm outline-none resize-none text-gray-600" placeholder="輸入門票資訊..." onchange="saveEventInline('${event.id}', 'ticket', this.value)">${event.ticket || ''}</textarea>
+                                    </div>
+                                    <div class="bg-plan-note p-3 rounded-lg border border-purple-50">
+                                        <div class="text-[10px] font-bold text-purple-400 mb-1 uppercase tracking-wider"><i class="fa-solid fa-note-sticky mr-1"></i>備註 (必做/攝影)</div>
+                                        <textarea rows="2" class="w-full bg-transparent text-sm outline-none resize-none text-gray-600" placeholder="輸入備註..." onchange="saveEventInline('${event.id}', 'note', this.value)">${event.note || ''}</textarea>
+                                    </div>
+                                    <div class="flex justify-end gap-2 mt-2">
+                                        <button onclick="moveEvent('${event.id}', -1)" class="text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 text-gray-500">⬆ 上移</button>
+                                        <button onclick="moveEvent('${event.id}', 1)" class="text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 text-gray-500">⬇ 下移</button>
+                                        <button onclick="deleteEvent('${event.id}')" class="text-xs bg-red-50 px-2 py-1 rounded hover:bg-red-100 text-danger">刪除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            
+            html += `
+                <button onclick="addNewEvent()" class="w-full py-3 rounded-xl border-2 border-dashed border-app-accent text-app-accent font-bold hover:bg-app-soft transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> 新增行程
+                </button>
+            `;
+
+            html += `</div></div>`;
+            app.innerHTML = html;
+
+            const handles = document.querySelectorAll('.drag-handle');
+            handles.forEach(handle => { handle.addEventListener('dragstart', handleDragStart, false); });
+            const items = document.querySelectorAll('.draggable-item');
+            items.forEach(item => {
+                item.addEventListener('dragenter', handleDragEnter, false);
+                item.addEventListener('dragover', handleDragOver, false);
+                item.addEventListener('dragleave', handleDragLeave, false);
+                item.addEventListener('drop', handleDrop, false);
+                item.addEventListener('dragend', handleDragEnd, false);
+            });
+        }
+
+        function renderWallet() {
+            let summary = { andy: { paid: 0, cost: 0 }, lynn: { paid: 0, cost: 0 }, publicPaid: 0 };
+            
+            state.expenses.forEach(ex => {
+                let amtKRW = ex.currency === 'TWD' ? ex.amount / state.exchangeRate : ex.amount;
+                
+                if (ex.payer === 'Andy') summary.andy.paid += amtKRW;
+                else if (ex.payer === 'Lynn') summary.lynn.paid += amtKRW;
+                else if (ex.payer === '公費') summary.publicPaid += amtKRW;
+
+                if (ex.split === '平均分攤') { summary.andy.cost += amtKRW / 2; summary.lynn.cost += amtKRW / 2; }
+                else if (ex.split === 'Andy 個人') { summary.andy.cost += amtKRW; }
+                else if (ex.split === 'Lynn 個人') { summary.lynn.cost += amtKRW; }
+                else if (ex.split === '不平均分攤' && ex.customSplit) {
+                    let sA = ex.currency === 'TWD' ? ex.customSplit.andy / state.exchangeRate : ex.customSplit.andy;
+                    let sL = ex.currency === 'TWD' ? ex.customSplit.lynn / state.exchangeRate : ex.customSplit.lynn;
+                    summary.andy.cost += sA; summary.lynn.cost += sL;
+                }
+            });
+
+            const andyNet = summary.andy.paid - summary.andy.cost;
+            const settlementText = andyNet > 0 
+                ? `Lynn 需給 Andy <span class="text-app-accent font-bold">₩${formatMoney(andyNet)}</span> <span class="text-xs text-gray-400 font-normal">(≈NT$${formatMoney(andyNet*state.exchangeRate)})</span>`
+                : `Andy 需給 Lynn <span class="text-app-accent font-bold">₩${formatMoney(Math.abs(andyNet))}</span> <span class="text-xs text-gray-400 font-normal">(≈NT$${formatMoney(Math.abs(andyNet)*state.exchangeRate)})</span>`;
+
+            const andyAdvance = Math.max(0, summary.andy.paid - summary.andy.cost);
+            const lynnAdvance = Math.max(0, summary.lynn.paid - summary.lynn.cost);
+
+            let html = `
+                <div class="fade-in pb-24">
+                    <div class="bg-[#F2F5F2] p-4 rounded-xl shadow-sm mb-4 border border-[#E6EBE6]">
+                         <div class="text-center text-sm font-bold text-gray-600 mb-3 pb-2 border-b border-gray-200">
+                            結算 (Settlement) <br><span class="text-base mt-1 block">${settlementText}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <h3 class="text-xs text-gray-400 font-bold uppercase mb-1">Andy</h3>
+                                <div class="text-[10px] text-gray-500">代墊: ₩${formatMoney(andyAdvance)} <span class="text-gray-400 block">≈NT$${formatMoney(andyAdvance*state.exchangeRate)}</span></div>
+                                <div class="text-[10px] text-gray-500 mt-1">消費: ₩${formatMoney(summary.andy.cost)} <span class="text-gray-400 block">≈NT$${formatMoney(summary.andy.cost*state.exchangeRate)}</span></div>
+                            </div>
+                            <div class="text-center border-l border-gray-200">
+                                <h3 class="text-xs text-gray-400 font-bold uppercase mb-1">Lynn</h3>
+                                <div class="text-[10px] text-gray-500">代墊: ₩${formatMoney(lynnAdvance)} <span class="text-gray-400 block">≈NT$${formatMoney(lynnAdvance*state.exchangeRate)}</span></div>
+                                <div class="text-[10px] text-gray-500 mt-1">消費: ₩${formatMoney(summary.lynn.cost)} <span class="text-gray-400 block">≈NT$${formatMoney(summary.lynn.cost*state.exchangeRate)}</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 border border-gray-100 relative">
+                        <h3 class="text-xs font-bold text-app-accent mb-4 uppercase flex justify-between items-center tracking-widest">
+                            <span>${state.editingId ? '編輯' : '新增記帳'}</span>
+                            ${state.editingId ? `<button onclick="cancelEdit()" class="text-danger"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                                ${state.itinerary.map((d, i) => `
+                                    <label class="flex-shrink-0 cursor-pointer">
+                                        <input type="radio" name="expenseDay" value="${i}" class="peer hidden" ${i === state.walletDay ? 'checked' : ''} onchange="state.walletDay=${i}">
+                                        <span class="px-3 py-1 rounded-full text-xs bg-[#F5F5F0] text-gray-500 peer-checked:bg-app-accent peer-checked:text-white transition shadow-sm">${d.shortTitle}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="select-wrapper"><select id="itemPayer" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none appearance-none"><option value="" disabled selected>誰支付?</option>${staticData.payers.map(p => `<option>${p}</option>`).join('')}</select></div>
+                                <div class="select-wrapper"><select id="itemMethod" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none appearance-none"><option value="" disabled selected>支付方式?</option>${staticData.paymentMethods.map(m => `<option>${m}</option>`).join('')}</select></div>
+                            </div>
+
+                            <!-- Currency Select Dropdown -->
+                            <div class="select-wrapper">
+                                <select id="itemCurrency" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none appearance-none font-bold text-app-accent" onchange="setCurrency(this.value)">
+                                    <option value="KRW" ${state.expenseCurrency === 'KRW' ? 'selected' : ''}>KRW ₩ (韓元)</option>
+                                    <option value="TWD" ${state.expenseCurrency === 'TWD' ? 'selected' : ''}>TWD $ (台幣)</option>
+                                </select>
+                            </div>
+
+                            <div class="relative">
+                                <div class="flex gap-2">
+                                    <div class="relative w-full">
+                                        <span id="currSymbol" class="absolute left-3 top-3 text-gray-400 text-xs">${state.expenseCurrency === 'KRW' ? '₩' : '$'}</span>
+                                        <input type="number" id="itemAmount" oninput="autoCalcSplit('total'); updateApprox()" placeholder="金額" inputmode="decimal" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 pl-7 text-sm outline-none text-gray-700 font-mono">
+                                    </div>
+                                    <button onclick="openCalc()" class="bg-[#F0F0EB] px-4 rounded-lg text-gray-500 hover:bg-[#E0E0DB] border border-gray-200"><i class="fa-solid fa-calculator"></i></button>
+                                </div>
+                                <div id="approxVal" class="text-[10px] text-gray-400 text-right mt-1 h-4"></div>
+                            </div>
+
+                            <div class="select-wrapper"><select id="itemSplit" onchange="toggleUnevenSplit()" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none appearance-none">${staticData.splitOptions.map(s => `<option>${s}</option>`).join('')}</select></div>
+                            <div id="unevenSplitInputs" class="hidden grid grid-cols-2 gap-3 bg-gray-50 p-2 rounded-lg border border-dashed border-gray-200">
+                                <div><label class="text-[10px] text-gray-400 block mb-1">Andy</label><input type="number" id="splitAndy" oninput="autoCalcSplit('andy')" class="w-full bg-white border border-gray-200 rounded p-2 text-sm text-center"></div>
+                                <div><label class="text-[10px] text-gray-400 block mb-1">Lynn</label><input type="number" id="splitLynn" oninput="autoCalcSplit('lynn')" class="w-full bg-white border border-gray-200 rounded p-2 text-sm text-center"></div>
+                            </div>
+
+                            <div class="select-wrapper"><select id="itemCat" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none appearance-none">${staticData.categories.map(c => `<option>${c}</option>`).join('')}</select></div>
+                            <input type="text" id="itemName" placeholder="品項名稱" class="w-full bg-[#F9F9F7] border border-gray-200 rounded-lg p-3 text-sm outline-none">
+
+                            <label class="flex items-center justify-center gap-2 text-sm text-gray-500 bg-[#F9F9F7] px-3 py-3 rounded-lg cursor-pointer border border-dashed border-gray-300 hover:bg-white hover:border-app-accent transition w-full"><i class="fa-solid fa-receipt"></i><span id="photoLabel">上傳收據</span><input type="file" id="itemPhoto" accept="image/*" class="hidden" onchange="document.getElementById('photoLabel').innerText = '已選擇'"></label>
+
+                            <button onclick="submitExpense()" class="w-full bg-app-accent text-white font-bold py-3 rounded-lg shadow-md hover:opacity-90 transition mt-2 tracking-wide">${state.editingId ? '更新紀錄' : '加入記帳'}</button>
+                        </div>
+                    </div>
+
+                    <div class="flex border-b border-gray-200 mb-4 overflow-x-auto no-scrollbar">
+                         ${state.itinerary.map((d, i) => `
+                            <button onclick="state.walletDay=${i};renderWallet()" class="flex-1 py-2 text-xs font-bold whitespace-nowrap transition-colors ${i === state.walletDay ? 'text-app-accent border-b-2 border-app-accent' : 'text-gray-400 hover:text-gray-500'}">${d.shortTitle}</button>
+                        `).join('')}
+                    </div>
+
+                    <div class="space-y-3">
+            `;
+
+            const dailyExpenses = state.expenses.filter(e => parseInt(e.day) === state.walletDay);
+            
+            if (dailyExpenses.length === 0) html += `<div class="text-center text-gray-300 py-10 text-sm italic">本日無紀錄</div>`;
+            else {
+                [...dailyExpenses].reverse().forEach((item) => {
+                    const catColor = staticData.catColors[item.cat] || 'bg-gray-100 text-gray-500';
+                    const payerColor = staticData.payerColors[item.payer] || 'bg-gray-100 text-gray-500';
+                    const payerTextClass = item.payer === 'Andy' ? 'text-blue-500 bg-blue-50' : item.payer === 'Lynn' ? 'text-pink-500 bg-pink-50' : 'text-gray-500 bg-gray-100';
+                    const catTextClass = { '飲食':'text-orange-500 bg-orange-50', '交通':'text-blue-500 bg-blue-50', '購物逛街':'text-pink-500 bg-pink-50', '住宿':'text-purple-500 bg-purple-50', '景點':'text-emerald-500 bg-emerald-50', '門票':'text-amber-500 bg-amber-50' }[item.cat] || 'text-gray-500 bg-gray-50';
+
+                    let displayVal = `${item.currency === 'KRW' ? '₩' : 'NT$'}${formatMoney(item.amount)}`;
+                    if (item.currency === 'KRW') {
+                        let approx = Math.round(item.amount * state.exchangeRate);
+                        displayVal += ` <span class="text-[10px] text-gray-400 block text-right">≈ NT$${formatMoney(approx)}</span>`;
+                    } else {
+                        // If TWD, show approx KRW? Or just TWD. User asked for KRW primary summary, but expense list shows recorded currency.
+                        // Let's keep it clean.
+                    }
+
+                    html += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-3 border border-gray-100 relative group transition hover:shadow-md">
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-gray-700 truncate text-sm mb-1">${item.name}</div>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full ${payerTextClass}">${item.payer}</span>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full ${catTextClass}">${item.cat}</span>
+                                    <span class="text-[10px] bg-gray-50 text-gray-400 px-2 py-0.5 rounded-full">${item.method}</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-app-accent font-mono text-sm leading-tight">${displayVal}</div>
+                                <div class="flex gap-3 justify-end mt-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition">
+                                    <button onclick="editExpense('${item.id}')" class="text-gray-400 hover:text-app-accent"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="deleteExpense('${item.id}')" class="text-gray-400 hover:text-danger"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div></div>`;
+            app.innerHTML = html;
+        }
+
+        function renderMap() {
+            app.innerHTML = `<div class="fade-in h-[85vh] flex flex-col"><div class="bg-white p-3 rounded-lg shadow-sm mb-3 text-center text-xs text-gray-500 border border-gray-100 flex items-center justify-center gap-2"><i class="fa-solid fa-hand-pointer text-app-accent"></i> 雙指縮放<a href="https://map.naver.com/" target="_blank" class="text-app-accent underline ml-2">開啟 Naver</a></div><div class="map-wrapper bg-white rounded-xl shadow-inner border border-gray-200 relative overflow-hidden" id="mapContainer"><img id="mapImg" src="https://upload.wikimedia.org/wikipedia/commons/b/b6/Seoul_subway_linemap_en_ko.png" class="absolute top-0 left-0 min-w-[150%] h-auto origin-top-left touch-none" alt="Map"></div></div>`;
+            setTimeout(() => { const i=document.getElementById('mapImg'); if(i) i.style.position='absolute'; document.getElementById('mapContainer').style.overflow='auto'; }, 100);
+        }
+        function renderLists() {
+            let html = `<div class="fade-in space-y-6 pb-20">`;
+            const groups = {}; state.checklist.forEach(i => { if(!groups[i.category]) groups[i.category]=[]; groups[i.category].push(i); });
+            for(let cat in groups) {
+                html += `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-50"><h2 class="text-sm font-bold text-app-accent mb-4 border-b border-[#F0F0F0] pb-2">${cat}</h2><div class="grid grid-cols-2 gap-y-3 gap-x-4">`;
+                groups[cat].forEach(item => {
+                    const idx = state.checklist.findIndex(x => x.text === item.text && x.category === item.category);
+                    html += `<label class="flex items-center cursor-pointer select-none group"><input type="checkbox" class="hidden custom-checkbox" ${item.checked?'checked':''} onchange="toggleCheck(${idx})"><div class="w-4 h-4 border border-gray-300 rounded mr-2 flex items-center justify-center transition-colors bg-gray-50 group-hover:border-app-accent"></div><span class="text-sm ${item.checked?'text-gray-300 line-through':'text-gray-600'} group-hover:text-app-accent transition-colors">${item.text}</span></label>`;
+                });
+                html += `</div></div>`;
+            }
+            app.innerHTML = html + `</div>`;
+        }
+        function renderInfo() {
+            app.innerHTML = `<div class="fade-in grid gap-4"><a href="https://n.weather.naver.com/" target="_blank" class="bg-blue-50/50 p-6 rounded-xl flex items-center justify-between border border-blue-50 hover:shadow-md transition"><div><h3 class="font-bold text-[#6B8096] text-lg">首爾天氣</h3><p class="text-xs text-[#8A9BB0] mt-1">Naver Weather</p></div><i class="fa-solid fa-cloud-sun text-3xl text-[#A0B0C0]"></i></a><div class="bg-[#FFF5F5] p-6 rounded-xl border border-red-50"><h3 class="font-bold text-[#C08080] text-lg mb-3"><i class="fa-solid fa-phone mr-2"></i>緊急聯絡</h3><div class="space-y-2 text-sm text-gray-600"><div class="flex justify-between border-b border-red-100/50 pb-2"><span>警察</span><span class="font-mono font-bold text-[#D48989] text-lg">112</span></div><div class="flex justify-between border-b border-red-100/50 pb-2"><span>救護車</span><span class="font-mono font-bold text-[#D48989] text-lg">119</span></div><div class="pt-1"><span class="block font-bold text-gray-700 mb-1">觀光諮詢</span><span class="block font-mono text-gray-500">1330</span></div></div></div></div>`;
+        }
+
+        function router(target) {
+            state.activeTab = target;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('text-app-accent', btn.dataset.target === target);
+                btn.classList.toggle('text-gray-400', btn.dataset.target !== target);
+            });
+            if (target === 'plan') renderPlan(); else if (target === 'map') renderMap(); else if (target === 'wallet') renderWallet(); else if (target === 'lists') renderLists(); else if (target === 'info') renderInfo();
+            window.scrollTo(0,0);
+        }
+
+        function setCurrency(c) { 
+            state.expenseCurrency = c; 
+            updateApprox();
+            document.getElementById('currSymbol').innerText = c === 'KRW' ? '₩' : '$';
+        }
+        function updateApprox() {
+            const val = parseFloat(document.getElementById('itemAmount').value);
+            const disp = document.getElementById('approxVal');
+            if (state.expenseCurrency === 'KRW' && !isNaN(val)) {
+                disp.innerText = `≈ NT$${Math.round(val * state.exchangeRate).toLocaleString()}`;
+            } else {
+                disp.innerText = '';
+            }
+        }
+        function toggleUnevenSplit() { const s = document.getElementById('itemSplit').value; document.getElementById('unevenSplitInputs').classList.toggle('hidden', s !== '不平均分攤'); document.getElementById('unevenSplitInputs').classList.toggle('grid', s === '不平均分攤'); }
+        function autoCalcSplit(src) {
+            const total = parseFloat(document.getElementById('itemAmount').value)||0;
+            const aIn = document.getElementById('splitAndy'); const lIn = document.getElementById('splitLynn');
+            if(src==='andy') lIn.value = total - (parseFloat(aIn.value)||0);
+            else if(src==='lynn') aIn.value = total - (parseFloat(lIn.value)||0);
+        }
+        function addExpense() {
+            const name=document.getElementById('itemName').value, amount=document.getElementById('itemAmount').value, payer=document.getElementById('itemPayer').value, method=document.getElementById('itemMethod').value, cat=document.getElementById('itemCat').value, split=document.getElementById('itemSplit').value;
+            let day = state.walletDay; document.getElementsByName('expenseDay').forEach(r => { if(r.checked) day = parseInt(r.value); });
+            const val = safeCalculate(amount);
+            if(!name || val===null || !payer || !method) { alert('請完整填寫'); return; }
+            
+            let cSplit = null;
+            if(split==='不平均分攤') cSplit = { andy: parseFloat(document.getElementById('splitAndy').value)||0, lynn: parseFloat(document.getElementById('splitLynn').value)||0 };
+
+            const item = { id: state.editingId||generateId(), day, cat, split, name, amount: val, payer, method, currency: state.expenseCurrency, customSplit: cSplit, date: new Date().toLocaleDateString() };
+            
+            if(state.editingId) { const idx = state.expenses.findIndex(e=>e.id===state.editingId); if(idx!==-1) state.expenses[idx]=item; state.editingId=null; }
+            else state.expenses.push(item);
+            saveToLS(); renderWallet();
+        }
+        function editExpense(id) {
+            const ex = state.expenses.find(e => e.id === id); if(!ex) return;
+            state.editingId = id; state.walletDay = ex.day; state.expenseCurrency = ex.currency || 'KRW';
+            renderWallet();
+            setTimeout(() => {
+                document.getElementById('itemPayer').value = ex.payer; document.getElementById('itemMethod').value = ex.method; document.getElementById('itemAmount').value = ex.amount;
+                document.getElementById('itemSplit').value = ex.split; document.getElementById('itemCat').value = ex.cat; document.getElementById('itemName').value = ex.name;
+                document.getElementById('itemCurrency').value = state.expenseCurrency; 
+                toggleUnevenSplit();
+                if(ex.customSplit) { document.getElementById('splitAndy').value = ex.customSplit.andy; document.getElementById('splitLynn').value = ex.customSplit.lynn; }
+                updateApprox();
+            }, 50);
+        }
+        function cancelEdit() { state.editingId = null; renderWallet(); }
+        function deleteExpense(id) { if(confirm('刪除?')) { state.expenses=state.expenses.filter(e=>e.id!==id); saveToLS(); renderWallet(); } }
+        function toggleCheck(i) { state.checklist[i].checked = !state.checklist[i].checked; saveToLS(); renderLists(); }
+
+        let calcVal = '0';
+        function openCalc() { document.getElementById('calcModal').classList.remove('hidden'); calcVal='0'; document.getElementById('calcDisplay').innerText='0'; }
+        function closeCalc() { document.getElementById('calcModal').classList.add('hidden'); }
+        function calcAppend(c) { if(calcVal==='0' && !['.','/','*','-','+'].includes(c)) calcVal=c; else calcVal+=c; document.getElementById('calcDisplay').innerText=calcVal; }
+        function calcClear() { calcVal='0'; document.getElementById('calcDisplay').innerText='0'; }
+        function calcConfirm() { const r=safeCalculate(calcVal); if(r!==null) { document.getElementById('itemAmount').value=r; autoCalcSplit('total'); updateApprox(); closeCalc(); } }
+
+        window.submitExpense = addExpense;
+        router('plan');
+    </script>
+</body>
+</html>
