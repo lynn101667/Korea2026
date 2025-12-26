@@ -372,11 +372,6 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         // === Configuration ===
-        const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
-        const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
-        const CHECKLIST_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUFJYS6U-wqQv6d9AI-V0iW7DNsREniGC5OhzV-RCpOSJaqicfaN5i4LuXgDhlJy8LF2FcCVNx3l79/pub?output=csv';
-        const SHOP_CSV_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREVSza-V5N2uH1DUq5EVG9XNlvLN_bgat8Z4kXXN-2Qu_gyXLeXnE1hVqVyBjHkdOO2snjvOSQk9wa/pub?output=csv';
-
         const config = { currencyRate: 0.024 }; 
         const staticData = {
             itinerary: [ { day: 'Day 1', date: '12/31', events: [] }, { day: 'Day 2', date: '01/01', events: [] }, { day: 'Day 3', date: '01/02', events: [] }, { day: 'Day 4', date: '01/03', events: [] } ],
@@ -385,7 +380,7 @@
             categories: ['餐飲', '購物', '門票', '交通', '住宿', '其他']
         };
 
-        // State & Cache Logic
+        // State
         let state = {
             activeTab: 'plan', activeDay: 0,
             walletMode: 'record', walletDay: 0, walletFilter: 'all', expenseCurrency: 'KRW',
@@ -398,16 +393,16 @@
             expandedCategories: []
         };
 
-        // Load Cache
+        // Cache Load
         const cachedState = localStorage.getItem('seoul2026_cache');
         if (cachedState) {
             try {
                 const parsed = JSON.parse(cachedState);
-                if (parsed.itinerary) state.itinerary = parsed.itinerary;
+                if (parsed.itinerary && parsed.itinerary.length > 0) state.itinerary = parsed.itinerary;
                 if (parsed.expenses) state.expenses = parsed.expenses;
                 if (parsed.checklist) state.checklist = parsed.checklist;
                 if (parsed.shopProducts) state.shopProducts = parsed.shopProducts;
-            } catch(e) { console.warn("Cache parse error"); }
+            } catch(e) { console.warn("Cache error"); }
         }
 
         // Firebase Global Vars
@@ -1060,13 +1055,9 @@
 
         function renderWalletRecord(c) {
             const defaultDate = state.itinerary[state.activeDay].date;
-            
             let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="12/31" ${defaultDate==='12/31'?'selected':''}>12/31 (Day 1)</option><option value="01/01" ${defaultDate==='01/01'?'selected':''}>01/01 (Day 2)</option><option value="01/02" ${defaultDate==='01/02'?'selected':''}>01/02 (Day 3)</option><option value="01/03" ${defaultDate==='01/03'?'selected':''}>01/03 (Day 4)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
-            
             let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-card-border pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-gray-100">${state.expenseCurrency==='KRW'?'₩':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D3DCD6]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
-            
             let h3 = `<div class="grid grid-cols-2 gap-3"><div class="select-wrapper"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><input type="time" id="exTime" class="ac-input text-center font-mono"></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-3xl bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
-            
             c.innerHTML = h1 + h2 + h3;
             
             if(state.editingId) {
@@ -1200,7 +1191,7 @@
 
             let html = `<div class="shop-grid">`;
             list.forEach(item => {
-                const name = (item['Name'] || item['名稱'] || item['商品名稱'] || '').trim().replace(/'/g, "\\'");
+                const name = escapeStr((item['Name'] || item['名稱'] || item['商品名稱'] || '').trim());
                 const desc = item['Description'] || item['描述'] || '';
                 const imageRaw = item['Image'] || item['image'] || item['圖片'] || '';
                 const gid = getGoogleDriveId(imageRaw);
