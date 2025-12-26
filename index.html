@@ -6,8 +6,8 @@
     <title>Seoul Trip 2025-26 🌲</title>
     
     <!-- App Icons & PWA Settings -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌲</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌲</text></svg>">
+    <link rel="icon" type="image/png" href="image.png">
+    <link rel="apple-touch-icon" href="image.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#F5F1E8">
@@ -40,15 +40,15 @@
                         'func-yellow': '#EBCB8B',   
                         'func-red': '#D68C8C',      
                         'func-blue': '#8FB4C4',
-                        'card-warm': '#FBFAF4', // 暖白背景
-                        'card-border': '#E6DFD3', // 手帳感邊框
+                        'card-warm': '#FBFAF4',
+                        'card-border': '#E6DFD3',
                     },
                     fontFamily: { cute: ['"Zen Maru Gothic"', 'sans-serif'] },
                     boxShadow: {
                         'paper': '3px 3px 0px #D3DCD6', 
                         'floating': '0 8px 24px -4px rgba(62, 95, 82, 0.12)', 
                         'sticker': '2px 2px 0px rgba(143, 175, 154, 0.5)',
-                        'soft-card': '0 8px 20px rgba(0,0,0,0.08)', // 柔和手帳陰影
+                        'soft-card': '0 8px 20px rgba(0,0,0,0.08)',
                     }
                 }
             }
@@ -75,7 +75,6 @@
         .ac-input, .ac-textarea, .ac-select { @apply w-full bg-white border-2 border-[#D3DCD6] rounded-3xl px-4 py-2 text-text-main font-bold outline-none focus:border-sage-dark transition shadow-sm; box-sizing: border-box !important; width: 100% !important; max-width: 100% !important; }
         .ac-input::placeholder, .ac-textarea::placeholder { color: #BCCUC6; font-weight: 500; }
         
-        /* Updated Input for Expense Section */
         .input-gray-border { @apply border-gray-300 focus:border-sage-dark; }
 
         .ac-card { background: #FFFFFF; border-radius: 24px; box-shadow: 3px 3px 0px #D3DCD6; border: 2px solid #EFF3F1; overflow: hidden; width: 100%; box-sizing: border-box; }
@@ -253,7 +252,12 @@
         </div>
     </div>
 
-    <main id="app" class="safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-48"></main>
+    <!-- Main Content -->
+    <main id="app" class="safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-48">
+        <div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D3DCD6] rounded-3xl">
+            <div class="animate-pulse">載入中...</div>
+        </div>
+    </main>
 
     <!-- Modals -->
     <div id="syncModal" class="fixed inset-0 modal-overlay z-[90] hidden flex items-center justify-center p-4 fade-in">
@@ -303,7 +307,7 @@
         </div>
     </div>
 
-    <!-- Calculator Modal: Refined UI -->
+    <!-- Calculator Modal -->
     <div id="calcModal" class="fixed inset-0 bg-black/30 z-[60] hidden flex flex-col justify-end fade-in backdrop-blur-sm">
         <div class="bg-white rounded-t-[2.5rem] p-6 shadow-2xl safe-bottom">
             <div class="flex justify-between items-center mb-6">
@@ -311,36 +315,28 @@
                 <button onclick="window.closeCalc()" class="w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <!-- Display Screen -->
             <div class="bg-[#F7F4EB] border-2 border-[#D3DCD6] p-4 rounded-3xl mb-6 text-right text-4xl font-mono text-text-main h-24 flex items-center justify-end font-bold shadow-inner" id="calcDisplay">0</div>
             
-            <!-- Keypad Grid -->
             <div class="calc-grid">
-                <!-- Row 1: Actions -->
                 <div class="calc-btn calc-action" onclick="window.calcClear()">C</div>
                 <div class="calc-btn calc-action" onclick="window.calcBackspace()">⌫</div>
                 <div class="calc-btn calc-op" onclick="window.calcAppend('/')">÷</div>
                 <div class="calc-btn calc-op" onclick="window.calcAppend('*')">×</div>
                 
-                <!-- Row 2 -->
                 <div class="calc-btn calc-num" onclick="window.calcAppend('7')">7</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('8')">8</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('9')">9</div>
                 <div class="calc-btn calc-op" onclick="window.calcAppend('-')">−</div>
                 
-                <!-- Row 3 -->
                 <div class="calc-btn calc-num" onclick="window.calcAppend('4')">4</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('5')">5</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('6')">6</div>
                 <div class="calc-btn calc-op" onclick="window.calcAppend('+')">+</div>
                 
-                <!-- Row 4 -->
                 <div class="calc-btn calc-num" onclick="window.calcAppend('1')">1</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('2')">2</div>
                 <div class="calc-btn calc-num" onclick="window.calcAppend('3')">3</div>
                 
-                <!-- Row 5 (Equal spans 2 rows visually or sits bottom right) -->
-                <!-- Let's do standard grid: 0 spans 2 cols -->
                 <div class="calc-btn calc-eq row-span-2 flex flex-col justify-center h-full" style="grid-column: 4; grid-row: 4 / span 2;" onclick="window.calcConfirm()">=</div>
                 
                 <div class="calc-btn calc-num col-span-2" style="grid-column: 1 / span 2;" onclick="window.calcAppend('0')">0</div>
@@ -411,62 +407,17 @@
                 if (parsed.expenses) state.expenses = parsed.expenses;
                 if (parsed.checklist) state.checklist = parsed.checklist;
                 if (parsed.shopProducts) state.shopProducts = parsed.shopProducts;
-                console.log("Loaded from Cache");
             } catch(e) { console.warn("Cache parse error"); }
         }
 
-        // Firebase Setup
+        // Firebase Global Vars
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         let auth, db;
 
-        // Initialize Firebase logic (Executed at bottom)
-        
         // Helpers
         function formatMoney(n) { return Math.round(n).toLocaleString('en-US'); }
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
-        
-        function normalizeDate(d) {
-            if (!d) return '12/31';
-            let str = String(d).trim();
-            if (/^\d{1,2}\/\d{1,2}$/.test(str)) {
-                let parts = str.split('/');
-                return parts[0].padStart(2,'0') + '/' + parts[1].padStart(2,'0');
-            }
-            if (str.includes('T') && (str.includes('Z') || str.includes('+'))) {
-                try {
-                    let date = new Date(str);
-                    let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-                    let seoulDate = new Date(utc + (3600000 * 9));
-                    let mm = String(seoulDate.getMonth() + 1).padStart(2, '0');
-                    let dd = String(seoulDate.getDate()).padStart(2, '0');
-                    return `${mm}/${dd}`;
-                } catch (e) {}
-            }
-            if (str.includes('T')) str = str.split('T')[0];
-            let match = str.match(/(\d{4})?[.\/-]?(\d{1,2})[.\/-](\d{1,2})/);
-            if (match) {
-                return match[2].padStart(2, '0') + '/' + match[3].padStart(2, '0');
-            }
-            return str; 
-        }
-
-        function normalizeTime(t) {
-            if (!t) return '';
-            let str = String(t).trim();
-            if (str.includes('T') && str.endsWith('Z')) {
-                try {
-                    let date = new Date(str);
-                    let hh = String(date.getHours()).padStart(2, '0');
-                    let mm = String(date.getMinutes()).padStart(2, '0');
-                    return `${hh}:${mm}`;
-                } catch(e) {}
-            }
-            if (str.includes('T')) {
-                let match = str.match(/T(\d{2}:\d{2})/);
-                if (match) return match[1];
-            }
-            return str.substring(0, 5);
-        }
+        function escapeStr(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
         function ensureProtocol(url) {
             if (!url) return '';
@@ -474,6 +425,50 @@
             if(url.length < 3) return '';
             return url.match(/^https?:\/\//i) ? url : 'https://' + url;
         }
+
+        function normalizeDate(d) {
+            if (!d) return '12/31';
+            let str = String(d).trim();
+            if (/^\d{1,2}\/\d{1,2}$/.test(str)) {
+                let parts = str.split('/');
+                return parts[0].padStart(2,'0') + '/' + parts[1].padStart(2,'0');
+            }
+            if (str.includes('T')) {
+                try {
+                    let date = new Date(str);
+                    if(!isNaN(date.getTime())) {
+                        let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+                        let seoulDate = new Date(utc + (3600000 * 9));
+                        let mm = String(seoulDate.getMonth() + 1).padStart(2, '0');
+                        let dd = String(seoulDate.getDate()).padStart(2, '0');
+                        return `${mm}/${dd}`;
+                    }
+                } catch (e) {}
+            }
+            if (str.includes('T')) str = str.split('T')[0];
+            let match = str.match(/(\d{4})?[.\/-]?(\d{1,2})[.\/-](\d{1,2})/);
+            if (match) return match[2].padStart(2, '0') + '/' + match[3].padStart(2, '0');
+            return str; 
+        }
+
+        function normalizeTime(t) {
+            if (!t) return '';
+            let str = String(t).trim();
+            if (str.includes('T')) {
+                try {
+                    let date = new Date(str);
+                    if(!isNaN(date.getTime())) {
+                        let hh = String(date.getHours()).padStart(2, '0');
+                        let mm = String(date.getMinutes()).padStart(2, '0');
+                        return `${hh}:${mm}`;
+                    }
+                    let match = str.match(/T(\d{2}:\d{2})/);
+                    if (match) return match[1];
+                } catch(e) {}
+            }
+            return str.substring(0, 5);
+        }
+
         function getGoogleDriveId(url) {
             if (!url || !url.includes('drive.google.com')) return '';
             try {
@@ -717,7 +712,7 @@
             });
             let html = `<button onclick="window.filterShop('All')" class="shop-tab-btn ${state.shopFilter==='All'?'active':''}">全部</button>`;
             locations.forEach(loc => {
-                html += `<button onclick="window.filterShop('${loc}')" class="shop-tab-btn ${state.shopFilter===loc?'active':''}">📍${loc}</button>`;
+                html += `<button onclick="window.filterShop('${escapeStr(loc)}')" class="shop-tab-btn ${state.shopFilter===loc?'active':''}">📍${loc}</button>`;
             });
             container.innerHTML = html;
         }
@@ -949,7 +944,6 @@
 
         function loadShopData() {
             if (typeof Papa === 'undefined') {
-                console.warn("PapaParse not loaded");
                 return;
             }
             Papa.parse(SHOP_CSV_URL, {
@@ -977,7 +971,9 @@
 
         // --- Render Functions ---
         function renderPlan(c) {
-             const day = state.itinerary[state.activeDay];
+             const day = state.itinerary[state.activeDay] || state.itinerary[0]; // guard
+             if (!day) return;
+
              day.events.sort((a, b) => {
                  if (!a.time) return -1;
                  if (!b.time) return 1;
@@ -1064,9 +1060,13 @@
 
         function renderWalletRecord(c) {
             const defaultDate = state.itinerary[state.activeDay].date;
+            
             let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="12/31" ${defaultDate==='12/31'?'selected':''}>12/31 (Day 1)</option><option value="01/01" ${defaultDate==='01/01'?'selected':''}>01/01 (Day 2)</option><option value="01/02" ${defaultDate==='01/02'?'selected':''}>01/02 (Day 3)</option><option value="01/03" ${defaultDate==='01/03'?'selected':''}>01/03 (Day 4)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
+            
             let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-card-border pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-gray-100">${state.expenseCurrency==='KRW'?'₩':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D3DCD6]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
+            
             let h3 = `<div class="grid grid-cols-2 gap-3"><div class="select-wrapper"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><input type="time" id="exTime" class="ac-input text-center font-mono"></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-3xl bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
+            
             c.innerHTML = h1 + h2 + h3;
             
             if(state.editingId) {
@@ -1136,7 +1136,8 @@
                 list = state.expenses.filter(e => e.cat !== '公費入金').slice().reverse();
                 list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
             } else {
-                const targetDate = state.itinerary[state.walletDay] ? state.itinerary[state.walletDay].date : '12/31';
+                const day = state.itinerary[state.walletDay];
+                const targetDate = day ? day.date : '12/31';
                 displayTitle = `${targetDate} 消費明細`;
                 list = state.expenses.filter(e => { const d = e.date || '12/31'; return d === targetDate; }).slice().reverse();
             }
@@ -1229,12 +1230,13 @@
         
         function renderList(c) {
             const groups = {};
-            state.checklist.forEach(i => {
-                if(!i || !i.category) return;
-                if(!groups[i.category]) groups[i.category] = [];
-                // Fix: Push the item string directly, NOT an object
-                groups[i.category].push(i.item); 
-            });
+            if (Array.isArray(state.checklist)) {
+                state.checklist.forEach(i => {
+                    if(!i || !i.category) return;
+                    if(!groups[i.category]) groups[i.category] = [];
+                    groups[i.category].push(i.item); 
+                });
+            }
 
             let html = `<div class="pb-24 fade-in space-y-4">`;
             for(let cat in groups) {
@@ -1244,7 +1246,7 @@
                 
                 html += `
                 <div class="bg-white rounded-[1.5rem] shadow-sm border-2 border-[#EFF3F1] overflow-hidden transition-all duration-300">
-                    <div onclick="window.toggleCategory('${cat}')" class="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50 transition select-none">
+                    <div onclick="window.toggleCategory('${escapeStr(cat)}')" class="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50 transition select-none">
                         <h3 class="font-black text-lg text-sage-dark flex items-center gap-2">
                             <i class="fa-solid fa-list-check text-base opacity-70"></i> ${cat}
                             <span class="text-xs bg-sage-pale text-sage-dark px-2 py-0.5 rounded-full ml-1">${groups[cat].length}</span>
@@ -1261,7 +1263,7 @@
                     const checked = state.checkedItems[itemText] ? 'checked' : '';
                     html += `
                     <label class="cb-container">
-                        <input type="checkbox" ${checked} onchange="window.toggleCheck('${itemText}')">
+                        <input type="checkbox" ${checked} onchange="window.toggleCheck('${escapeStr(itemText)}')">
                         <span class="checkmark"></span>
                         <span class="item-text font-bold text-sm text-[#3E5F52]">${itemText}</span>
                     </label>`;
@@ -1334,7 +1336,8 @@
                 }
             } catch(e) {
                 console.error("Render error:", e);
-                document.getElementById('app').innerHTML = `<div class="text-red-500 p-4">渲染錯誤: ${e.message}</div>`;
+                const app = document.getElementById('app');
+                if(app) app.innerHTML = `<div class="text-red-500 p-4">渲染錯誤: ${e.message}</div>`;
             }
         }
 
@@ -1376,7 +1379,29 @@
         try {
             // Force immediate render to prevent white screen
             window.render(); 
-        } catch(e) { console.error("Initial render failed", e); }
+            
+            // Re-init firebase with config check
+            if (typeof __firebase_config !== 'undefined') {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        startShopSync();
+                    }
+                });
+            } else {
+                console.warn("Firebase config missing - running in offline/demo mode");
+            }
+        } catch(e) { console.error("Initial setup failed", e); }
         
         loadAllData(); // Then fetch
     </script>
