@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="IMG_2476.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#F5F1E8">
+    <meta name="theme-color" content="#F5F4F8">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,28 +27,30 @@
             theme: {
                 extend: {
                     colors: {
-                        'page-bg': '#F5F1E8',       
-                        'nav-bg': '#C7D2C8',        
-                        'nav-border': '#B3BFB6',
-                        'nav-text-active': '#3E5F52', 
-                        'nav-text-inactive': '#6F8F83',
-                        'sage-main': '#9FB8A9',     
-                        'sage-dark': '#8FAF9A',     
-                        'sage-light': '#DCE8E1',    
-                        'sage-pale': '#E4EFE8',     
-                        'text-main': '#3E5F52',     
-                        'text-sub': '#748B82',      
-                        'func-yellow': '#EBCB8B',   
-                        'func-red': '#D68C8C',      
-                        'func-blue': '#8FB4C4',
-                        'card-warm': '#FBFAF4',
-                        'card-border': '#E6DFD3',
+                        'page-bg': '#F5F4F8',       
+                        'nav-bg': '#FFFFFF',        
+                        'nav-border': '#D8D4E1',
+                        'nav-text-active': '#5E5470', 
+                        'nav-text-inactive': '#B0A9BD',
+                        'sage-main': '#A79EB7',     
+                        'sage-dark': '#7A6E8C',     
+                        'sage-light': '#D8D4E1',    
+                        'sage-pale': '#EBE9F0',     
+                        'text-main': '#433E4A',     
+                        'text-sub': '#827A90',      
+                        'func-yellow': '#D6CAAA',   
+                        'func-red': '#C99494',      
+                        'func-blue': '#94A4C2',
+                        'card-warm': '#FFFFFF',
+                        'card-border': '#D8D4E1',
+                        'ac-blue': '#94A4C2',
+                        'ac-brown': '#9C897B',
                     },
                     fontFamily: { cute: ['"Zen Maru Gothic"', 'sans-serif'] },
                     boxShadow: {
-                        'paper': '3px 3px 0px #D3DCD6', 
-                        'floating': '0 8px 24px -4px rgba(62, 95, 82, 0.12)', 
-                        'sticker': '2px 2px 0px rgba(143, 175, 154, 0.5)',
+                        'paper': '3px 3px 0px #D8D4E1', 
+                        'floating': '0 8px 24px -4px rgba(122, 110, 140, 0.15)', 
+                        'sticker': '2px 2px 0px rgba(122, 110, 140, 0.5)',
                         'soft-card': '0 8px 20px rgba(0,0,0,0.08)',
                     }
                 }
@@ -57,10 +59,10 @@
     </script>
     <style>
         body { 
-            background-color: #F5F1E8; 
-            background-image: radial-gradient(#E2E8E4 1.5px, transparent 1.5px); 
+            background-color: #F5F4F8; 
+            background-image: radial-gradient(#EBE9F0 1.5px, transparent 1.5px); 
             background-size: 24px 24px; 
-            color: #3E5F52; 
+            color: #433E4A; 
             font-family: "Zen Maru Gothic", sans-serif; 
             -webkit-tap-highlight-color: transparent; 
             padding-bottom: 140px; 
@@ -73,39 +75,39 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         /* UI Components */
-        .ac-input, .ac-textarea, .ac-select { @apply w-full bg-white border-2 border-[#D3DCD6] rounded-3xl px-4 py-2 text-text-main font-bold outline-none focus:border-sage-dark transition shadow-sm; box-sizing: border-box !important; width: 100% !important; max-width: 100% !important; }
-        .ac-input::placeholder, .ac-textarea::placeholder { color: #BCCUC6; font-weight: 500; }
+        .ac-input, .ac-textarea, .ac-select { @apply w-full bg-white border-2 border-[#D8D4E1] rounded-3xl px-4 py-2 text-text-main font-bold outline-none focus:border-sage-dark transition shadow-sm; box-sizing: border-box !important; width: 100% !important; max-width: 100% !important; }
+        .ac-input::placeholder, .ac-textarea::placeholder { color: #B0A9BD; font-weight: 500; }
         
         .input-gray-border { @apply border-gray-300 focus:border-sage-dark; }
 
-        .ac-card { background: #FFFFFF; border-radius: 24px; box-shadow: 3px 3px 0px #D3DCD6; border: 2px solid #EFF3F1; overflow: hidden; width: 100%; box-sizing: border-box; }
+        .ac-card { background: #FFFFFF; border-radius: 24px; box-shadow: 3px 3px 0px #D8D4E1; border: 2px solid #FFFFFF; overflow: hidden; width: 100%; box-sizing: border-box; }
         
         /* Nav & Tabs */
         .day-tabs-container { display: flex; gap: 8px; padding: 8px 12px; width: 100%; box-sizing: border-box; overflow-x: auto; scrollbar-width: none; }
         .day-tabs-container::-webkit-scrollbar { display: none; }
-        .day-pill { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; color: #9FB5A8; background-color: #FFFFFF; border: 2px solid #D3DCD6; transition: all 0.2s; cursor: pointer; box-shadow: 2px 2px 0px #D3DCD6; min-width: 70px; whitespace-nowrap; }
-        .day-pill.active { background-color: #DCE8E1; color: #3E5F52; border-color: #8FAF9A; box-shadow: inset 0 2px 4px rgba(62, 95, 82, 0.05); transform: translateY(1px); }
+        .day-pill { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; color: #A79EB7; background-color: #FFFFFF; border: 2px solid #D8D4E1; transition: all 0.2s; cursor: pointer; box-shadow: 2px 2px 0px #D8D4E1; min-width: 70px; whitespace-nowrap; }
+        .day-pill.active { background-color: #EBE9F0; color: #433E4A; border-color: #7A6E8C; box-shadow: inset 0 2px 4px rgba(122, 110, 140, 0.05); transform: translateY(1px); }
         
-        .plan-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #FAFCFB; }
-        .plan-detail.expanded { max-height: 2000px; transition: max-height 0.6s ease-in; border-top: 2px dashed #D3DCD6; position: relative; z-index: 10; }
+        .plan-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #FAFAFA; }
+        .plan-detail.expanded { max-height: 2000px; transition: max-height 0.6s ease-in; border-top: 2px dashed #D8D4E1; position: relative; z-index: 10; }
         
-        .segment-control { position: relative; display: flex; background-color: #E4EFE8; border-radius: 999px; padding: 4px; cursor: pointer; border: 2px solid #D3DCD6; width: 220px; margin: 0 auto; height: 52px; user-select: none; }
-        .segment-glider { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background-color: #FFFFFF; border-radius: 999px; box-shadow: 0 2px 8px rgba(62, 95, 82, 0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; }
-        .segment-item { flex: 1; text-align: center; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #9FB5A8; transition: color 0.3s ease; position: relative; }
+        .segment-control { position: relative; display: flex; background-color: #EBE9F0; border-radius: 999px; padding: 4px; cursor: pointer; border: 2px solid #D8D4E1; width: 220px; margin: 0 auto; height: 52px; user-select: none; }
+        .segment-glider { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background-color: #FFFFFF; border-radius: 999px; box-shadow: 0 2px 8px rgba(122, 110, 140, 0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; }
+        .segment-item { flex: 1; text-align: center; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #A79EB7; transition: color 0.3s ease; position: relative; }
         .segment-control.mode-details .segment-glider { transform: translateX(100%); }
-        .segment-control.mode-record .item-record { color: #3E5F52; }
-        .segment-control.mode-details .item-details { color: #3E5F52; }
+        .segment-control.mode-record .item-record { color: #433E4A; }
+        .segment-control.mode-details .item-details { color: #433E4A; }
         
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { @apply text-xl font-bold rounded-3xl active:scale-95 transition-transform flex items-center justify-center select-none cursor-pointer shadow-sm h-14 border-2 border-[#E4EFE8] bg-white text-text-main; }
+        .calc-btn { @apply text-xl font-bold rounded-3xl active:scale-95 transition-transform flex items-center justify-center select-none cursor-pointer shadow-sm h-14 border-2 border-[#EBE9F0] bg-white text-text-main; }
         .calc-eq { @apply bg-sage-dark text-white border-sage-dark; }
-        .modal-overlay { background: rgba(62, 95, 82, 0.4); backdrop-filter: blur(4px); }
+        .modal-overlay { background: rgba(122, 110, 140, 0.4); backdrop-filter: blur(4px); }
         
         /* Nav */
-        .nav-btn { @apply flex-1 flex flex-row items-center justify-center gap-1.5 h-12 rounded-full transition-all font-bold tracking-widest; color: #6F8F83; }
+        .nav-btn { @apply flex-1 flex flex-row items-center justify-center gap-1.5 h-12 rounded-full transition-all font-bold tracking-widest; color: #827A90; }
         .nav-btn i { @apply text-xl mb-0.5; } 
         .nav-btn span { @apply text-[13px]; }
-        .nav-btn.active { @apply bg-[#F7F4EB] text-nav-text-active shadow-sm; }
+        .nav-btn.active { @apply bg-[#FDFCFD] text-nav-text-active shadow-sm; }
         .bottom-nav { height: 5.5rem; }
         
         #app { min-height: 100vh; padding-bottom: 160px; }
@@ -113,19 +115,19 @@
         /* Checkbox */
         .cb-container { display: block; position: relative; padding-left: 35px; margin-bottom: 12px; cursor: pointer; font-size: 16px; user-select: none; }
         .cb-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
-        .checkmark { position: absolute; top: 0; left: 0; height: 24px; width: 24px; background-color: #fff; border-radius: 8px; border: 2px solid #D3DCD6; }
-        .cb-container:hover input ~ .checkmark { background-color: #E4EFE8; }
-        .cb-container input:checked ~ .checkmark { background-color: #8FAF9A; border-color: #8FAF9A; }
+        .checkmark { position: absolute; top: 0; left: 0; height: 24px; width: 24px; background-color: #fff; border-radius: 8px; border: 2px solid #D8D4E1; }
+        .cb-container:hover input ~ .checkmark { background-color: #EBE9F0; }
+        .cb-container input:checked ~ .checkmark { background-color: #7A6E8C; border-color: #7A6E8C; }
         .checkmark:after { content: ""; position: absolute; display: none; }
         .cb-container input:checked ~ .checkmark:after { display: block; }
         .cb-container .checkmark:after { left: 8px; top: 4px; width: 6px; height: 12px; border: solid white; border-width: 0 3px 3px 0; transform: rotate(45deg); }
-        .item-text { transition: all 0.2s; color: #3E5F52; }
-        .cb-container input:checked ~ .item-text { text-decoration: line-through; color: #9FB5A8; }
+        .item-text { transition: all 0.2s; color: #433E4A; }
+        .cb-container input:checked ~ .item-text { text-decoration: line-through; color: #A79EB7; }
         
         /* Buttons */
         .btn-primary { @apply bg-sage-dark text-white border-2 border-sage-dark shadow-sm hover:opacity-90 active:scale-95 transition; }
-        .btn-secondary { @apply bg-white text-text-main border-2 border-[#D3DCD6] shadow-sm hover:bg-sage-pale active:scale-95 transition; }
-        .btn-accent { @apply bg-func-yellow text-[#6B4F1D] border-2 border-[#D6C095] shadow-sm hover:opacity-90 active:scale-95 transition; }
+        .btn-secondary { @apply bg-white text-text-main border-2 border-[#D8D4E1] shadow-sm hover:bg-sage-pale active:scale-95 transition; }
+        .btn-accent { @apply bg-func-yellow text-[#615C52] border-2 border-[#D6CAAA] shadow-sm hover:opacity-90 active:scale-95 transition; }
 
         /* Shop Styles - Planner Theme */
         .shop-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -154,10 +156,10 @@
         /* Shop Card: Structural Integrity */
         .shop-card { 
             @apply flex flex-col h-auto w-full transition-all duration-300;
-            background-color: #FBFAF4; 
-            border: 1px solid #E6DFD3; 
+            background-color: #FFFFFF; 
+            border: 1px solid #D8D4E1; 
             border-radius: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
             overflow: hidden; 
         }
         
@@ -165,7 +167,7 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             position: relative;
-            background-color: #F5F5F5;
+            background-color: #F5F4F8;
         }
         
         .shop-card-body {
@@ -175,7 +177,7 @@
         }
 
         .shop-card.purchased { 
-            background-color: #F0F0F0;
+            background-color: #F9F9FB;
         }
         .shop-card.purchased img {
             filter: grayscale(100%);
@@ -183,14 +185,14 @@
         }
         .shop-card.purchased h4, 
         .shop-card.purchased p {
-            color: #999;
+            color: #A79EB7;
             text-decoration: line-through;
         }
         
         .badge-purchased {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) rotate(-15deg) scale(0);
-            background-color: rgba(62, 95, 82, 0.95);
+            background-color: rgba(122, 110, 140, 0.95);
             color: white; font-size: 14px; font-weight: bold;
             padding: 6px 16px; border-radius: 50px; border: 2px solid white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 20; pointer-events: none;
@@ -200,27 +202,27 @@
         
         .check-circle { 
             position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; 
-            background: rgba(255,255,255,0.9); border-radius: 50%; 
+            background: rgba(255,255,255,0.95); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; z-index: 30; 
-            border: 1px solid #D3DCD6;
+            border: 1px solid #D8D4E1;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             cursor: pointer; 
             transition: transform 0.2s;
         }
         .check-circle:active { transform: scale(0.9); }
-        .check-circle::after { content: ''; width: 16px; height: 16px; border-radius: 50%; background-color: #D3DCD6; transition: background-color 0.2s; }
-        .shop-card.purchased .check-circle::after { background-color: #3E5F52; }
+        .check-circle::after { content: ''; width: 16px; height: 16px; border-radius: 50%; background-color: #D8D4E1; transition: background-color 0.2s; }
+        .shop-card.purchased .check-circle::after { background-color: #7A6E8C; }
 
         .dep-btn { 
             @apply w-full py-3 rounded-full font-bold border-2 transition-all duration-200 shadow-sm;
-            @apply bg-white text-text-sub border-[#D3DCD6]; 
+            @apply bg-white text-text-sub border-[#D8D4E1]; 
         }
         .dep-btn:hover { @apply opacity-90; }
         .dep-btn:active { @apply scale-95; }
         .dep-btn.active { 
-            background-color: #8FAF9A !important;
+            background-color: #7A6E8C !important;
             color: #ffffff !important;
-            border-color: #8FAF9A !important;
+            border-color: #7A6E8C !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
             transform: scale(1.02) !important;
         }
@@ -236,10 +238,10 @@
     </script>
 
     <!-- Header -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-[#F5F1E8]/95 backdrop-blur-md px-4 pt-10 pb-2 border-b border-[#D3DCD6]">
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#F5F4F8]/95 backdrop-blur-md px-4 pt-10 pb-2 border-b border-[#D8D4E1]">
         <div class="flex justify-between items-center mb-1 px-1 pt-2">
             <h1 class="text-xl font-black text-text-main tracking-wide flex items-center gap-2"><span class="text-2xl">🪻</span> HOKKAIDO 2026</h1>
-            <div id="syncStatus" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-[#D3DCD6] shadow-sm cursor-pointer hover:bg-white/80 transition active:scale-95" onclick="window.loadAllData()">
+            <div id="syncStatus" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-[#D8D4E1] shadow-sm cursor-pointer hover:bg-white/80 transition active:scale-95" onclick="window.loadAllData()">
                 <div id="syncDot" class="w-2 h-2 rounded-full bg-gray-300"></div><span id="syncText" class="text-xs font-bold text-gray-400">讀取中</span>
             </div>
         </div>
@@ -259,7 +261,7 @@
 
     <!-- Main Content -->
     <main id="app" class="safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-48">
-        <div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D3DCD6] rounded-3xl">
+        <div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">
             <div class="animate-pulse">載入中...</div>
         </div>
     </main>
@@ -309,8 +311,8 @@
                         <option value="06/30">06/30</option>
                     </select>
                 </div>
-                <button onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-3xl bg-func-yellow text-[#6B4F1D] shadow-sm hover:opacity-90">確認存入</button>
-                <button onclick="document.getElementById('depositModal').classList.add('hidden')" class="w-full text-text-sub text-sm mt-2 font-bold hover:underline text-center block bg-gray-100 rounded-full py-3 hover:bg-gray-200 transition">取消</button>
+                <button onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-3xl bg-func-yellow text-[#5C4A2E] shadow-sm hover:opacity-90">確認存入</button>
+                <button onclick="document.getElementById('depositModal').classList.add('hidden')" class="w-full text-text-sub text-sm mt-2 font-bold hover:underline text-center block bg-sage-pale rounded-full py-3 hover:bg-gray-200 transition">取消</button>
             </div>
         </div>
     </div>
@@ -320,10 +322,10 @@
         <div class="bg-white rounded-t-[2.5rem] p-6 shadow-2xl safe-bottom">
             <div class="flex justify-between items-center mb-6">
                 <span class="text-text-main font-bold text-xl ml-2">🔢 計算機</span>
-                <button onclick="window.closeCalc()" class="w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="window.closeCalc()" class="w-10 h-10 rounded-full bg-sage-pale text-text-sub hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="bg-[#F7F4EB] border-2 border-[#D3DCD6] p-4 rounded-3xl mb-6 text-right text-4xl font-mono text-text-main h-24 flex items-center justify-end font-bold shadow-inner" id="calcDisplay">0</div>
+            <div class="bg-[#FDFCFD] border-2 border-[#D8D4E1] p-4 rounded-3xl mb-6 text-right text-4xl font-mono text-text-main h-24 flex items-center justify-end font-bold shadow-inner" id="calcDisplay">0</div>
             
             <div class="calc-grid">
                 <div class="calc-btn calc-action" onclick="window.calcClear()">C</div>
@@ -499,7 +501,7 @@
             localStorage.setItem('seoul2026_cache', JSON.stringify(cache));
         }
 
-        // --- Core Functions (Moved Up) ---
+        // --- Core Functions ---
         function toggleWalletMode() {
             state.walletMode = state.walletMode === 'record' ? 'details' : 'record';
             render();
@@ -685,7 +687,7 @@
 
         function addEvent() {
             const newId = generateId();
-            const newEvt = { id: newId, time: '00:00', title: '新行程', cost: '', transport: '', note: '', link: '' };
+            const newEvt = { id: newId, time: '00:00', title: '新行程', cost: '', transport: '', food: '', note: '', link: '' };
             state.itinerary[state.activeDay].events.push(newEvt);
             state.editingEventId = newId;
             state.expandedEvents.push(newId);
@@ -874,7 +876,12 @@
                                     sheetName: row.sheetName,
                                     id: cleanId, 
                                     time: row.time ? row.time.toString() : '',
-                                    title: row.title || '', transport: row.transport || '', food: row.food || '', cost: row.cost || '', link: row.link || '', note: row.note || ''
+                                    title: row.title || '', 
+                                    transport: row.transport || '', 
+                                    food: row.food || '', 
+                                    cost: row.cost || '', 
+                                    link: row.link || '', 
+                                    note: row.note || ''
                                 });
                                 if (row.date) newItinerary[dayIdx].date = normalizeDate(row.date);
                             }
@@ -1004,15 +1011,28 @@
                 const isExp = state.expandedEvents.includes(evt.id);
                 const isEditing = state.editingEventId === evt.id;
                 
-                let linkUrl = evt.link || '';
-                let linkText = '點擊開啟';
-                if (linkUrl && linkUrl.includes(' ')) {
-                    const idx = linkUrl.indexOf(' ');
-                    const r = linkUrl.substring(0, idx);
-                    const t = linkUrl.substring(idx + 1).trim();
-                    if(r && t) { linkUrl = r; linkText = t; }
+                let linksHtml = '';
+                if (evt.link) {
+                    const lines = evt.link.split('\n').map(l => l.trim()).filter(l => l);
+                    if (lines.length > 0) {
+                        linksHtml = `<div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem] relative z-20 mt-0.5">連結</span><div class="flex flex-col gap-1.5 flex-1">`;
+                        lines.forEach(line => {
+                            let linkUrl = line;
+                            let linkText = '點擊開啟';
+                            if (line.includes(' ')) {
+                                const idx = line.indexOf(' ');
+                                linkUrl = line.substring(0, idx);
+                                const t = line.substring(idx + 1).trim();
+                                if(t) linkText = t;
+                            }
+                            const safeLink = ensureProtocol(linkUrl);
+                            if (safeLink) {
+                                linksHtml += `<a href="${safeLink}" onclick="event.preventDefault(); event.stopPropagation(); window.open(this.href, '_blank');" class="text-func-blue underline break-all relative z-50 pointer-events-auto cursor-pointer font-bold flex items-center w-fit" target="_blank"><span>${linkText}</span><i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1.5 opacity-70"></i></a>`;
+                            }
+                        });
+                        linksHtml += `</div></div>`;
+                    }
                 }
-                const safeLink = ensureProtocol(linkUrl);
 
                 html += `
                 <div class="ac-card ${isExp?'expanded':''} relative">
@@ -1022,7 +1042,7 @@
                                 <span class="bg-sage-pale text-text-sub text-[10px] font-bold px-2 py-0.5 rounded-full">${evt.time || '未定'}</span>
                             </div>
                             <h3 class="font-bold text-text-main text-lg break-words whitespace-pre-wrap leading-tight">${evt.title}</h3>
-                            ${evt.transport ? `<div class="text-xs text-text-sub mt-1 break-words"><i class="fa-solid fa-train-subway mr-1"></i>${evt.transport}</div>` : ''}
+                            ${evt.transport ? `<div class="text-xs text-text-sub mt-1 break-words">${evt.transport}</div>` : ''}
                         </div>
                         <div class="text-[#D3DCD6]"><i class="fa-solid fa-angle-down transition-transform ${isExp?'rotate-180':''}"></i></div>
                     </div>
@@ -1038,9 +1058,8 @@
                             </div>
                             <textarea class="ac-textarea font-bold" rows="2" placeholder="請輸入行程標題" onchange="window.updateVal('${evt.id}','title',this.value)">${evt.title}</textarea>
                             <textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入交通方式 (可換行)" onchange="window.updateVal('${evt.id}','transport',this.value)">${evt.transport}</textarea>
-                            <div class="relative mt-2">
-                                <input class="ac-input pr-10 text-func-blue underline" type="text" placeholder="網址 (空一格可輸入自訂名稱)" value="${evt.link}" onchange="window.updateVal('${evt.id}','link',this.value)">
-                            </div>
+                            <textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入餐飲資訊 (可換行)" onchange="window.updateVal('${evt.id}','food',this.value)">${evt.food || ''}</textarea>
+                            <textarea class="ac-textarea mt-2 resize-y text-func-blue" rows="2" placeholder="網址 (空一格自訂名稱，多個連結請換行)" onchange="window.updateVal('${evt.id}','link',this.value)">${evt.link || ''}</textarea>
                             <textarea class="ac-input mt-2" rows="3" placeholder="請輸入備註..." onchange="window.updateVal('${evt.id}','note',this.value)">${evt.note}</textarea>
                             <div class="flex justify-between pt-2">
                                 <button onclick="window.askDelete('${evt.id}')" class="px-4 py-2 text-xs bg-sage-pale text-func-red rounded-full font-bold">刪除</button>
@@ -1052,17 +1071,8 @@
                             <div class="space-y-2 text-text-main">
                                 <div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">費用</span><span>${evt.cost || '--'}</span></div>
                                 <div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">交通</span><span class="break-words whitespace-pre-wrap flex-1">${evt.transport || '--'}</span></div>
-                                ${safeLink ? `
-                                    <div class="flex gap-2 text-sm items-center">
-                                        <span class="text-sage-dark font-bold min-w-[3rem] relative z-20">連結</span>
-                                        <a href="${safeLink}" 
-                                           onclick="event.preventDefault(); event.stopPropagation(); window.open(this.href, '_blank');"
-                                           class="text-func-blue underline break-all flex-1 relative z-50 pointer-events-auto cursor-pointer py-1 font-bold"
-                                           target="_blank">
-                                           ${linkText} <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1 opacity-70"></i>
-                                        </a>
-                                    </div>
-                                ` : ''}
+                                <div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">餐飲</span><span class="break-words whitespace-pre-wrap flex-1">${evt.food || '--'}</span></div>
+                                ${linksHtml}
                                 <div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">備註</span><span class="whitespace-pre-wrap break-words flex-1 bg-sage-pale p-2 rounded-xl text-text-sub">${evt.note || '無'}</span></div>
                             </div>
                             <div class="flex justify-end pt-2">
@@ -1080,7 +1090,7 @@
         function renderWalletRecord(c) {
             const defaultDate = state.itinerary[state.activeDay].date;
             let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="06/24" ${defaultDate==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${defaultDate==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${defaultDate==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${defaultDate==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${defaultDate==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${defaultDate==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${defaultDate==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
-            let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-card-border pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-gray-100">${state.expenseCurrency==='JPY'?'¥':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D3DCD6]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D3DCD6] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
+            let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-[#D8D4E1] pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-[#EBE9F0]">${state.expenseCurrency==='JPY'?'¥':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D8D4E1]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-3xl p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
             let h3 = `<div class="grid grid-cols-2 gap-3"><div class="select-wrapper"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><input type="time" id="exTime" class="ac-input text-center font-mono"></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-3xl bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
             c.innerHTML = h1 + h2 + h3;
             
@@ -1170,7 +1180,7 @@
             let html = `
                 <div class="fade-in pb-24">
                     <div class="ac-card p-5 mb-4 bg-white">
-                        <div class="flex justify-between items-center mb-3 pb-2 border-b-2 border-[#E4EFE8]">
+                        <div class="flex justify-between items-center mb-3 pb-2 border-b-2 border-[#D8D4E1]">
                             <div><div class="text-xs text-text-sub font-bold">💰 公費餘額</div><div class="text-xl font-black text-sage-dark">¥${formatMoney(publicFundTotal)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(publicFundTotal*config.currencyRate)}</span></div></div>
                             <div class="text-right flex gap-3">
                                 <div><div class="text-[10px] text-text-sub">🦁 Andy</div><div class="text-xs font-bold text-sage-dark">¥${formatMoney(andyEquity)}</div></div>
@@ -1178,7 +1188,7 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4 text-center">
-                            <div class="border-r-2 border-[#E4EFE8] space-y-2">
+                            <div class="border-r-2 border-[#D8D4E1] space-y-2">
                                 <div class="text-lg mb-1">🦁</div>
                                 <div class="text-xs text-text-sub font-bold">💸 個人消費</div><div class="text-sm font-black text-text-main">¥${formatMoney(andyTotalConsum)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(andyTotalConsumTwd)}</span></div>
                                 <div class="text-xs text-text-sub font-bold mt-1">💳 代墊</div><div class="text-sm font-black text-ac-blue">¥${formatMoney(andyAdvance)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(andyAdvanceTwd)}</span></div>
@@ -1192,7 +1202,7 @@
                     </div>
                     <div class="space-y-3">
                          <div class="flex justify-between items-end px-2 mb-2"><h4 class="text-xs font-bold text-text-sub">${displayTitle}</h4><span class="text-xs font-black text-ac-brown bg-sage-light px-2 py-1 rounded-lg">小計: ¥${formatMoney(dailyTotal)} <span class="text-[10px] text-gray-500">≈NT$${formatMoney(dailyTotalTwd)}</span></span></div>
-                         ${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D3DCD6] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}
+                         ${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}
                          ${list.map(e => {
                              const isDeposit = e.cat === '公費入金'; const payer = e.payer || '';
                              const twdVal = e.currency === 'JPY' ? e.amount * config.currencyRate : null;
@@ -1200,9 +1210,9 @@
                     </div>
                     
                     <div class="mt-10 mb-8 px-2">
-                        <h4 class="text-sm font-black text-sage-dark mb-4 flex items-center gap-2 border-b-2 border-dashed border-[#D3DCD6] pb-2 w-fit pr-4"><i class="fa-solid fa-piggy-bank"></i> 公費儲值紀錄</h4>
+                        <h4 class="text-sm font-black text-sage-dark mb-4 flex items-center gap-2 border-b-2 border-dashed border-[#D8D4E1] pb-2 w-fit pr-4"><i class="fa-solid fa-piggy-bank"></i> 公費儲值紀錄</h4>
                         <div class="space-y-3">
-                        ${depositList.length > 0 ? depositList.map(e => `<div class="bg-func-yellow/10 border-2 border-func-yellow/20 rounded-2xl p-3 flex justify-between items-center relative overflow-hidden"><div class="absolute right-0 top-0 text-6xl text-func-yellow/10 -mr-2 -mt-2"><i class="fa-solid fa-coins"></i></div><div class="relative z-10"><div><span class="text-[10px] font-mono text-func-yellow bg-white/80 px-2 py-0.5 rounded-md">${e.date}</span></div><div class="font-bold text-text-main text-sm mt-1">公費入金</div><div class="text-[10px] text-text-sub mt-0.5 opacity-70">${e.payer}</div></div><div class="text-right relative z-10"><div class="font-black text-func-yellow text-lg">¥${formatMoney(e.amount)}</div><button onclick="window.deleteExpense('${e.id}')" class="text-func-red text-xs mt-1 hover:underline opacity-60 hover:opacity-100">刪除</button></div></div>`).join('') : '<div class="text-center text-gray-400 text-xs py-4 border-2 border-dashed border-[#E4EFE8] rounded-2xl">無儲值紀錄</div>'}
+                        ${depositList.length > 0 ? depositList.map(e => `<div class="bg-func-yellow/10 border-2 border-func-yellow/20 rounded-2xl p-3 flex justify-between items-center relative overflow-hidden"><div class="absolute right-0 top-0 text-6xl text-func-yellow/10 -mr-2 -mt-2"><i class="fa-solid fa-coins"></i></div><div class="relative z-10"><div><span class="text-[10px] font-mono text-func-yellow bg-white/80 px-2 py-0.5 rounded-md">${e.date}</span></div><div class="font-bold text-text-main text-sm mt-1">公費入金</div><div class="text-[10px] text-text-sub mt-0.5 opacity-70">${e.payer}</div></div><div class="text-right relative z-10"><div class="font-black text-func-yellow text-lg">¥${formatMoney(e.amount)}</div><button onclick="window.deleteExpense('${e.id}')" class="text-func-red text-xs mt-1 hover:underline opacity-60 hover:opacity-100">刪除</button></div></div>`).join('') : '<div class="text-center text-gray-400 text-xs py-4 border-2 border-dashed border-[#D8D4E1] rounded-2xl">無儲值紀錄</div>'}
                         </div>
                     </div>
                 </div>`;
@@ -1221,7 +1231,7 @@
                 const gid = getGoogleDriveId(imageRaw);
                 const isPurchased = state.shopPurchased[name];
                 
-                let imgTag = `<div class="w-full h-full bg-[#E5E5E5] flex items-center justify-center text-xs text-gray-400">No Image</div>`;
+                let imgTag = `<div class="w-full h-full bg-sage-pale flex items-center justify-center text-xs text-gray-400">No Image</div>`;
                 if(gid) imgTag = `<img src="https://lh3.googleusercontent.com/d/${gid}=s400" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/200?text=No+Image'">`;
                 else if(imageRaw) imgTag = `<img src="${imageRaw}" class="w-full h-full object-cover" loading="lazy">`;
 
@@ -1234,8 +1244,8 @@
                     </div>
                     
                     <div class="shop-card-body">
-                        <h4 class="text-[#3E5F52] font-[600] text-sm leading-tight mb-2 whitespace-normal break-words">${name}</h4>
-                        <p class="text-[#6F8F83] text-xs whitespace-normal break-words leading-relaxed">${desc}</p>
+                        <h4 class="text-text-main font-[600] text-sm leading-tight mb-2 whitespace-normal break-words">${name}</h4>
+                        <p class="text-text-sub text-xs whitespace-normal break-words leading-relaxed">${desc}</p>
                     </div>
                 </div>`;
             });
@@ -1260,8 +1270,8 @@
                 const contentClass = isExpanded ? '' : 'hidden';
                 
                 html += `
-                <div class="bg-white rounded-[1.5rem] shadow-sm border-2 border-[#EFF3F1] overflow-hidden transition-all duration-300">
-                    <div onclick="window.toggleCategory('${escapeStr(cat)}')" class="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50 transition select-none">
+                <div class="bg-white rounded-[1.5rem] shadow-sm border-2 border-[#D8D4E1] overflow-hidden transition-all duration-300">
+                    <div onclick="window.toggleCategory('${escapeStr(cat)}')" class="flex justify-between items-center p-4 cursor-pointer hover:bg-white transition select-none">
                         <h3 class="font-black text-lg text-sage-dark flex items-center gap-2">
                             <i class="fa-solid fa-list-check text-base opacity-70"></i> ${cat}
                             <span class="text-xs bg-sage-pale text-sage-dark px-2 py-0.5 rounded-full ml-1">${groups[cat].length}</span>
@@ -1271,7 +1281,7 @@
                         </div>
                     </div>
                     
-                    <div class="${contentClass} px-4 pb-4 pt-0 border-t border-dashed border-[#E4EFE8]">
+                    <div class="${contentClass} px-4 pb-4 pt-0 border-t border-dashed border-[#D8D4E1]">
                         <div class="pt-3 space-y-2">`;
                         
                 groups[cat].forEach(itemText => {
@@ -1280,7 +1290,7 @@
                     <label class="cb-container">
                         <input type="checkbox" ${checked} onchange="window.toggleCheck('${escapeStr(itemText)}')">
                         <span class="checkmark"></span>
-                        <span class="item-text font-bold text-sm text-[#3E5F52]">${itemText}</span>
+                        <span class="item-text font-bold text-sm text-text-main">${itemText}</span>
                     </label>`;
                 });
                 
@@ -1290,7 +1300,7 @@
             }
             
             if(Object.keys(groups).length === 0) {
-                html += `<div class="text-center text-gray-400 mt-10 py-10 border-2 border-dashed border-[#D3DCD6] rounded-3xl">載入清單中...</div>`;
+                html += `<div class="text-center text-gray-400 mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">載入清單中...</div>`;
             }
             
             html += `</div>`;
