@@ -6,7 +6,6 @@
     <title>Hokkaido Trip 2025-26 🪻</title>
     
     <!-- App Icons & PWA Settings -->
-    <!-- 這裡已經幫您替換成您上傳的圖片檔名，請確保圖片與此 HTML 檔案放在同一個資料夾 -->
     <link rel="icon" type="image/jpeg" href="IMG_2476.jpg">
     <link rel="apple-touch-icon" sizes="192x192" href="IMG_2476.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -128,19 +127,6 @@
         .btn-primary { @apply bg-sage-dark text-white border-2 border-sage-dark shadow-sm hover:opacity-90 active:scale-95 transition; }
         .btn-secondary { @apply bg-white text-text-main border-2 border-[#D8D4E1] shadow-sm hover:bg-sage-pale active:scale-95 transition; }
         .btn-accent { @apply bg-func-yellow text-[#615C52] border-2 border-[#D6CAAA] shadow-sm hover:opacity-90 active:scale-95 transition; }
-
-        /* Shop Styles - Planner Theme */
-        .shop-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .shop-tabs::-webkit-scrollbar { display: none; }
-        
-        .shop-tab-btn { 
-            @apply flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-300;
-            @apply bg-card-warm text-sage-dark border-card-border shadow-sm;
-        }
-        .shop-tab-btn:active { @apply scale-95; }
-        .shop-tab-btn.active { 
-            @apply bg-sage-dark text-white border-sage-dark shadow-sticker -translate-y-1; 
-        }
         
         /* Grid Layout (Strict Structure) */
         .shop-grid { 
@@ -231,8 +217,14 @@
 <body class="font-cute">
 
     <script>
+        // API URLs
         const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
         const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
+        
+        // 必買清單專用 GAS API 網址 (請確保有照著下方步驟重新部署過)
+        const SHOP_API_URL      = 'https://script.google.com/macros/s/AKfycbyVRLtEQRo_3K9aVWk9KckZyquWM6X7Btd3HGAUiouXDIWn1D5N01zX9xSD9B-H1Y_l/exec'; 
+
+        // CSV URLs
         const CHECKLIST_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUFJYS6U-wqQv6d9AI-V0iW7DNsREniGC5OhzV-RCpOSJaqicfaN5i4LuXgDhlJy8LF2FcCVNx3l79/pub?output=csv';
         const SHOP_CSV_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREVSza-V5N2uH1DUq5EVG9XNlvLN_bgat8Z4kXXN-2Qu_gyXLeXnE1hVqVyBjHkdOO2snjvOSQk9wa/pub?output=csv';
     </script>
@@ -254,8 +246,12 @@
                 <div class="segment-item item-details"><i class="fa-solid fa-list-ul mr-2"></i>明細</div>
             </div>
         </div>
-        <div class="hidden pb-1 mt-2" id="shopTabsContainer">
-            <div class="shop-tabs" id="shopTabs"></div>
+        <!-- Shop Dropdown Container -->
+        <div class="hidden pb-2 mt-2 w-full max-w-xs mx-auto" id="shopTabsContainer">
+            <div class="select-wrapper">
+                <select id="shopFilterSelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white" onchange="window.filterShop(this.value)">
+                </select>
+            </div>
         </div>
     </div>
 
@@ -311,7 +307,7 @@
                         <option value="06/30">06/30</option>
                     </select>
                 </div>
-                <button onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-3xl bg-func-yellow text-[#5C4A2E] shadow-sm hover:opacity-90">確認存入</button>
+                <button onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-3xl bg-func-yellow text-[#615C52] shadow-sm hover:opacity-90">確認存入</button>
                 <button onclick="document.getElementById('depositModal').classList.add('hidden')" class="w-full text-text-sub text-sm mt-2 font-bold hover:underline text-center block bg-sage-pale rounded-full py-3 hover:bg-gray-200 transition">取消</button>
             </div>
         </div>
@@ -378,7 +374,6 @@
     <!-- MODULE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         // === Configuration ===
@@ -425,7 +420,7 @@
 
         // Firebase Global Vars
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        let auth, db;
+        let auth;
 
         // Helpers
         function formatMoney(n) { return Math.round(n).toLocaleString('en-US'); }
@@ -687,7 +682,7 @@
 
         function addEvent() {
             const newId = generateId();
-            const newEvt = { id: newId, time: '00:00', title: '新行程', cost: '', transport: '', food: '', note: '', link: '' };
+            const newEvt = { id: newId, time: '', title: '新行程', cost: '', transport: '', food: '', note: '', link: '' };
             state.itinerary[state.activeDay].events.push(newEvt);
             state.editingEventId = newId;
             state.expandedEvents.push(newId);
@@ -717,15 +712,16 @@
         }
 
         function setupShopTabs() {
-            const container = document.getElementById('shopTabs');
+            const container = document.getElementById('shopFilterSelect');
+            if(!container) return;
             const locations = new Set();
             state.shopProducts.forEach(item => {
                 const loc = item['Location'] || item['地點'] || 'Other';
                 if(loc) locations.add(loc.trim());
             });
-            let html = `<button onclick="window.filterShop('All')" class="shop-tab-btn ${state.shopFilter==='All'?'active':''}">全部</button>`;
+            let html = `<option value="All" ${state.shopFilter==='All'?'selected':''}>全部分類</option>`;
             locations.forEach(loc => {
-                html += `<button onclick="window.filterShop('${escapeStr(loc)}')" class="shop-tab-btn ${state.shopFilter===loc?'active':''}">📍${loc}</button>`;
+                html += `<option value="${escapeStr(loc)}" ${state.shopFilter===loc?'selected':''}>📍 ${loc}</option>`;
             });
             container.innerHTML = html;
         }
@@ -743,13 +739,7 @@
                 else card.classList.remove('purchased');
             }
             saveCache();
-            try {
-                if (db) {
-                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'shopping_list_status', name);
-                    if (newState) await setDoc(ref, { isPurchased: true });
-                    else await deleteDoc(ref);
-                }
-            } catch(err) { console.error("Shop Sync Error", err); }
+            syncShopStatus(name, newState);
         }
 
         function router(tab) {
@@ -798,6 +788,29 @@
         }
 
         // --- Data Sync ---
+        function syncShopStatus(name, isPurchased) {
+            if (!SHOP_API_URL) return;
+            
+            const dot = document.getElementById('syncDot');
+            const txt = document.getElementById('syncText');
+            if(dot) dot.className = 'w-2 h-2 rounded-full bg-func-yellow animate-pulse';
+            if(txt) txt.innerText = '狀態更新...';
+
+            const statusStr = isPurchased ? 'Purchased' : '';
+            
+            // 終極修復：改用 GET 參數傳輸，徹底避免手機瀏覽器轉址(Redirect)時將 POST Data 吃掉的問題
+            const targetUrl = `${SHOP_API_URL}?action=updateShopStatus&name=${encodeURIComponent(name)}&status=${encodeURIComponent(statusStr)}`;
+
+            fetch(targetUrl, { 
+                method: 'GET', 
+                mode: 'no-cors' 
+            }).then(() => {
+                if(dot) dot.className = 'w-2 h-2 rounded-full bg-sage-dark';
+                if(txt) txt.innerText = '已儲存';
+                setTimeout(() => { if(txt) txt.innerText = '已同步'; }, 2000);
+            }).catch(e => { console.error("Shop Sync Error", e); });
+        }
+
         function syncData(type, action, data) {
             let targetUrl = '';
             let payload = { action: action };
@@ -979,19 +992,19 @@
                          const name = item['Name'] || item['名稱'] || item['商品名稱'];
                          return name && name.trim() !== '';
                     });
+                    
+                    // 從 CSV 讀取 Status 欄位並更新本地 state.shopPurchased
+                    state.shopProducts.forEach(item => {
+                        const name = (item['Name'] || item['名稱'] || item['商品名稱']).trim();
+                        const status = (item['Status'] || item['狀態'] || '').toString().trim().toLowerCase();
+                        if (status === 'purchased' || status === 'v' || status === 'true' || status === '已購買') {
+                            state.shopPurchased[name] = true;
+                        }
+                    });
+
                     saveCache();
                     if(state.activeTab === 'shop') render();
                 }
-            });
-        }
-
-        function startShopSync() {
-            if (!db) return;
-            const statusRef = collection(db, 'artifacts', appId, 'public', 'data', 'shopping_list_status');
-            onSnapshot(statusRef, (snapshot) => {
-                state.shopPurchased = {}; 
-                snapshot.forEach(doc => { state.shopPurchased[doc.id] = doc.data().isPurchased; });
-                if(state.activeTab === 'shop') render();
             });
         }
 
@@ -1011,6 +1024,8 @@
                 const isExp = state.expandedEvents.includes(evt.id);
                 const isEditing = state.editingEventId === evt.id;
                 
+                let displayTime = evt.time || '未定';
+
                 let linksHtml = '';
                 if (evt.link) {
                     const lines = evt.link.split('\n').map(l => l.trim()).filter(l => l);
@@ -1039,12 +1054,12 @@
                     <div class="p-4 flex items-center gap-3 cursor-pointer" onclick="window.toggleEvent('${evt.id}')">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-sage-pale text-text-sub text-[10px] font-bold px-2 py-0.5 rounded-full">${evt.time || '未定'}</span>
+                                <span class="bg-sage-pale text-text-sub text-xs font-bold px-2 py-0.5 rounded-full">${displayTime}</span>
                             </div>
                             <h3 class="font-bold text-text-main text-lg break-words whitespace-pre-wrap leading-tight">${evt.title}</h3>
                             ${evt.transport ? `<div class="text-xs text-text-sub mt-1 break-words">${evt.transport}</div>` : ''}
                         </div>
-                        <div class="text-[#D3DCD6]"><i class="fa-solid fa-angle-down transition-transform ${isExp?'rotate-180':''}"></i></div>
+                        <div class="text-[#D8D4E1]"><i class="fa-solid fa-angle-down transition-transform ${isExp?'rotate-180':''}"></i></div>
                     </div>
                     <div class="plan-detail ${isExp?'expanded':''}">
                         <div class="px-5 pb-5 space-y-4 pt-2">
@@ -1052,9 +1067,9 @@
 
                 if (isEditing) {
                     html += `
-                            <div class="grid grid-cols-2 gap-6">
-                                <div><label class="text-xs font-bold text-text-sub">時間</label><input class="ac-input" type="time" value="${evt.time}" onchange="window.updateVal('${evt.id}','time',this.value)"></div>
-                                <div><label class="text-xs font-bold text-text-sub">費用</label><input class="ac-input" type="text" value="${evt.cost}" placeholder="費用" onchange="window.updateVal('${evt.id}','cost',this.value)"></div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="text-[10px] font-bold text-text-sub">時間</label><input class="ac-input px-2" type="text" value="${evt.time}" placeholder="例如: 09:00 - 10:30" onchange="window.updateVal('${evt.id}','time',this.value)"></div>
+                                <div><label class="text-[10px] font-bold text-text-sub">費用</label><input class="ac-input px-2" type="text" value="${evt.cost}" placeholder="費用" onchange="window.updateVal('${evt.id}','cost',this.value)"></div>
                             </div>
                             <textarea class="ac-textarea font-bold" rows="2" placeholder="請輸入行程標題" onchange="window.updateVal('${evt.id}','title',this.value)">${evt.title}</textarea>
                             <textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入交通方式 (可換行)" onchange="window.updateVal('${evt.id}','transport',this.value)">${evt.transport}</textarea>
@@ -1404,28 +1419,6 @@
         try {
             // Force immediate render to prevent white screen
             window.render(); 
-            
-            // Re-init firebase with config check
-            if (typeof __firebase_config !== 'undefined') {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        startShopSync();
-                    }
-                });
-            } else {
-                console.warn("Firebase config missing - running in offline/demo mode");
-            }
         } catch(e) { console.error("Initial setup failed", e); }
         
         loadAllData(); // Then fetch
