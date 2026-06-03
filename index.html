@@ -141,7 +141,7 @@
         
         /* Shop Card: Structural Integrity */
         .shop-card { 
-            @apply flex flex-col h-auto w-full transition-all duration-300;
+            @apply flex flex-col h-auto w-full transition-all duration-300 relative;
             background-color: #FFFFFF; 
             border: 1px solid #D8D4E1; 
             border-radius: 20px; 
@@ -221,7 +221,7 @@
         const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
         const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
         
-        // 必買清單專用 GAS API 網址 (請確保有照著下方步驟重新部署過)
+        // 必買清單專用 GAS API 網址 (此處為您提供可正常讀寫的版本)
         const SHOP_API_URL      = 'https://script.google.com/macros/s/AKfycbyVRLtEQRo_3K9aVWk9KckZyquWM6X7Btd3HGAUiouXDIWn1D5N01zX9xSD9B-H1Y_l/exec'; 
 
         // CSV URLs
@@ -246,11 +246,20 @@
                 <div class="segment-item item-details"><i class="fa-solid fa-list-ul mr-2"></i>明細</div>
             </div>
         </div>
-        <!-- Shop Dropdown Container -->
-        <div class="hidden pb-2 mt-2 w-full max-w-xs mx-auto" id="shopTabsContainer">
-            <div class="select-wrapper">
-                <select id="shopFilterSelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white" onchange="window.filterShop(this.value)">
-                </select>
+        
+        <!-- Shop Dropdown Container (兩層結構：地點與分類) -->
+        <div class="hidden pb-2 mt-2 w-full max-w-sm mx-auto px-1" id="shopTabsContainer">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="select-wrapper">
+                    <!-- Location Filter -->
+                    <select id="shopLocationSelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopLocation(this.value)">
+                    </select>
+                </div>
+                <div class="select-wrapper">
+                    <!-- Category Filter -->
+                    <select id="shopCategorySelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopCategory(this.value)">
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -373,9 +382,6 @@
 
     <!-- MODULE SCRIPT -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
         // === Configuration ===
         const config = { currencyRate: 0.2 }; // 日幣大約匯率為 0.2
         const staticData = {
@@ -402,7 +408,10 @@
             expandedEvents: [], deleteTargetId: null, deleteType: null, editingId: null, editingEventId: null,
             checklist: [], 
             checkedItems: JSON.parse(localStorage.getItem('checkedItems') || '{}'),
-            shopProducts: [], shopPurchased: {}, shopFilter: 'All',
+            shopProducts: [], shopPurchased: {}, 
+            shopLocationFilter: 'All', // 地點篩選器
+            shopCategoryFilter: 'All', // 分類篩選器
+            editingShopId: null, // tracking 編輯中的商品
             expandedCategories: []
         };
 
@@ -418,14 +427,11 @@
             } catch(e) { console.warn("Cache error"); }
         }
 
-        // Firebase Global Vars
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        let auth;
-
         // Helpers
         function formatMoney(n) { return Math.round(n).toLocaleString('en-US'); }
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
         function escapeStr(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+        function getProductName(item) { return (item['Name'] || item['名稱'] || item['商品名稱'] || '').trim(); }
 
         function ensureProtocol(url) {
             if (!url) return '';
@@ -711,21 +717,56 @@
              render();
         }
 
+        // 雙層篩選：Location -> Category
         function setupShopTabs() {
-            const container = document.getElementById('shopFilterSelect');
-            if(!container) return;
+            const locContainer = document.getElementById('shopLocationSelect');
+            const catContainer = document.getElementById('shopCategorySelect');
+            if(!locContainer || !catContainer) return;
+            
             const locations = new Set();
+            const categories = new Set();
+            
             state.shopProducts.forEach(item => {
-                const loc = item['Location'] || item['地點'] || 'Other';
-                if(loc) locations.add(loc.trim());
+                const loc = (item['Location'] || item['地點'] || '未分類').trim();
+                if(loc) locations.add(loc);
+                
+                // 只加入符合目前 Location 篩選條件的 Category
+                if (state.shopLocationFilter === 'All' || loc === state.shopLocationFilter) {
+                    const cat = (item['Category'] || item['類別'] || '未分類').trim();
+                    if(cat) categories.add(cat);
+                }
             });
-            let html = `<option value="All" ${state.shopFilter==='All'?'selected':''}>全部分類</option>`;
+            
+            // 建立 Location 下拉選單
+            let locHtml = `<option value="All" ${state.shopLocationFilter==='All'?'selected':''}>📍 所有地點</option>`;
             locations.forEach(loc => {
-                html += `<option value="${escapeStr(loc)}" ${state.shopFilter===loc?'selected':''}>📍 ${loc}</option>`;
+                locHtml += `<option value="${escapeStr(loc)}" ${state.shopLocationFilter===loc?'selected':''}>📍 ${loc}</option>`;
             });
-            container.innerHTML = html;
+            locContainer.innerHTML = locHtml;
+            
+            // 建立 Category 下拉選單
+            let catHtml = `<option value="All" ${state.shopCategoryFilter==='All'?'selected':''}>🏷️ 全部分類</option>`;
+            categories.forEach(cat => {
+                catHtml += `<option value="${escapeStr(cat)}" ${state.shopCategoryFilter===cat?'selected':''}>🏷️ ${cat}</option>`;
+            });
+            catContainer.innerHTML = catHtml;
         }
 
+        // 篩選地點事件：改變地點時，自動重置分類為 All
+        function filterShopLocation(val) {
+            state.shopLocationFilter = val;
+            state.shopCategoryFilter = 'All'; 
+            setupShopTabs(); // 重新渲染下拉選單
+            render();
+        }
+
+        // 篩選分類事件
+        function filterShopCategory(val) {
+            state.shopCategoryFilter = val;
+            render();
+        }
+
+        // Shop Check Circle
         async function toggleShopItem(e, name) {
             if(e) e.stopPropagation();
             const isPurchased = !!state.shopPurchased[name];
@@ -739,7 +780,40 @@
                 else card.classList.remove('purchased');
             }
             saveCache();
-            syncShopStatus(name, newState);
+            syncShopUpdate(name, { status: newState ? 'Purchased' : '' });
+        }
+
+        // Shop Edit Functions
+        function startEditShop(name) {
+            state.editingShopId = name;
+            render();
+        }
+
+        function cancelEditShop() {
+            state.editingShopId = null;
+            render();
+        }
+
+        function saveShopItem(name) {
+            // 使用轉換過的安全 ID 取出文字
+            const jsSafeName = name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            const desc = document.getElementById(`edit-desc-${jsSafeName}`).value;
+            const price = document.getElementById(`edit-price-${jsSafeName}`).value;
+            
+            // Update local state
+            state.shopProducts.forEach(p => {
+                if (getProductName(p) === name) {
+                    p['Description'] = desc;
+                    p['actual price'] = price;
+                }
+            });
+            
+            state.editingShopId = null;
+            saveCache();
+            render();
+            
+            // Sync to Backend (這會同步到您的 Google Apps Script 後端)
+            syncShopUpdate(name, { description: desc, actualPrice: price });
         }
 
         function router(tab) {
@@ -766,11 +840,6 @@
             }
             render();
         }
-
-        function filterShop(filter) {
-            state.shopFilter = filter;
-            render();
-        }
         
         function toggleCheck(item) {
             state.checkedItems[item] = !state.checkedItems[item];
@@ -788,22 +857,27 @@
         }
 
         // --- Data Sync ---
-        function syncShopStatus(name, isPurchased) {
-            if (!SHOP_API_URL) return;
-            
+        function syncShopUpdate(name, updates) {
+            if (!SHOP_API_URL) {
+                console.warn("SHOP_API_URL 尚未設定，無法同步");
+                return;
+            }
             const dot = document.getElementById('syncDot');
             const txt = document.getElementById('syncText');
             if(dot) dot.className = 'w-2 h-2 rounded-full bg-func-yellow animate-pulse';
-            if(txt) txt.innerText = '狀態更新...';
+            if(txt) txt.innerText = '同步中...';
 
-            const statusStr = isPurchased ? 'Purchased' : '';
-            
-            // 終極修復：改用 GET 參數傳輸，徹底避免手機瀏覽器轉址(Redirect)時將 POST Data 吃掉的問題
-            const targetUrl = `${SHOP_API_URL}?action=updateShopStatus&name=${encodeURIComponent(name)}&status=${encodeURIComponent(statusStr)}`;
+            const payload = {
+                action: 'updateShopItem',
+                name: name,
+                ...updates
+            };
 
-            fetch(targetUrl, { 
-                method: 'GET', 
-                mode: 'no-cors' 
+            fetch(SHOP_API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
             }).then(() => {
                 if(dot) dot.className = 'w-2 h-2 rounded-full bg-sage-dark';
                 if(txt) txt.innerText = '已儲存';
@@ -889,12 +963,7 @@
                                     sheetName: row.sheetName,
                                     id: cleanId, 
                                     time: row.time ? row.time.toString() : '',
-                                    title: row.title || '', 
-                                    transport: row.transport || '', 
-                                    food: row.food || '', 
-                                    cost: row.cost || '', 
-                                    link: row.link || '', 
-                                    note: row.note || ''
+                                    title: row.title || '', transport: row.transport || '', food: row.food || '', cost: row.cost || '', link: row.link || '', note: row.note || ''
                                 });
                                 if (row.date) newItinerary[dayIdx].date = normalizeDate(row.date);
                             }
@@ -989,13 +1058,13 @@
                 download: true, header: true, skipEmptyLines: true,
                 complete: function(results) {
                     state.shopProducts = results.data.filter(item => {
-                         const name = item['Name'] || item['名稱'] || item['商品名稱'];
+                         const name = getProductName(item);
                          return name && name.trim() !== '';
                     });
                     
                     // 從 CSV 讀取 Status 欄位並更新本地 state.shopPurchased
                     state.shopProducts.forEach(item => {
-                        const name = (item['Name'] || item['名稱'] || item['商品名稱']).trim();
+                        const name = getProductName(item);
                         const status = (item['Status'] || item['狀態'] || '').toString().trim().toLowerCase();
                         if (status === 'purchased' || status === 'v' || status === 'true' || status === '已購買') {
                             state.shopPurchased[name] = true;
@@ -1235,34 +1304,78 @@
         }
 
         function renderShop(c) {
-            const list = state.shopFilter === 'All' ? state.shopProducts : state.shopProducts.filter(i => (i['Location']||i['地點']||'').trim() === state.shopFilter);
-            if(list.length === 0) { c.innerHTML = '<div class="text-center text-text-sub mt-10">尚無商品資料</div>'; return; }
+            // 套用雙層篩選器邏輯 (Location && Category)
+            const list = state.shopProducts.filter(item => {
+                const loc = (item['Location'] || item['地點'] || '未分類').trim();
+                const cat = (item['Category'] || item['類別'] || '未分類').trim();
+                
+                const locMatch = state.shopLocationFilter === 'All' || loc === state.shopLocationFilter;
+                const catMatch = state.shopCategoryFilter === 'All' || cat === state.shopCategoryFilter;
+                
+                return locMatch && catMatch;
+            });
+            
+            if(list.length === 0) { c.innerHTML = '<div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">尚無商品資料</div>'; return; }
 
             let html = `<div class="shop-grid">`;
             list.forEach(item => {
-                const name = escapeStr((item['Name'] || item['名稱'] || item['商品名稱'] || '').trim());
+                const name = getProductName(item);
                 const desc = item['Description'] || item['描述'] || '';
+                const actualPrice = item['actual price'] || item['實際價格'] || item['Actual Price'] || '';
                 const imageRaw = item['Image'] || item['image'] || item['圖片'] || '';
                 const gid = getGoogleDriveId(imageRaw);
                 const isPurchased = state.shopPurchased[name];
+                const isEditing = state.editingShopId === name;
+                
+                // 將名稱進行 JS 安全編碼，避免單引號報錯
+                const safeName = name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 
                 let imgTag = `<div class="w-full h-full bg-sage-pale flex items-center justify-center text-xs text-gray-400">No Image</div>`;
                 if(gid) imgTag = `<img src="https://lh3.googleusercontent.com/d/${gid}=s400" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/200?text=No+Image'">`;
                 else if(imageRaw) imgTag = `<img src="${imageRaw}" class="w-full h-full object-cover" loading="lazy">`;
 
                 html += `
-                <div class="shop-card ${isPurchased ? 'purchased' : ''}">
+                <div class="shop-card ${isPurchased && !isEditing ? 'purchased' : ''}">
                     <div class="shop-card-img-container">
                         ${imgTag}
                         <div class="badge-purchased">Purchased</div>
-                        <div class="check-circle" onclick="window.toggleShopItem(event, '${name}')"></div>
+                        <div class="check-circle" onclick="window.toggleShopItem(event, '${safeName}')"></div>
                     </div>
                     
-                    <div class="shop-card-body">
-                        <h4 class="text-text-main font-[600] text-sm leading-tight mb-2 whitespace-normal break-words">${name}</h4>
-                        <p class="text-text-sub text-xs whitespace-normal break-words leading-relaxed">${desc}</p>
-                    </div>
-                </div>`;
+                    <div class="shop-card-body flex-1 flex flex-col relative">`;
+
+                if (isEditing) {
+                    const currentDesc = escapeStr(desc);
+                    const currentPrice = escapeStr(actualPrice);
+                    html += `
+                        <div class="mb-2">
+                            <label class="text-[10px] text-text-sub font-bold">描述</label>
+                            <textarea id="edit-desc-${safeName}" class="ac-textarea text-sm py-1 px-2 mt-1" rows="2">${currentDesc}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-[10px] text-text-sub font-bold">實際價格</label>
+                            <div class="relative mt-1 flex items-center">
+                                <span class="absolute left-3 text-text-sub font-bold">¥</span>
+                                <input id="edit-price-${safeName}" type="number" class="ac-input text-sm py-1.5 pl-8 pr-2" value="${currentPrice}" placeholder="輸入金額">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-auto">
+                            <button onclick="window.cancelEditShop()" class="flex-1 py-1.5 text-base font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">❎</button>
+                            <button onclick="window.saveShopItem('${safeName}')" class="flex-1 py-1.5 text-base font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">✅</button>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h4 class="text-text-main font-[600] text-sm leading-tight whitespace-normal break-words">${escapeStr(name)}</h4>
+                            <button onclick="window.startEditShop('${safeName}')" class="text-sage-dark hover:scale-110 flex-shrink-0 bg-sage-pale w-6 h-6 rounded-full flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                        </div>
+                        <p class="text-text-sub text-xs whitespace-normal break-words leading-relaxed mb-2">${escapeStr(desc)}</p>
+                        ${actualPrice ? `<div class="mt-auto text-xs font-bold text-func-red bg-red-50 w-fit px-2 py-0.5 rounded-md border border-red-100 shadow-sm">💰 ¥${escapeStr(actualPrice)}</div>` : ''}
+                    `;
+                }
+                
+                html += `</div></div>`;
             });
             html += `</div>`;
             c.innerHTML = html;
@@ -1371,7 +1484,8 @@
                 else if(state.activeTab === 'shop') {
                     if(shopTabs) shopTabs.classList.remove('hidden');
                     setupShopTabs();
-                    app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-40";
+                    // 加大頂部間距以容納兩排的下拉選單
+                    app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-[11rem]";
                     renderShop(app);
                 }
             } catch(e) {
@@ -1408,9 +1522,16 @@
         window.confirmDelete = confirmDelete;
         window.toggleCheck = toggleCheck;
         window.toggleCategory = toggleCategory;
-        window.filterShop = filterShop;
+        
+        // 綁定新的雙層篩選器
+        window.filterShopLocation = filterShopLocation;
+        window.filterShopCategory = filterShopCategory;
+        
         window.switchDay = switchDay;
         window.toggleShopItem = toggleShopItem;
+        window.startEditShop = startEditShop;
+        window.cancelEditShop = cancelEditShop;
+        window.saveShopItem = saveShopItem;
         window.router = router;
         window.loadAllData = loadAllData;
         window.render = render;
