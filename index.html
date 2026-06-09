@@ -6,7 +6,7 @@
     <title>Hokkaido Trip 2025-26 🪻</title>
     
     <!-- App Icons & PWA Settings -->
-    <link rel="icon" type="image/jpeg" href="IMG_2476.jpg">
+    <link class="rounded-full" rel="icon" type="image/jpeg" href="IMG_2476.jpg">
     <link rel="apple-touch-icon" sizes="192x192" href="IMG_2476.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -221,7 +221,7 @@
         const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
         const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
         
-        // 必買清單專用 GAS API 網址 (此處為您提供可正常讀寫的版本)
+        // 必買清單專用 GAS API 網址
         const SHOP_API_URL      = 'https://script.google.com/macros/s/AKfycbyVRLtEQRo_3K9aVWk9KckZyquWM6X7Btd3HGAUiouXDIWn1D5N01zX9xSD9B-H1Y_l/exec'; 
 
         // CSV URLs
@@ -395,7 +395,7 @@
                 { day: 'Day 7', date: '06/30', events: [] }
             ],
             payers: ['公費支付', 'Andy 支付', 'Lynn 支付'],
-            paymentMethods: ['現金', '信用卡', 'IC卡(Suica/Pasmo)', '行動支付'],
+            paymentMethods: ['現金', '富邦J', '台新Pay', '永豐大戶', '全支付', '全盈pay', '玉山Wallet', 'Suica', 'Paypay'],
             categories: ['餐飲', '購物', '門票', '交通', '住宿', '其他']
         };
 
@@ -412,6 +412,9 @@
             shopLocationFilter: 'All', // 地點篩選器
             shopCategoryFilter: 'All', // 分類篩選器
             editingShopId: null, // tracking 編輯中的商品
+            personalDetailUser: null, // 個人消費明細分析成員 ('andy' | 'lynn' | null)
+            personalDetailDateFilter: 'All', // 個人消費明細日期篩選
+            personalDetailCatFilter: 'All', // 個人消費明細分類篩選
             expandedCategories: []
         };
 
@@ -508,18 +511,21 @@
             render();
         }
 
+        // 貨幣切換
         function toggleCurrency() {
             state.expenseCurrency = state.expenseCurrency === 'JPY' ? 'TWD' : 'JPY';
             const btn = document.getElementById('currBtn');
             if(btn) btn.innerText = state.expenseCurrency === 'JPY' ? '¥' : 'NT$';
         }
 
+        // 拆帳模式切換
         function toggleUneven(val) {
             const box = document.getElementById('unevenBox');
             if(val === '不平均分攤') box.classList.remove('hidden');
             else box.classList.add('hidden');
         }
 
+        // 拆帳自動計算
         function autoCalcSplit(type) {
             const total = parseFloat(document.getElementById('exAmt').value) || 0;
             const spAndy = document.getElementById('spAndy');
@@ -539,6 +545,7 @@
             }
         }
 
+        // 送出記帳
         function submitExpense() {
             const amt = parseFloat(document.getElementById('exAmt').value);
             if(!amt) return alert('請輸入金額');
@@ -575,12 +582,14 @@
             alert('已儲存');
         }
 
+        // 刪除記帳
         function deleteExpense(id) {
             state.deleteTargetId = id;
             state.deleteType = 'expense';
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 
+        // 編輯記帳
         function editExpense(id) {
             state.editingId = id;
             state.walletMode = 'record';
@@ -665,6 +674,7 @@
             render();
         }
 
+        // 編輯行程
         function startEdit(id) {
             state.editingEventId = id;
             if(!state.expandedEvents.includes(id)) state.expandedEvents.push(id);
@@ -789,6 +799,7 @@
             render();
         }
 
+        // 取消編輯必買
         function cancelEditShop() {
             state.editingShopId = null;
             render();
@@ -812,12 +823,106 @@
             saveCache();
             render();
             
-            // Sync to Backend (這會同步到您的 Google Apps Script 後端)
+            // Sync to Backend
             syncShopUpdate(name, { description: desc, actualPrice: price });
+        }
+
+        // 個人消費分析頁面切換機制
+        function openPersonalDetails(user) {
+            state.personalDetailUser = user;
+            state.personalDetailDateFilter = 'All';
+            state.personalDetailCatFilter = 'All';
+            render();
+        }
+
+        function closePersonalDetails() {
+            state.personalDetailUser = null;
+            render();
+        }
+
+        function filterPersonalDetails(type, value) {
+            if (type === 'date') state.personalDetailDateFilter = value;
+            if (type === 'cat') state.personalDetailCatFilter = value;
+            render();
+        }
+
+        // Canvas 畫個人消費圓餅圖的極簡穩定版 JS 函式 (支援 Retina 螢幕高解析度)
+        function drawPieChart(canvasId, data) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // 處理 high DPI
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            
+            const total = Object.values(data).reduce((a, b) => a + b, 0);
+            if (total === 0) {
+                ctx.fillStyle = '#827A90';
+                ctx.font = '13px "Zen Maru Gothic"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('此條件下無消費數據 🪻', rect.width / 2, rect.height / 2);
+                return;
+            }
+            
+            const colors = {
+                '餐飲': '#C99494', // func-red
+                '購物': '#D6CAAA', // func-yellow
+                '門票': '#94A4C2', // func-blue
+                '交通': '#A79EB7', // sage-main
+                '住宿': '#7A6E8C', // sage-dark
+                '其他': '#9C897B'  // ac-brown
+            };
+            
+            let startAngle = -Math.PI / 2;
+            const centerX = rect.width / 3;
+            const centerY = rect.height / 2;
+            const radius = Math.min(centerX, centerY) * 0.75;
+            
+            // 繪製扇形
+            for (const [cat, val] of Object.entries(data)) {
+                if (val === 0) continue;
+                const sliceAngle = (val / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[cat] || '#B0A9BD';
+                ctx.fill();
+                startAngle += sliceAngle;
+            }
+            
+            // 繪製右側圖例 (Legend)
+            let legendY = 20;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.font = 'bold 11px "Zen Maru Gothic"';
+            
+            for (const [cat, val] of Object.entries(data)) {
+                if (val === 0) continue;
+                const percent = Math.round((val / total) * 100);
+                
+                // 圖例色方塊
+                ctx.fillStyle = colors[cat] || '#B0A9BD';
+                ctx.fillRect(rect.width - 120, legendY - 5, 10, 10);
+                
+                // 圖例文字
+                ctx.fillStyle = '#433E4A';
+                ctx.fillText(`${cat} ${percent}%`, rect.width - 105, legendY);
+                legendY += 18;
+            }
         }
 
         function router(tab) {
             state.activeTab = tab;
+            // 每次切換頁籤，自動重置個人明細視角
+            state.personalDetailUser = null;
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 const target = btn.dataset.target;
                 if(target === tab) {
@@ -847,6 +952,7 @@
             render();
         }
 
+        // 展開分類
         function toggleCategory(cat) {
             if (state.expandedCategories.includes(cat)) {
                 state.expandedCategories = state.expandedCategories.filter(c => c !== cat);
@@ -986,8 +1092,9 @@
                                 customSplit: cSplit,
                                 date: cleanDate,
                                 time: cleanTime,
-                                note: item.w_note || item.note || ''
-                            };
+                                note: item.w_note || item.note || '',
+                                method: item.w_method || item.method || ''
+                             };
                         });
                     }
                     
@@ -1205,9 +1312,9 @@
         }
 
         function renderWalletDetails(c) {
-            let publicFundTotal = 0; let andyDeposit = 0; let lynnDeposit = 0;
+            let publicFundTotal = 0;
             let andyTotalConsum = 0; let lynnTotalConsum = 0;
-            let andyAdvance = 0; let lynnAdvance = 0;
+            let andyPaidForLynn = 0; let lynnPaidForAndy = 0;
             let depositList = [];
 
             state.expenses.forEach(e => {
@@ -1217,9 +1324,6 @@
                 if(e.cat === '公費入金' || e.cat.includes('入金')) {
                     depositList.push(e);
                     publicFundTotal += amt;
-                    if(payer.includes('🦁') || payer.includes('Andy')) andyDeposit += amt;
-                    else if(payer.includes('🐱') || payer.includes('Lynn')) lynnDeposit += amt;
-                    else { andyDeposit += amt/2; lynnDeposit += amt/2; }
                 } else {
                     let splitAndy = 0; let splitLynn = 0;
                     if(e.split === '不平均分攤' && e.customSplit) {
@@ -1227,16 +1331,37 @@
                         splitLynn = e.currency==='TWD' ? e.customSplit.lynn/config.currencyRate : e.customSplit.lynn;
                     } else { splitAndy = amt/2; splitLynn = amt/2; }
 
-                    if(payer === '公費支付') { publicFundTotal -= amt; }
-                    else if(payer.includes('Andy') || payer.includes('🦁')) { andyAdvance += splitLynn; }
-                    else if(payer.includes('Lynn') || payer.includes('🐱')) { lynnAdvance += splitAndy; }
+                    if(payer === '公費支付') { 
+                        publicFundTotal -= amt; 
+                    }
+                    else if(payer.includes('Andy') || payer.includes('🦁')) { 
+                        andyPaidForLynn += splitLynn; 
+                    }
+                    else if(payer.includes('Lynn') || payer.includes('🐱')) { 
+                        lynnPaidForAndy += splitLynn; 
+                    }
                     
                     andyTotalConsum += splitAndy; lynnTotalConsum += splitLynn;
                 }
             });
 
-            const andyEquity = andyDeposit - (andyTotalConsum - (andyAdvance + (state.expenses.filter(e=>e.payer && e.payer.includes('Andy') && e.cat!=='公費入金').reduce((s,x)=>s+(x.currency==='TWD'?x.amount/config.currencyRate:x.amount),0) - andyAdvance))); 
-            const lynnEquity = lynnDeposit - (lynnTotalConsum - (lynnAdvance + (state.expenses.filter(e=>e.payer && e.payer.includes('Lynn') && e.cat!=='公費入金').reduce((s,x)=>s+(x.currency==='TWD'?x.amount/config.currencyRate:x.amount),0) - lynnAdvance)));
+            // 簡化結算文字，移除英文名，只留下 Emojis 應給關係
+            let settlementText = "目前雙方無欠款";
+            let settlementAmount = 0;
+            let settlementTwd = 0;
+            let settlementColor = "text-sage-dark";
+
+            if (andyPaidForLynn > lynnPaidForAndy) {
+                settlementAmount = andyPaidForLynn - lynnPaidForAndy;
+                settlementTwd = settlementAmount * config.currencyRate;
+                settlementText = `🐱 應給 🦁`;
+                settlementColor = "text-ac-blue";
+            } else if (lynnPaidForAndy > andyPaidForLynn) {
+                settlementAmount = lynnPaidForAndy - andyPaidForLynn;
+                settlementTwd = settlementAmount * config.currencyRate;
+                settlementText = `🦁 應給 🐱`;
+                settlementColor = "text-func-red";
+            }
             
             let list = [];
             let displayTitle = '';
@@ -1253,34 +1378,36 @@
 
             let dailyTotal = list.reduce((sum, e) => { if(e.cat === '公費入金') return sum; return sum + (e.currency === 'TWD' ? e.amount / config.currencyRate : e.amount); }, 0);
             let dailyTotalTwd = dailyTotal * config.currencyRate;
-            
-            let andyTotalConsumTwd = andyTotalConsum * config.currencyRate;
-            let andyAdvanceTwd = andyAdvance * config.currencyRate;
-            let lynnTotalConsumTwd = lynnTotalConsum * config.currencyRate;
-            let lynnAdvanceTwd = lynnAdvance * config.currencyRate;
 
             depositList.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
 
             let html = `
                 <div class="fade-in pb-24">
                     <div class="ac-card p-5 mb-4 bg-white">
-                        <div class="flex justify-between items-center mb-3 pb-2 border-b-2 border-[#D8D4E1]">
+                        <div class="flex justify-between items-center mb-3 pb-3 border-b-2 border-[#D8D4E1]">
                             <div><div class="text-xs text-text-sub font-bold">💰 公費餘額</div><div class="text-xl font-black text-sage-dark">¥${formatMoney(publicFundTotal)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(publicFundTotal*config.currencyRate)}</span></div></div>
-                            <div class="text-right flex gap-3">
-                                <div><div class="text-[10px] text-text-sub">🦁 Andy</div><div class="text-xs font-bold text-sage-dark">¥${formatMoney(andyEquity)}</div></div>
-                                <div><div class="text-[10px] text-text-sub">🐱 Lynn</div><div class="text-xs font-bold text-sage-dark">¥${formatMoney(lynnEquity)}</div></div>
-                            </div>
                         </div>
+                        
+                        <div class="mb-4 pb-3 border-b-2 border-[#D8D4E1] text-center bg-sage-pale rounded-2xl p-3 shadow-inner">
+                            <div class="text-xs text-text-sub font-bold mb-1">🤝 結算 (代墊應還)</div>
+                            ${settlementAmount > 0 ?
+                                `<div class="text-sm font-bold text-text-main">${settlementText}</div>
+                                 <div class="text-lg font-black ${settlementColor}">¥${formatMoney(settlementAmount)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(settlementTwd)}</span></div>`
+                                : `<div class="text-sm font-bold text-sage-dark mt-1">目前雙方無欠款 ✨</div>`
+                            }
+                        </div>
+
+                        <!-- 可點擊進行個人消費明細及分析 -->
                         <div class="grid grid-cols-2 gap-4 text-center">
-                            <div class="border-r-2 border-[#D8D4E1] space-y-2">
+                            <div onclick="window.openPersonalDetails('andy')" class="border-r-2 border-[#D8D4E1] cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl">
                                 <div class="text-lg mb-1">🦁</div>
-                                <div class="text-xs text-text-sub font-bold">💸 個人消費</div><div class="text-sm font-black text-text-main">¥${formatMoney(andyTotalConsum)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(andyTotalConsumTwd)}</span></div>
-                                <div class="text-xs text-text-sub font-bold mt-1">💳 代墊</div><div class="text-sm font-black text-ac-blue">¥${formatMoney(andyAdvance)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(andyAdvanceTwd)}</span></div>
+                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人消費總額 <i class="fa-solid fa-magnifying-glass-chart text-[9px] text-sage-dark"></i></div>
+                                <div class="text-sm font-black text-text-main">¥${formatMoney(andyTotalConsum)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(andyTotalConsum*config.currencyRate)}</span></div>
                             </div>
-                            <div class="space-y-2">
+                            <div onclick="window.openPersonalDetails('lynn')" class="cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl">
                                 <div class="text-lg mb-1">🐱</div>
-                                <div class="text-xs text-text-sub font-bold">💸 個人消費</div><div class="text-sm font-black text-text-main">¥${formatMoney(lynnTotalConsum)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(lynnTotalConsumTwd)}</span></div>
-                                <div class="text-xs text-text-sub font-bold mt-1">💳 代墊</div><div class="text-sm font-black text-func-red">¥${formatMoney(lynnAdvance)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(lynnAdvanceTwd)}</span></div>
+                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人消費總額 <i class="fa-solid fa-magnifying-glass-chart text-[9px] text-sage-dark"></i></div>
+                                <div class="text-sm font-black text-text-main">¥${formatMoney(lynnTotalConsum)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(lynnTotalConsum*config.currencyRate)}</span></div>
                             </div>
                         </div>
                     </div>
@@ -1288,9 +1415,10 @@
                          <div class="flex justify-between items-end px-2 mb-2"><h4 class="text-xs font-bold text-text-sub">${displayTitle}</h4><span class="text-xs font-black text-ac-brown bg-sage-light px-2 py-1 rounded-lg">小計: ¥${formatMoney(dailyTotal)} <span class="text-[10px] text-gray-500">≈NT$${formatMoney(dailyTotalTwd)}</span></span></div>
                          ${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}
                          ${list.map(e => {
-                             const isDeposit = e.cat === '公費入金'; const payer = e.payer || '';
+                             const isDeposit = e.cat === '公費入金'; const payer = e.payer || ''; const method = e.method || '';
                              const twdVal = e.currency === 'JPY' ? e.amount * config.currencyRate : null;
-                             return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden ${isDeposit ? 'bg-func-yellow/10 border-func-yellow/50' : ''}"><div class="absolute left-0 top-0 bottom-0 w-2 ${isDeposit ? 'bg-func-yellow' : (payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300')}"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1 flex items-center gap-1">${isDeposit ? '💰 ' : ''}${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] text-text-sub font-bold"><span class="bg-sage-pale px-2 py-0.5 rounded-md">${payer}</span>${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}</div></div><div class="text-right"><div class="font-mono font-black ${isDeposit ? 'text-func-yellow' : 'text-func-red'} text-lg">${e.currency} ${formatMoney(e.amount)}</div>${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}<div class="flex gap-2 justify-end mt-2 items-center">${!isDeposit ? `<button onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button>` : ''}<button onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button></div></div></div>`}).join('')}
+                             const displayLabel = isDeposit ? payer : `${payer} ${method}`.trim();
+                             return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden ${isDeposit ? 'bg-func-yellow/10 border-func-yellow/50' : ''}"><div class="absolute left-0 top-0 bottom-0 w-2 ${isDeposit ? 'bg-func-yellow' : (payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300')}"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1 flex items-center gap-1">${isDeposit ? '💰 ' : ''}${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] text-text-sub font-bold"><span class="bg-sage-pale px-2 py-0.5 rounded-md">${displayLabel}</span>${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}</div></div><div class="text-right"><div class="font-mono font-black ${isDeposit ? 'text-func-yellow' : 'text-func-red'} text-lg">${e.currency} ${formatMoney(e.amount)}</div>${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}<div class="flex gap-2 justify-end mt-2 items-center">${!isDeposit ? `<button onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button>` : ''}<button onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button></div></div></div>`}).join('')}
                     </div>
                     
                     <div class="mt-10 mb-8 px-2">
@@ -1301,6 +1429,133 @@
                     </div>
                 </div>`;
             c.innerHTML = html;
+        }
+
+        // 個人消費細項 sub-view 渲染函式
+        function renderPersonalDetails(c) {
+            const isAndy = state.personalDetailUser === 'andy';
+            const userEmoji = isAndy ? '🦁' : '🐱';
+            const userName = isAndy ? 'Andy' : 'Lynn';
+            
+            // 計算並篩選個人名下所有拆帳分攤後的消費紀錄
+            let filteredList = [];
+            let catTotals = { '餐飲': 0, '購物': 0, '門票': 0, '交通': 0, '住宿': 0, '其他': 0 };
+            let totalSum = 0;
+
+            state.expenses.forEach(e => {
+                if (e.cat === '公費入金' || e.cat.includes('入金')) return;
+                
+                // 拆算分攤比例
+                let splitAndy = 0; let splitLynn = 0;
+                let amt = e.currency === 'TWD' ? e.amount / config.currencyRate : e.amount;
+                if(e.split === '不平均分攤' && e.customSplit) {
+                    splitAndy = e.currency==='TWD' ? e.customSplit.andy/config.currencyRate : e.customSplit.andy;
+                    splitLynn = e.currency==='TWD' ? e.customSplit.lynn/config.currencyRate : e.customSplit.lynn;
+                } else { splitAndy = amt/2; splitLynn = amt/2; }
+
+                let userPortion = isAndy ? splitAndy : splitLynn;
+                if (userPortion <= 0) return; // 沒有分攤到就不顯示
+
+                // 進行下拉選單條件篩選
+                if (state.personalDetailDateFilter !== 'All' && e.date !== state.personalDetailDateFilter) return;
+                if (state.personalDetailCatFilter !== 'All' && e.cat !== state.personalDetailCatFilter) return;
+
+                totalSum += userPortion;
+                const catGroup = catTotals[e.cat] !== undefined ? e.cat : '其他';
+                catTotals[catGroup] += userPortion;
+
+                filteredList.push({
+                    ...e,
+                    portion: userPortion
+                });
+            });
+
+            let html = `
+                <div class="fade-in pb-24">
+                    <!-- 返回鍵 -->
+                    <button onclick="window.closePersonalDetails()" class="mb-4 flex items-center gap-2 text-sm font-bold text-sage-dark bg-white px-4 py-2 rounded-full border border-[#D8D4E1] shadow-sm hover:bg-sage-pale transition active:scale-95">
+                        <i class="fa-solid fa-arrow-left"></i> 返回公費明細
+                    </button>
+                    
+                    <div class="ac-card p-5 mb-4 bg-white">
+                        <h3 class="text-lg font-black text-text-main mb-3 flex items-center gap-2">
+                            <span>${userEmoji} ${userName} 的消費分析</span>
+                        </h3>
+                        
+                        <!-- 下拉篩選選單：日期 & 消費分類 -->
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <div class="select-wrapper">
+                                <select id="personalDateFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('date', this.value)">
+                                    <option value="All" ${state.personalDetailDateFilter==='All'?'selected':''}>📅 所有日期</option>
+                                    <option value="06/24" ${state.personalDetailDateFilter==='06/24'?'selected':''}>06/24 (Day 1)</option>
+                                    <option value="06/25" ${state.personalDetailDateFilter==='06/25'?'selected':''}>06/25 (Day 2)</option>
+                                    <option value="06/26" ${state.personalDetailDateFilter==='06/26'?'selected':''}>06/26 (Day 3)</option>
+                                    <option value="06/27" ${state.personalDetailDateFilter==='06/27'?'selected':''}>06/27 (Day 4)</option>
+                                    <option value="06/28" ${state.personalDetailDateFilter==='06/28'?'selected':''}>06/28 (Day 5)</option>
+                                    <option value="06/29" ${state.personalDetailDateFilter==='06/29'?'selected':''}>06/29 (Day 6)</option>
+                                    <option value="06/30" ${state.personalDetailDateFilter==='06/30'?'selected':''}>06/30 (Day 7)</option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="personalCatFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('cat', this.value)">
+                                    <option value="All" ${state.personalDetailCatFilter==='All'?'selected':''}>🏷️ 所有分類</option>
+                                    ${staticData.categories.map(cat => `<option value="${cat}" ${state.personalDetailCatFilter===cat?'selected':''}>${cat}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 圓餅圖 Canvas -->
+                        <div class="bg-[#FDFCFD] rounded-2xl p-3 border-2 border-dashed border-[#D8D4E1] flex justify-center items-center mb-4">
+                            <canvas id="personalPieChart" style="width: 100%; height: 160px;"></canvas>
+                        </div>
+
+                        <!-- 個人消費總額展示 -->
+                        <div class="text-center bg-sage-pale rounded-2xl p-3 shadow-inner">
+                            <div class="text-xs text-text-sub font-bold mb-1">篩選後個人分攤總額</div>
+                            <div class="text-lg font-black text-sage-dark">¥${formatMoney(totalSum)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(totalSum*config.currencyRate)}</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 篩選後的所有明細細項 -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-text-sub px-2">消費項目 (${filteredList.length} 筆)</h4>
+                        ${filteredList.length === 0 ? '<div class="text-center text-text-sub py-8 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 無符合篩選條件的個人明細</div>' : ''}
+                        ${filteredList.map(e => {
+                            const twdVal = e.currency === 'JPY' ? e.portion * config.currencyRate : null;
+                            const payer = e.payer || '';
+                            const method = e.method || '';
+                            return `
+                            <div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden">
+                                <div class="absolute left-0 top-0 bottom-0 w-2 ${payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300'}"></div>
+                                <div class="pl-3">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span>
+                                        <span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span>
+                                    </div>
+                                    <div class="font-bold text-text-main text-base mb-1">${e.name || e.cat}</div>
+                                    <div class="flex flex-wrap gap-1 text-[10px] text-text-sub font-bold">
+                                        <span class="bg-sage-pale px-2 py-0.5 rounded-md">總額: ${e.currency} ${formatMoney(e.amount)}</span>
+                                        <span class="bg-gray-100 text-[#433E4A] px-2 py-0.5 rounded-md border border-[#D8D4E1]">${payer} ${method}</span>
+                                        <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.split}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] text-text-sub font-bold block mb-1">分攤金額</span>
+                                    <div class="font-mono font-black text-func-red text-base">¥${formatMoney(e.portion)}</div>
+                                    ${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+            c.innerHTML = html;
+            
+            // 非同步延遲繪製圓餅圖，確保 Canvas DOM 正確渲染
+            setTimeout(() => {
+                drawPieChart('personalPieChart', catTotals);
+            }, 50);
         }
 
         function renderShop(c) {
@@ -1449,6 +1704,13 @@
                 if(shopTabs) shopTabs.classList.add('hidden');
                 app.innerHTML = '';
                 
+                // 優先處理：若是在記帳細項下點擊了個人消費總額，切換到個人消費 sub-view，並隱藏其餘天數選單與 Segment 控制器
+                if(state.activeTab === 'wallet' && state.walletMode === 'details' && state.personalDetailUser !== null) {
+                    app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-24";
+                    renderPersonalDetails(app);
+                    return;
+                }
+
                 app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-48";
 
                 if(state.activeTab === 'plan') {
@@ -1484,7 +1746,7 @@
                 else if(state.activeTab === 'shop') {
                     if(shopTabs) shopTabs.classList.remove('hidden');
                     setupShopTabs();
-                    // 加大頂部間距以容納兩排的下拉選單
+                    // 加大頂部間距以容納雙層下拉選單
                     app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-[11rem]";
                     renderShop(app);
                 }
@@ -1523,9 +1785,14 @@
         window.toggleCheck = toggleCheck;
         window.toggleCategory = toggleCategory;
         
-        // 綁定新的雙層篩選器
+        // 綁定雙層篩選器
         window.filterShopLocation = filterShopLocation;
         window.filterShopCategory = filterShopCategory;
+        
+        // 綁定個人消費細項分析與篩選
+        window.openPersonalDetails = openPersonalDetails;
+        window.closePersonalDetails = closePersonalDetails;
+        window.filterPersonalDetails = filterPersonalDetails;
         
         window.switchDay = switchDay;
         window.toggleShopItem = toggleShopItem;
