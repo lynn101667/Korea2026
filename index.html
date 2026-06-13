@@ -261,7 +261,7 @@
         const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
         const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
         
-        // 必買清單專用 GAS API 網址
+        // ⚠️ 請替換為您最新發佈的 GAS API 網址
         const SHOP_API_URL      = 'https://script.google.com/macros/s/AKfycbyVRLtEQRo_3K9aVWk9KckZyquWM6X7Btd3HGAUiouXDIWn1D5N01zX9xSD9B-H1Y_l/exec'; 
 
         // CSV URLs
@@ -995,9 +995,9 @@
                         }
                     })
                     .catch(err => {
-                        statusTxt.innerText = '❌ 網路錯誤或 GAS 後端尚未設定。';
+                        statusTxt.innerText = '❌ 網路錯誤詳細原因: ' + err.message;
                         statusTxt.classList.replace('text-ac-blue', 'text-func-red');
-                        console.error(err);
+                        console.error("詳細錯誤：", err);
                     });
                 };
                 img.src = e.target.result;
@@ -1030,6 +1030,9 @@
                 "actual price": price,
                 "Status": ""
             };
+
+            // ⚠️ 強制將新商品的狀態標記為 false (未買完)
+            state.shopPurchased[name] = false;
 
             // 檢查本地是否已經有同名商品，避免重複
             const existingIndex = state.shopProducts.findIndex(p => getProductName(p) === name);
@@ -2015,8 +2018,8 @@
                 const locMatch = state.shopLocationFilter === 'All' || loc === state.shopLocationFilter;
                 const catMatch = state.shopCategoryFilter === 'All' || cat === state.shopCategoryFilter;
                 
-                // 檢查是否隱藏已買商品
-                const isPurchased = !!state.shopPurchased[name];
+                // ⚠️ 嚴格檢查是否為 true
+                const isPurchased = state.shopPurchased[name] === true;
                 const hideMatch = state.shopHidePurchased ? !isPurchased : true;
                 
                 return locMatch && catMatch && hideMatch;
@@ -2035,7 +2038,9 @@
                 const actualPrice = item['actual price'] || item['實際價格'] || item['Actual Price'] || '';
                 const imageRaw = item['Image'] || item['image'] || item['圖片'] || '';
                 const gid = getGoogleDriveId(imageRaw);
-                const isPurchased = state.shopPurchased[name];
+                
+                // ⚠️ 嚴格檢查是否為 true
+                const isPurchased = state.shopPurchased[name] === true;
                 const isEditing = state.editingShopId === name;
                 
                 // 將名稱進行 JS 安全編碼，避免單引號報錯
