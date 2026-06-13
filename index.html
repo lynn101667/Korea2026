@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Hokkaido Trip 2025-26 🪻</title>
+    <title>Hokkaido Trip 2026 🪻</title>
     
-    <!-- App Icons & PWA Settings -->
     <link class="rounded-full" rel="icon" type="image/jpeg" href="IMG_2476.jpg">
     <link rel="apple-touch-icon" sizes="192x192" href="IMG_2476.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#F5F4F8">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- PapaParse for CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <script>
@@ -101,25 +96,15 @@
             background-repeat: no-repeat;
             background-size: 1.25rem 1.25rem;
             padding-right: 2.5rem;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
         }
 
-        /* 修復時間輸入框在小螢幕被擠出邊框的問題 */
+        /* 專門修復 iOS Safari Time Input 撐破寬度的問題 */
         .time-input-fix {
-            padding-left: 0.25rem !important;
-            padding-right: 0.25rem !important;
-            font-size: 14px !important;
-            letter-spacing: -0.5px;
-        }
-        .time-input-fix::-webkit-date-and-time-value {
-            text-align: center;
-        }
-        .time-input-fix::-webkit-calendar-picker-indicator {
-            margin-left: -4px;
-            padding: 0;
-            transform: scale(0.85);
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            font-size: 0.875rem !important; /* text-sm */
+            min-width: 0 !important;
+            width: 100% !important;
         }
 
         .input-gray-border { border-color: #D1D5DB; }
@@ -127,6 +112,7 @@
 
         .ac-card { background: #FFFFFF; border-radius: 24px; box-shadow: 3px 3px 0px #D8D4E1; border: 2px solid #FFFFFF; overflow: hidden; width: 100%; box-sizing: border-box; }
         
+        /* Nav & Tabs */
         .day-tabs-container { display: flex; gap: 8px; padding: 8px 12px; width: 100%; box-sizing: border-box; overflow-x: auto; scrollbar-width: none; }
         .day-tabs-container::-webkit-scrollbar { display: none; }
         .day-pill { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; color: #A79EB7; background-color: #FFFFFF; border: 2px solid #D8D4E1; transition: all 0.2s; cursor: pointer; box-shadow: 2px 2px 0px #D8D4E1; min-width: 70px; whitespace-nowrap; }
@@ -153,6 +139,7 @@
         .calc-eq { background-color: #7A6E8C; color: #FFFFFF; border-color: #7A6E8C; }
         .modal-overlay { background: rgba(122, 110, 140, 0.4); backdrop-filter: blur(4px); }
         
+        /* Nav */
         .nav-btn { 
             flex: 1; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.375rem; 
             height: 3rem; border-radius: 9999px; transition: all 0.2s; font-weight: 700; letter-spacing: 0.1em; color: #827A90; 
@@ -164,6 +151,7 @@
         
         #app { min-height: 100vh; padding-bottom: 160px; }
         
+        /* Checkbox */
         .cb-container { display: block; position: relative; padding-left: 35px; margin-bottom: 12px; cursor: pointer; font-size: 16px; user-select: none; }
         .cb-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
         .checkmark { position: absolute; top: 0; left: 0; height: 24px; width: 24px; background-color: #fff; border-radius: 8px; border: 2px solid #D8D4E1; }
@@ -175,6 +163,7 @@
         .item-text { transition: all 0.2s; color: #433E4A; }
         .cb-container input:checked ~ .item-text { text-decoration: line-through; color: #A79EB7; }
         
+        /* Buttons */
         .btn-primary, .btn-secondary, .btn-accent { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: all 0.2s; border-width: 2px; border-style: solid; }
         .btn-primary:active, .btn-secondary:active, .btn-accent:active { transform: scale(0.95); }
         .btn-primary { background-color: #7A6E8C; color: #FFFFFF; border-color: #7A6E8C; }
@@ -184,6 +173,7 @@
         .btn-accent { background-color: #D6CAAA; color: #615C52; border-color: #D6CAAA; }
         .btn-accent:hover { opacity: 0.9; }
         
+        /* Grid Layout (Strict Structure) */
         .shop-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -194,6 +184,7 @@
         }
         @media (min-width: 768px) { .shop-grid { grid-template-columns: repeat(3, 1fr); } }
         
+        /* Shop Card: Structural Integrity */
         .shop-card { 
             display: flex; flex-direction: column; height: auto; width: 100%; transition: all 0.3s; position: relative;
             background-color: #FFFFFF; border: 1px solid #D8D4E1; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); overflow: hidden; 
@@ -212,9 +203,18 @@
             padding: 12px 16px 16px 16px;
         }
 
-        .shop-card.purchased { background-color: #F9F9FB; }
-        .shop-card.purchased img { filter: grayscale(100%); opacity: 0.7; }
-        .shop-card.purchased h4, .shop-card.purchased p { color: #A79EB7; text-decoration: line-through; }
+        .shop-card.purchased { 
+            background-color: #F9F9FB;
+        }
+        .shop-card.purchased img {
+            filter: grayscale(100%);
+            opacity: 0.7;
+        }
+        .shop-card.purchased h4, 
+        .shop-card.purchased p {
+            color: #A79EB7;
+            text-decoration: line-through;
+        }
         
         .badge-purchased {
             position: absolute; top: 50%; left: 50%;
@@ -260,6 +260,8 @@
         // API URLs
         const ITINERARY_API_URL = 'https://script.google.com/macros/s/AKfycbzxqo9i1PjYYvv96O041LQWY6PsC3M4tIAVT93puATbWuYOAj9g_C8p2oBS2lEDuit3/exec'; 
         const WALLET_API_URL    = 'https://script.google.com/macros/s/AKfycbx4UGXPQcYj1llewcfCKw86EGRbUVr2GZlSDOg0VO6fsGiGoVn1NCzmbYKCpceLuvex/exec'; 
+        
+        // 必買清單專用 GAS API 網址
         const SHOP_API_URL      = 'https://script.google.com/macros/s/AKfycbyVRLtEQRo_3K9aVWk9KckZyquWM6X7Btd3HGAUiouXDIWn1D5N01zX9xSD9B-H1Y_l/exec'; 
 
         // CSV URLs
@@ -267,7 +269,6 @@
         const SHOP_CSV_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREVSza-V5N2uH1DUq5EVG9XNlvLN_bgat8Z4kXXN-2Qu_gyXLeXnE1hVqVyBjHkdOO2snjvOSQk9wa/pub?output=csv';
     </script>
 
-    <!-- Header -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#F5F4F8]/95 backdrop-blur-md px-4 pt-10 pb-2 border-b border-[#D8D4E1]">
         <div class="flex justify-between items-center mb-1 px-1 pt-2">
             <h1 class="text-xl font-black text-text-main tracking-wide flex items-center gap-2"><span class="text-2xl">🪻</span> HOKKAIDO 2026</h1>
@@ -285,27 +286,26 @@
             </div>
         </div>
         
-        <!-- Shop Dropdown Container -->
         <div class="hidden pb-2 mt-2 w-full max-w-sm mx-auto px-1" id="shopTabsContainer">
             <div class="grid grid-cols-2 gap-2">
                 <div class="select-wrapper">
-                    <select id="shopLocationSelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopLocation(this.value)"></select>
+                    <select id="shopLocationSelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopLocation(this.value)">
+                    </select>
                 </div>
                 <div class="select-wrapper">
-                    <select id="shopCategorySelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopCategory(this.value)"></select>
+                    <select id="shopCategorySelect" class="ac-select text-center font-bold text-sage-dark shadow-sm bg-white px-2 text-sm" onchange="window.filterShopCategory(this.value)">
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
     <main id="app" class="safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-48">
         <div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">
             <div class="animate-pulse">載入中...</div>
         </div>
     </main>
 
-    <!-- Modals -->
     <div id="syncModal" class="fixed inset-0 modal-overlay z-[90] hidden flex items-center justify-center p-4 fade-in">
         <div class="ac-card p-6 w-auto bg-white flex flex-col items-center rounded-3xl">
             <div class="animate-spin text-3xl mb-3 text-sage-dark"><i class="fa-solid fa-circle-notch"></i></div>
@@ -356,7 +356,48 @@
         </div>
     </div>
 
-    <!-- Calculator Modal -->
+    <div id="shopAddModal" class="fixed inset-0 modal-overlay z-[100] hidden flex items-center justify-center p-4 fade-in">
+        <div class="ac-card p-6 w-full max-w-sm bg-white rounded-[2.5rem] max-h-[90vh] overflow-y-auto no-scrollbar">
+            <h3 class="text-xl font-bold text-text-main mb-4 text-center">🛍️ 新增必買商品</h3>
+            <div class="space-y-3">
+                <input type="text" id="newShopName" placeholder="商品名稱 (必填)" class="ac-input text-sm py-2.5">
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="select-wrapper">
+                        <select id="newShopLoc" class="ac-select text-sm py-2.5" onchange="window.handleShopAddChange('Loc')">
+                            </select>
+                        <input type="text" id="customShopLoc" placeholder="輸入自訂地點" class="ac-input text-sm py-2.5 mt-2 hidden border-func-blue">
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="newShopCat" class="ac-select text-sm py-2.5" onchange="window.handleShopAddChange('Cat')">
+                            </select>
+                        <input type="text" id="customShopCat" placeholder="輸入自訂分類" class="ac-input text-sm py-2.5 mt-2 hidden border-func-blue">
+                    </div>
+                </div>
+
+                <div class="relative flex items-center gap-2">
+                    <input type="text" id="newShopImg" placeholder="圖片連結網址" class="ac-input text-sm py-2.5 flex-1 min-w-0">
+                    <input type="file" id="shopImageUpload" accept="image/*" class="hidden" onchange="window.handleImageUpload(event)">
+                    <button onclick="document.getElementById('shopImageUpload').click()" class="bg-[#94A4C2] text-white rounded-full px-4 py-2.5 text-[11px] font-bold shadow-sm whitespace-nowrap active:scale-95 transition flex-shrink-0">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳
+                    </button>
+                </div>
+                <div id="uploadStatus" class="text-[11px] font-bold text-ac-blue hidden px-2"></div>
+
+                <textarea id="newShopDesc" placeholder="商品描述或備註 (選填)" class="ac-textarea text-sm py-2.5" rows="2"></textarea>
+                
+                <div class="relative flex items-center">
+                    <span class="absolute left-4 text-text-sub font-bold text-sm">¥</span>
+                    <input type="number" id="newShopPrice" placeholder="實際價格 (選填)" class="ac-input pl-8 text-sm py-2.5">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="window.closeShopAddModal()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">取消</button>
+                <button onclick="window.submitShopItem()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">確認新增</button>
+            </div>
+        </div>
+    </div>
+
     <div id="calcModal" class="fixed inset-0 bg-black/30 z-[60] hidden flex flex-col justify-end fade-in backdrop-blur-sm">
         <div class="bg-white rounded-t-[2.5rem] p-6 shadow-2xl safe-bottom">
             <div class="flex justify-between items-center mb-6">
@@ -394,7 +435,6 @@
         </div>
     </div>
     
-    <!-- Nav Bar -->
     <nav class="fixed bottom-6 left-6 right-6 bottom-nav bg-nav-bg rounded-[32px] shadow-floating z-50 flex justify-between items-center px-6 border-2 border-nav-border">
         <button onclick="window.router('plan')" class="nav-btn" data-target="plan">
             <i class="fa-solid fa-calendar-day"></i>
@@ -414,9 +454,9 @@
         </button>
     </nav>
 
-    <!-- MODULE SCRIPT -->
     <script type="module">
-        const config = { currencyRate: 0.2 }; 
+        // === Configuration ===
+        const config = { currencyRate: 0.2 }; // 日幣大約匯率為 0.2
         const staticData = {
             itinerary: [ 
                 { day: 'Day 1', date: '06/24', events: [] }, 
@@ -432,6 +472,7 @@
             categories: ['餐飲', '購物', '門票', '交通', '住宿', '其他']
         };
 
+        // State
         let state = {
             activeTab: 'plan', activeDay: 0,
             walletMode: 'record', walletDay: 0, walletFilter: 'all', expenseCurrency: 'JPY',
@@ -441,15 +482,17 @@
             checklist: [], 
             checkedItems: JSON.parse(localStorage.getItem('checkedItems') || '{}'),
             shopProducts: [], shopPurchased: {}, 
-            shopLocationFilter: 'All', 
-            shopCategoryFilter: 'All', 
-            editingShopId: null, 
-            personalDetailUser: null, 
-            personalDetailDateFilter: 'All', 
-            personalDetailCatFilter: 'All', 
+            shopLocationFilter: 'All', // 地點篩選器
+            shopCategoryFilter: 'All', // 分類篩選器
+            shopHidePurchased: false, // 隱藏已買完的商品狀態
+            editingShopId: null, // tracking 編輯中的商品
+            personalDetailUser: null, // 個人消費明細分析成員 ('andy' | 'lynn' | null)
+            personalDetailDateFilter: 'All', // 個人消費明細日期篩選
+            personalDetailCatFilter: 'All', // 個人消費明細分類篩選
             expandedCategories: []
         };
 
+        // Cache Load
         const cachedState = localStorage.getItem('seoul2026_cache');
         if (cachedState) {
             try {
@@ -461,9 +504,10 @@
             } catch(e) { console.warn("Cache error"); }
         }
 
+        // Helpers
         function formatMoney(n) { return Math.round(n).toLocaleString('en-US'); }
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
-        function escapeStr(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+        function escapeStr(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '"'); }
         function getProductName(item) { return (item['Name'] || item['名稱'] || item['商品名稱'] || '').trim(); }
 
         function ensureProtocol(url) {
@@ -535,23 +579,27 @@
             localStorage.setItem('seoul2026_cache', JSON.stringify(cache));
         }
 
+        // --- Core Functions ---
         function toggleWalletMode() {
             state.walletMode = state.walletMode === 'record' ? 'details' : 'record';
             render();
         }
 
+        // 貨幣切換
         function toggleCurrency() {
             state.expenseCurrency = state.expenseCurrency === 'JPY' ? 'TWD' : 'JPY';
             const btn = document.getElementById('currBtn');
             if(btn) btn.innerText = state.expenseCurrency === 'JPY' ? '¥' : 'NT$';
         }
 
+        // 拆帳模式切換
         function toggleUneven(val) {
             const box = document.getElementById('unevenBox');
             if(val === '不平均分攤') box.classList.remove('hidden');
             else box.classList.add('hidden');
         }
 
+        // 拆帳自動計算 (強制四捨五入避免 JS 浮點數誤差)
         function autoCalcSplit(type) {
             const total = Math.round(parseFloat(document.getElementById('exAmt').value)) || 0;
             const spAndy = document.getElementById('spAndy');
@@ -561,6 +609,7 @@
                 if(!document.getElementById('unevenBox').classList.contains('hidden')) {
                      const half = Math.round(total / 2);
                      spAndy.value = half;
+                     // 透過減法確保兩人金額相加必定等於 total
                      spLynn.value = total - half;
                 }
             } else if (type === 'andy') {
@@ -572,7 +621,9 @@
             }
         }
 
+        // 送出記帳
         function submitExpense() {
+            // 取值時強制使用 Math.round 防止浮點數小數點誤差存入陣列
             const amt = Math.round(parseFloat(document.getElementById('exAmt').value)) || 0;
             if(!amt) return alert('請輸入金額');
             
@@ -598,10 +649,8 @@
                 const idx = state.expenses.findIndex(e => e.id === state.editingId);
                 if(idx !== -1) state.expenses[idx] = item;
                 state.editingId = null;
-                state.walletMode = 'details'; // 返回明細查看
             } else {
                 state.expenses.push(item);
-                state.walletMode = 'details'; // 返回明細查看確認
             }
             
             syncData('expense', state.editingId ? 'update' : 'add', { item: item });
@@ -610,22 +659,29 @@
             alert('已儲存');
         }
 
+        // 刪除記帳
         function deleteExpense(id) {
             state.deleteTargetId = id;
             state.deleteType = 'expense';
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 
+        // 編輯記帳
         function editExpense(id) {
             state.editingId = id;
             state.walletMode = 'record';
             state.activeTab = 'wallet';
+            
+            // 如果原本是在查看個人明細，需先關閉，否則渲染會卡在個人明細頁面
+            if (state.personalDetailUser !== null) {
+                state.personalDetailUser = null;
+            }
+            
             render();
         }
 
         function cancelEdit() {
             state.editingId = null;
-            state.walletMode = 'details';
             render();
         }
 
@@ -636,8 +692,11 @@
         function setDepositSource(src) {
             document.getElementById('depositSource').value = src;
             document.querySelectorAll('.dep-btn').forEach(b => {
-                if(b.dataset.source === src) b.classList.add('active');
-                else b.classList.remove('active');
+                if(b.dataset.source === src) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
             });
         }
 
@@ -683,7 +742,8 @@
         function calcConfirm() {
             try {
                 const res = eval(document.getElementById('calcDisplay').innerText);
-                document.getElementById('exAmt').value = Math.round(res); // 確保四捨五入為整數
+                // 這裡將原本的 Math.floor 改為 Math.round，避免如 2999.9999... 被捨去成 2999
+                document.getElementById('exAmt').value = Math.round(res);
                 closeCalc();
                 autoCalcSplit('total');
             } catch(e) { document.getElementById('calcDisplay').innerText = 'Error'; }
@@ -698,6 +758,7 @@
             render();
         }
 
+        // 編輯行程
         function startEdit(id) {
             state.editingEventId = id;
             if(!state.expandedEvents.includes(id)) state.expandedEvents.push(id);
@@ -750,6 +811,7 @@
              render();
         }
 
+        // 雙層篩選：Location -> Category
         function setupShopTabs() {
             const locContainer = document.getElementById('shopLocationSelect');
             const catContainer = document.getElementById('shopCategorySelect');
@@ -762,18 +824,21 @@
                 const loc = (item['Location'] || item['地點'] || '未分類').trim();
                 if(loc) locations.add(loc);
                 
+                // 只加入符合目前 Location 篩選條件的 Category
                 if (state.shopLocationFilter === 'All' || loc === state.shopLocationFilter) {
                     const cat = (item['Category'] || item['類別'] || '未分類').trim();
                     if(cat) categories.add(cat);
                 }
             });
             
+            // 建立 Location 下拉選單
             let locHtml = `<option value="All" ${state.shopLocationFilter==='All'?'selected':''}>📍 所有地點</option>`;
             locations.forEach(loc => {
                 locHtml += `<option value="${escapeStr(loc)}" ${state.shopLocationFilter===loc?'selected':''}>📍 ${loc}</option>`;
             });
             locContainer.innerHTML = locHtml;
             
+            // 建立 Category 下拉選單
             let catHtml = `<option value="All" ${state.shopCategoryFilter==='All'?'selected':''}>🏷️ 全部分類</option>`;
             categories.forEach(cat => {
                 catHtml += `<option value="${escapeStr(cat)}" ${state.shopCategoryFilter===cat?'selected':''}>🏷️ ${cat}</option>`;
@@ -781,18 +846,208 @@
             catContainer.innerHTML = catHtml;
         }
 
+        // 篩選地點事件：改變地點時，自動重置分類為 All
         function filterShopLocation(val) {
             state.shopLocationFilter = val;
             state.shopCategoryFilter = 'All'; 
-            setupShopTabs(); 
+            setupShopTabs(); // 重新渲染下拉選單
             render();
         }
 
+        // 篩選分類事件
         function filterShopCategory(val) {
             state.shopCategoryFilter = val;
             render();
         }
 
+        // 隱藏/顯示已購買商品切換
+        function toggleHidePurchased() {
+            state.shopHidePurchased = !state.shopHidePurchased;
+            render();
+        }
+
+        // --- Shop Add & Upload Image Functions (新增必買商品與上傳) ---
+        function openShopAddModal() {
+            const locSelect = document.getElementById('newShopLoc');
+            const catSelect = document.getElementById('newShopCat');
+
+            // 取得現有清單中不重複的 Location 和 Category
+            const locations = new Set();
+            const categories = new Set();
+            
+            state.shopProducts.forEach(item => {
+                const loc = (item['Location'] || item['地點'] || '').trim();
+                if (loc && loc !== '未分類') locations.add(loc);
+                const cat = (item['Category'] || item['類別'] || '').trim();
+                if (cat && cat !== '未分類') categories.add(cat);
+            });
+
+            // 組合 Location 下拉選項
+            let locHtml = '<option value="" disabled selected>請選擇地點...</option>';
+            locations.forEach(loc => { locHtml += `<option value="${escapeStr(loc)}">${escapeStr(loc)}</option>`; });
+            locHtml += '<option value="__NEW__">➕ 新增自訂地點...</option>';
+            locSelect.innerHTML = locHtml;
+
+            // 組合 Category 下拉選項
+            let catHtml = '<option value="" disabled selected>請選擇分類...</option>';
+            categories.forEach(cat => { catHtml += `<option value="${escapeStr(cat)}">${escapeStr(cat)}</option>`; });
+            catHtml += '<option value="__NEW__">➕ 新增自訂分類...</option>';
+            catSelect.innerHTML = catHtml;
+
+            // 清空所有欄位
+            document.getElementById('newShopName').value = '';
+            document.getElementById('newShopImg').value = '';
+            document.getElementById('newShopDesc').value = '';
+            document.getElementById('newShopPrice').value = '';
+            document.getElementById('customShopLoc').value = '';
+            document.getElementById('customShopCat').value = '';
+            
+            const statusTxt = document.getElementById('uploadStatus');
+            statusTxt.classList.add('hidden');
+            statusTxt.innerText = '';
+            
+            // 隱藏自訂輸入框
+            document.getElementById('customShopLoc').classList.add('hidden');
+            document.getElementById('customShopCat').classList.add('hidden');
+
+            document.getElementById('shopAddModal').classList.remove('hidden');
+        }
+
+        function closeShopAddModal() {
+            document.getElementById('shopAddModal').classList.add('hidden');
+        }
+
+        function handleShopAddChange(type) {
+            const selectVal = document.getElementById(`newShop${type}`).value;
+            const customInput = document.getElementById(`customShop${type}`);
+            if (selectVal === '__NEW__') {
+                customInput.classList.remove('hidden');
+                customInput.focus();
+            } else {
+                customInput.classList.add('hidden');
+            }
+        }
+
+        // 處理圖片上傳 (加入自動壓縮以符合雲端限制)
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusTxt = document.getElementById('uploadStatus');
+            statusTxt.classList.remove('hidden', 'text-func-red', 'text-sage-dark');
+            statusTxt.classList.add('text-ac-blue');
+            statusTxt.innerText = '圖片處理中... (0%)';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    statusTxt.innerText = '圖片壓縮中... (50%)';
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX_SIZE = 800; // 壓縮圖片最大寬或高
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // 將壓縮後的圖片轉回 base64
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    const base64Data = dataUrl.split(',')[1];
+                    
+                    statusTxt.innerText = '正在上傳至 Google Drive... (請稍候)';
+                    
+                    // 將圖片傳送至 GAS 後端
+                    fetch(SHOP_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
+                        body: JSON.stringify({
+                            action: 'uploadImage',
+                            filename: file.name || 'upload.jpg',
+                            mimeType: 'image/jpeg',
+                            data: base64Data
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.status === 'success') {
+                            document.getElementById('newShopImg').value = data.url;
+                            statusTxt.innerText = '✅ 圖片上傳成功！';
+                            statusTxt.classList.replace('text-ac-blue', 'text-sage-dark');
+                        } else {
+                            statusTxt.innerText = '❌ 上傳失敗: ' + (data.message || '未知錯誤');
+                            statusTxt.classList.replace('text-ac-blue', 'text-func-red');
+                        }
+                    })
+                    .catch(err => {
+                        statusTxt.innerText = '❌ 網路錯誤或 GAS 後端尚未設定。';
+                        statusTxt.classList.replace('text-ac-blue', 'text-func-red');
+                        console.error(err);
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function submitShopItem() {
+            const name = document.getElementById('newShopName').value.trim();
+            if (!name) return alert('商品名稱為必填項目！');
+
+            let loc = document.getElementById('newShopLoc').value;
+            if (loc === '__NEW__') loc = document.getElementById('customShopLoc').value.trim();
+            if (!loc) loc = '未分類';
+
+            let cat = document.getElementById('newShopCat').value;
+            if (cat === '__NEW__') cat = document.getElementById('customShopCat').value.trim();
+            if (!cat) cat = '未分類';
+
+            const img = document.getElementById('newShopImg').value.trim();
+            const desc = document.getElementById('newShopDesc').value.trim();
+            const price = document.getElementById('newShopPrice').value.trim();
+
+            const newItem = {
+                "Name": name,
+                "Location": loc,
+                "Category": cat,
+                "Image": img,
+                "Description": desc,
+                "actual price": price,
+                "Status": ""
+            };
+
+            // 檢查本地是否已經有同名商品，避免重複
+            const existingIndex = state.shopProducts.findIndex(p => getProductName(p) === name);
+            if(existingIndex >= 0) {
+                state.shopProducts[existingIndex] = newItem;
+            } else {
+                state.shopProducts.unshift(newItem); // 插入最前面
+            }
+
+            saveCache();
+            closeShopAddModal();
+            render();
+            
+            // Sync to Excel via App Script
+            syncShopAdd(name, loc, cat, img, desc, price);
+        }
+
+        // Shop Check Circle
         async function toggleShopItem(e, name) {
             if(e) e.stopPropagation();
             const isPurchased = !!state.shopPurchased[name];
@@ -806,24 +1061,34 @@
                 else card.classList.remove('purchased');
             }
             saveCache();
+            
+            // 如果目前是在隱藏已買狀態，勾選完成後立即重新渲染畫面來隱藏它
+            if(state.shopHidePurchased) {
+                setTimeout(() => render(), 300); // 稍微延遲讓動畫跑完
+            }
+
             syncShopUpdate(name, { status: newState ? 'Purchased' : '' });
         }
 
+        // Shop Edit Functions
         function startEditShop(name) {
             state.editingShopId = name;
             render();
         }
 
+        // 取消編輯必買
         function cancelEditShop() {
             state.editingShopId = null;
             render();
         }
 
         function saveShopItem(name) {
-            const jsSafeName = name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            // 使用轉換過的安全 ID 取出文字
+            const jsSafeName = name.replace(/'/g, "\\'").replace(/"/g, '"');
             const desc = document.getElementById(`edit-desc-${jsSafeName}`).value;
             const price = document.getElementById(`edit-price-${jsSafeName}`).value;
             
+            // Update local state
             state.shopProducts.forEach(p => {
                 if (getProductName(p) === name) {
                     p['Description'] = desc;
@@ -834,9 +1099,12 @@
             state.editingShopId = null;
             saveCache();
             render();
+            
+            // Sync to Backend
             syncShopUpdate(name, { description: desc, actualPrice: price });
         }
 
+        // 個人消費分析頁面切換機制
         function openPersonalDetails(user) {
             state.personalDetailUser = user;
             state.personalDetailDateFilter = 'All';
@@ -855,11 +1123,13 @@
             render();
         }
 
+        // Canvas 畫個人消費圓餅圖的極簡穩定版 JS 函式 (支援 Retina 螢幕高解析度)
         function drawPieChart(canvasId, data) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             
+            // 處理 high DPI
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width * dpr;
@@ -879,8 +1149,12 @@
             }
             
             const colors = {
-                '餐飲': '#C99494', '購物': '#D6CAAA', '門票': '#94A4C2',
-                '交通': '#A79EB7', '住宿': '#7A6E8C', '其他': '#9C897B'
+                '餐飲': '#C99494', // func-red
+                '購物': '#D6CAAA', // func-yellow
+                '門票': '#94A4C2', // func-blue
+                '交通': '#A79EB7', // sage-main
+                '住宿': '#7A6E8C', // sage-dark
+                '其他': '#9C897B'  // ac-brown
             };
             
             let startAngle = -Math.PI / 2;
@@ -888,6 +1162,7 @@
             const centerY = rect.height / 2;
             const radius = Math.min(centerX, centerY) * 0.75;
             
+            // 繪製扇形
             for (const [cat, val] of Object.entries(data)) {
                 if (val === 0) continue;
                 const sliceAngle = (val / total) * 2 * Math.PI;
@@ -900,6 +1175,7 @@
                 startAngle += sliceAngle;
             }
             
+            // 繪製右側圖例 (Legend)
             let legendY = 20;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
@@ -908,8 +1184,12 @@
             for (const [cat, val] of Object.entries(data)) {
                 if (val === 0) continue;
                 const percent = Math.round((val / total) * 100);
+                
+                // 圖例色方塊
                 ctx.fillStyle = colors[cat] || '#B0A9BD';
                 ctx.fillRect(rect.width - 120, legendY - 5, 10, 10);
+                
+                // 圖例文字
                 ctx.fillStyle = '#433E4A';
                 ctx.fillText(`${cat} ${percent}%`, rect.width - 105, legendY);
                 legendY += 18;
@@ -918,6 +1198,7 @@
 
         function router(tab) {
             state.activeTab = tab;
+            // 每次切換頁籤，自動重置個人明細視角
             state.personalDetailUser = null;
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 const target = btn.dataset.target;
@@ -948,6 +1229,7 @@
             render();
         }
 
+        // 展開分類
         function toggleCategory(cat) {
             if (state.expandedCategories.includes(cat)) {
                 state.expandedCategories = state.expandedCategories.filter(c => c !== cat);
@@ -957,21 +1239,62 @@
             render();
         }
 
+        // --- Data Sync ---
         function syncShopUpdate(name, updates) {
+            if (!SHOP_API_URL) {
+                console.warn("SHOP_API_URL 尚未設定，無法同步");
+                return;
+            }
+            const dot = document.getElementById('syncDot');
+            const txt = document.getElementById('syncText');
+            if(dot) dot.className = 'w-2 h-2 rounded-full bg-func-yellow animate-pulse';
+            if(txt) txt.innerText = '同步中...';
+
+            const payload = {
+                action: 'updateShopItem',
+                name: name,
+                ...updates
+            };
+
+            fetch(SHOP_API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                if(dot) dot.className = 'w-2 h-2 rounded-full bg-sage-dark';
+                if(txt) txt.innerText = '已儲存';
+                setTimeout(() => { if(txt) txt.innerText = '已同步'; }, 2000);
+            }).catch(e => { console.error("Shop Sync Error", e); });
+        }
+
+        function syncShopAdd(name, loc, cat, img, desc, price) {
             if (!SHOP_API_URL) return;
             const dot = document.getElementById('syncDot');
             const txt = document.getElementById('syncText');
             if(dot) dot.className = 'w-2 h-2 rounded-full bg-func-yellow animate-pulse';
             if(txt) txt.innerText = '同步中...';
 
+            const payload = {
+                action: 'addShopItem',
+                name: name,
+                location: loc,
+                category: cat,
+                image: img,
+                description: desc,
+                actualPrice: price
+            };
+
             fetch(SHOP_API_URL, {
-                method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({ action: 'updateShopItem', name: name, ...updates })
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
             }).then(() => {
                 if(dot) dot.className = 'w-2 h-2 rounded-full bg-sage-dark';
-                if(txt) txt.innerText = '已儲存';
+                if(txt) txt.innerText = '已新增';
                 setTimeout(() => { if(txt) txt.innerText = '已同步'; }, 2000);
-            }).catch(e => { console.error("Shop Sync Error", e); });
+            }).catch(e => { console.error("Shop Add Sync Error", e); });
         }
 
         function syncData(type, action, data) {
@@ -1065,15 +1388,16 @@
                              if (typeof cSplit === 'string' && cSplit.startsWith('{')) {
                                 try { cSplit = JSON.parse(cSplit); } catch(e){}
                              }
+                             let cleanDate = normalizeDate(item.date || '06/24');
+                             let cleanTime = normalizeTime(item.time);
                              
                              return {
                                 ...item,
                                 id: (item.w_id || item.id || generateId()).toString().replace(/^'/, ''),
-                                // Force strictly round parsed amount
-                                amount: Math.round(parseFloat(item.w_amount || item.amount)) || 0,
+                                amount: parseFloat(item.w_amount || item.amount) || 0,
                                 customSplit: cSplit,
-                                date: normalizeDate(item.date || '06/24'),
-                                time: normalizeTime(item.time),
+                                date: cleanDate,
+                                time: cleanTime,
                                 note: item.w_note || item.note || '',
                                 method: item.w_method || item.method || ''
                              };
@@ -1104,7 +1428,9 @@
         function loadChecklistData() {
             if (typeof Papa !== 'undefined') {
                 Papa.parse(CHECKLIST_CSV_URL, {
-                    download: true, header: false, skipEmptyLines: true,
+                    download: true,
+                    header: false, 
+                    skipEmptyLines: true,
                     complete: function(results) {
                         const rows = results.data.slice(1); 
                         state.checklist = rows.map(r => {
@@ -1118,7 +1444,9 @@
                     },
                     error: function() { fallbackChecklistLoad(); }
                 });
-            } else { fallbackChecklistLoad(); }
+            } else {
+                fallbackChecklistLoad();
+            }
         }
         
         function fallbackChecklistLoad() {
@@ -1136,7 +1464,9 @@
         }
 
         function loadShopData() {
-            if (typeof Papa === 'undefined') return;
+            if (typeof Papa === 'undefined') {
+                return;
+            }
             Papa.parse(SHOP_CSV_URL, {
                 download: true, header: true, skipEmptyLines: true,
                 complete: function(results) {
@@ -1145,6 +1475,7 @@
                          return name && name.trim() !== '';
                     });
                     
+                    // 從 CSV 讀取 Status 欄位並更新本地 state.shopPurchased
                     state.shopProducts.forEach(item => {
                         const name = getProductName(item);
                         const status = (item['Status'] || item['狀態'] || '').toString().trim().toLowerCase();
@@ -1159,8 +1490,9 @@
             });
         }
 
+        // --- Render Functions ---
         function renderPlan(c) {
-             const day = state.itinerary[state.activeDay] || state.itinerary[0]; 
+             const day = state.itinerary[state.activeDay] || state.itinerary[0]; // guard
              if (!day) return;
 
              day.events.sort((a, b) => {
@@ -1173,15 +1505,17 @@
             day.events.forEach((evt) => {
                 const isExp = state.expandedEvents.includes(evt.id);
                 const isEditing = state.editingEventId === evt.id;
-                let displayTime = evt.time || '未定';
-                let linksHtml = '';
                 
+                let displayTime = evt.time || '未定';
+
+                let linksHtml = '';
                 if (evt.link) {
                     const lines = evt.link.split('\n').map(l => l.trim()).filter(l => l);
                     if (lines.length > 0) {
                         linksHtml = `<div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem] relative z-20 mt-0.5">連結</span><div class="flex flex-col gap-1.5 flex-1">`;
                         lines.forEach(line => {
-                            let linkUrl = line; let linkText = '點擊開啟';
+                            let linkUrl = line;
+                            let linkText = '點擊開啟';
                             if (line.includes(' ')) {
                                 const idx = line.indexOf(' ');
                                 linkUrl = line.substring(0, idx);
@@ -1201,7 +1535,9 @@
                 <div class="ac-card ${isExp?'expanded':''} relative">
                     <div class="p-4 flex items-center gap-3 cursor-pointer" onclick="window.toggleEvent('${evt.id}')">
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1"><span class="bg-sage-pale text-text-sub text-xs font-bold px-2 py-0.5 rounded-full">${displayTime}</span></div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-sage-pale text-text-sub text-xs font-bold px-2 py-0.5 rounded-full">${displayTime}</span>
+                            </div>
                             <h3 class="font-bold text-text-main text-lg break-words whitespace-pre-wrap leading-tight">${evt.title}</h3>
                             ${evt.transport ? `<div class="text-xs text-text-sub mt-1 break-words">${evt.transport}</div>` : ''}
                         </div>
@@ -1252,7 +1588,17 @@
             const defaultDate = state.itinerary[state.activeDay].date;
             let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="06/24" ${defaultDate==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${defaultDate==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${defaultDate==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${defaultDate==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${defaultDate==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${defaultDate==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${defaultDate==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
             let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-[#D8D4E1] pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-[#EBE9F0]">${state.expenseCurrency==='JPY'?'¥':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D8D4E1]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
-            let h3 = `<div class="grid grid-cols-2 gap-3"><div class="select-wrapper"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><input type="time" id="exTime" class="ac-input text-center font-mono min-w-0 time-input-fix"></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-full bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
+            
+            // 這裡將原本 1:1 的 grid 調整為 7:5 的比例，縮減時間欄位的寬度以防止撐破外框
+            let h3 = `<div class="grid grid-cols-12 gap-3">
+                        <div class="select-wrapper col-span-7">
+                            <select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select>
+                        </div>
+                        <div class="col-span-5 relative">
+                            <input type="time" id="exTime" class="ac-input text-center font-mono time-input-fix">
+                        </div>
+                      </div>
+                      <input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-full bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
             c.innerHTML = h1 + h2 + h3;
             
             if(state.editingId) {
@@ -1283,92 +1629,96 @@
 
         function renderWalletDetails(c) {
             let publicFundTotal = 0;
-            let andyPaid = 0; let andyCost = 0;
-            let lynnPaid = 0; let lynnCost = 0;
+            
+            // 計算個人名下「實質花費」與「已預付/代墊」金額
+            let andyActualCost = 0; let lynnActualCost = 0;
+            let andyPaid = 0;       let lynnPaid = 0;
+
             let depositList = [];
 
-            // 精確的對帳演算法：各自的代墊總額度 vs 各自的消費總額度
             state.expenses.forEach(e => {
-                let amt = Math.round(e.currency === 'TWD' ? e.amount / config.currencyRate : e.amount);
+                const payer = e.payer || '';
+                // 統一在加減前使用 Math.round 防止浮點數運算問題
+                let amt = e.currency === 'TWD' ? Math.round(e.amount / config.currencyRate) : Math.round(e.amount);
 
                 if(e.cat === '公費入金' || e.cat.includes('入金')) {
                     depositList.push(e);
                     publicFundTotal += amt;
-                    // 分派各自存入公費帳戶的金額
-                    if (e.payer.includes('兩人') || e.payer.includes('各出')) {
-                        andyPaid += Math.round(amt / 2);
-                        lynnPaid += (amt - Math.round(amt / 2));
-                    } else if (e.payer.includes('Andy') || e.payer.includes('🦁')) {
+                    
+                    // 記錄誰存了公費
+                    if (payer.includes('Andy') || payer.includes('🦁')) {
                         andyPaid += amt;
-                    } else if (e.payer.includes('Lynn') || e.payer.includes('🐱')) {
+                    } else if (payer.includes('Lynn') || payer.includes('🐱')) {
                         lynnPaid += amt;
+                    } else if (payer === '兩人') {
+                        let half = Math.round(amt / 2);
+                        andyPaid += half;
+                        lynnPaid += (amt - half);
                     }
                 } else {
                     let splitAndy = 0; let splitLynn = 0;
                     if(e.split === '不平均分攤' && e.customSplit) {
-                        splitAndy = Math.round(e.currency === 'TWD' ? e.customSplit.andy / config.currencyRate : e.customSplit.andy);
-                        splitLynn = Math.round(e.currency === 'TWD' ? e.customSplit.lynn / config.currencyRate : e.customSplit.lynn);
+                        splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy);
+                        splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn);
                     } else { 
                         splitAndy = Math.round(amt / 2); 
                         splitLynn = amt - splitAndy; 
                     }
-                    
-                    // 歸納各自的「實際消費」
-                    andyCost += splitAndy; 
-                    lynnCost += splitLynn;
 
-                    // 扣除公費池，或歸納各自的「代墊」
-                    if(e.payer === '公費支付') { 
+                    // 記錄實質花費
+                    andyActualCost += splitAndy; 
+                    lynnActualCost += splitLynn;
+
+                    // 記錄支付來源 (如果不是公費，就是個人代墊)
+                    if(payer === '公費支付') { 
                         publicFundTotal -= amt; 
-                    } else if(e.payer.includes('Andy') || e.payer.includes('🦁')) { 
+                    }
+                    else if(payer.includes('Andy') || payer.includes('🦁')) { 
                         andyPaid += amt; 
-                    } else if(e.payer.includes('Lynn') || e.payer.includes('🐱')) { 
+                    }
+                    else if(payer.includes('Lynn') || payer.includes('🐱')) { 
                         lynnPaid += amt; 
                     }
                 }
             });
 
-            // 計算個人的對帳結餘 (Balance = Paid - Cost)
-            let andyBalance = andyPaid - andyCost;
-            let lynnBalance = lynnPaid - lynnCost;
+            // 結算：已付 - 實質花費。如果 > 0 表示該退回，< 0 表示該補繳
+            let andyBalance = andyPaid - andyActualCost;
+            let lynnBalance = lynnPaid - lynnActualCost;
 
-            // 雙方結算邏輯：如果 Balance 為負數，代表該人透支了（少付），需補繳給另一方
-            let settlementText = "目前無需互相補繳 ✨";
+            let settlementText = "目前雙方無欠款";
             let settlementAmount = 0;
             let settlementTwd = 0;
             let settlementColor = "text-sage-dark";
 
-            if (andyBalance < 0) {
-                settlementAmount = Math.abs(andyBalance);
+            // 誰是負的，誰就該把錢給對方
+            if (andyBalance < 0 && lynnBalance > 0) {
+                settlementAmount = Math.abs(andyBalance); // Andy 補繳給 Lynn
                 settlementTwd = Math.round(settlementAmount * config.currencyRate);
-                settlementText = `🦁 Andy 應補繳給 🐱 Lynn`;
+                settlementText = `🦁 應給 🐱`;
                 settlementColor = "text-func-red";
-            } else if (lynnBalance < 0) {
-                settlementAmount = Math.abs(lynnBalance);
+            } else if (lynnBalance < 0 && andyBalance > 0) {
+                settlementAmount = Math.abs(lynnBalance); // Lynn 補繳給 Andy
                 settlementTwd = Math.round(settlementAmount * config.currencyRate);
-                settlementText = `🐱 Lynn 應補繳給 🦁 Andy`;
+                settlementText = `🐱 應給 🦁`;
                 settlementColor = "text-ac-blue";
             }
             
             let list = [];
             let displayTitle = '';
             if (state.walletDay === 'all') {
-                displayTitle = '全部消費明細 (不含公費入金)';
-                // 過濾掉公費入金
-                list = state.expenses.filter(e => e.cat !== '公費入金' && !e.cat.includes('入金')).slice().reverse();
+                displayTitle = '全部消費明細';
+                list = state.expenses.filter(e => e.cat !== '公費入金').slice().reverse();
                 list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
             } else {
                 const day = state.itinerary[state.walletDay];
                 const targetDate = day ? day.date : '06/24';
                 displayTitle = `${targetDate} 消費明細`;
-                // 過濾掉公費入金
-                list = state.expenses.filter(e => { 
-                    const d = e.date || '06/24'; 
-                    return d === targetDate && e.cat !== '公費入金' && !e.cat.includes('入金'); 
-                }).slice().reverse();
+                list = state.expenses.filter(e => { const d = e.date || '06/24'; return d === targetDate; }).slice().reverse();
             }
 
             let dailyTotal = list.reduce((sum, e) => { 
+                if(e.cat === '公費入金') return sum; 
                 return sum + (e.currency === 'TWD' ? Math.round(e.amount / config.currencyRate) : Math.round(e.amount)); 
             }, 0);
             let dailyTotalTwd = Math.round(dailyTotal * config.currencyRate);
@@ -1387,21 +1737,20 @@
                             ${settlementAmount > 0 ?
                                 `<div class="text-sm font-bold text-text-main">${settlementText}</div>
                                  <div class="text-lg font-black ${settlementColor}">¥${formatMoney(settlementAmount)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(settlementTwd)}</span></div>`
-                                : `<div class="text-sm font-bold text-sage-dark mt-1">${settlementText}</div>`
+                                : `<div class="text-sm font-bold text-sage-dark mt-1">目前雙方無欠款 ✨</div>`
                             }
                         </div>
 
-                        <!-- 可點擊進行個人消費明細及分析 -->
                         <div class="grid grid-cols-2 gap-4 text-center">
                             <div onclick="window.openPersonalDetails('andy')" class="border-r-2 border-[#D8D4E1] cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl">
                                 <div class="text-lg mb-1">🦁</div>
-                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice-dollar text-[9px] text-sage-dark"></i></div>
-                                <div class="text-sm font-black text-text-main mt-1">查看結算明細</div>
+                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div>
+                                <div class="text-sm font-black text-text-main">¥${formatMoney(andyActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(andyActualCost*config.currencyRate))}</span></div>
                             </div>
                             <div onclick="window.openPersonalDetails('lynn')" class="cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl">
                                 <div class="text-lg mb-1">🐱</div>
-                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice-dollar text-[9px] text-sage-dark"></i></div>
-                                <div class="text-sm font-black text-text-main mt-1">查看結算明細</div>
+                                <div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div>
+                                <div class="text-sm font-black text-text-main">¥${formatMoney(lynnActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(lynnActualCost*config.currencyRate))}</span></div>
                             </div>
                         </div>
                     </div>
@@ -1409,10 +1758,45 @@
                          <div class="flex justify-between items-end px-2 mb-2"><h4 class="text-xs font-bold text-text-sub">${displayTitle}</h4><span class="text-xs font-black text-ac-brown bg-sage-light px-2 py-1 rounded-lg">小計: ¥${formatMoney(dailyTotal)} <span class="text-[10px] text-gray-500">≈NT$${formatMoney(dailyTotalTwd)}</span></span></div>
                          ${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}
                          ${list.map(e => {
-                             const payer = e.payer || ''; const method = e.method || '';
+                             const payer = e.payer || ''; 
+                             const method = e.method || '';
                              const twdVal = e.currency === 'JPY' ? Math.round(e.amount * config.currencyRate) : null;
-                             const displayLabel = `${payer} ${method}`.trim();
-                             return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden"><div class="absolute left-0 top-0 bottom-0 w-2 ${payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300'}"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1">${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] text-text-sub font-bold"><span class="bg-sage-pale px-2 py-0.5 rounded-md">${displayLabel}</span>${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}</div></div><div class="text-right"><div class="font-mono font-black text-func-red text-lg">${e.currency} ${formatMoney(Math.round(e.amount))}</div>${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}<div class="flex gap-2 justify-end mt-2 items-center"><button onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button></div></div></div>`}).join('')}
+                             
+                             let displayLabel = '';
+                             let labelColor = 'bg-gray-100 text-[#433E4A]';
+                             
+                             if (payer === '公費支付') {
+                                 displayLabel = '[公費扣除]';
+                                 labelColor = 'bg-sage-pale text-sage-dark';
+                             } else {
+                                 displayLabel = `[${payer}代墊] ${method}`;
+                                 labelColor = payer.includes('Andy') ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-red-50 text-red-600 border border-red-100';
+                             }
+
+                             return `
+                             <div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden">
+                                 <div class="absolute left-0 top-0 bottom-0 w-2 ${payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300'}"></div>
+                                 <div class="pl-3">
+                                     <div class="flex items-center gap-2 mb-0.5">
+                                         <span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span>
+                                         <span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span>
+                                     </div>
+                                     <div class="font-bold text-text-main text-base mb-1 flex items-center gap-1">${e.name || e.cat}</div>
+                                     <div class="flex flex-wrap gap-1 text-[10px] font-bold">
+                                         <span class="${labelColor} px-2 py-0.5 rounded-md">${displayLabel}</span>
+                                         ${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}
+                                     </div>
+                                 </div>
+                                 <div class="text-right">
+                                     <div class="font-mono font-black text-func-red text-lg">${e.currency} ${formatMoney(Math.round(e.amount))}</div>
+                                     ${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}
+                                     <div class="flex gap-2 justify-end mt-2 items-center">
+                                         <button onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button>
+                                         <button onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button>
+                                     </div>
+                                 </div>
+                             </div>`;
+                         }).join('')}
                     </div>
                     
                     <div class="mt-10 mb-8 px-2">
@@ -1425,6 +1809,7 @@
             c.innerHTML = html;
         }
 
+        // 個人消費細項 sub-view 渲染函式
         function renderPersonalDetails(c) {
             const isAndy = state.personalDetailUser === 'andy';
             const userEmoji = isAndy ? '🦁' : '🐱';
@@ -1433,94 +1818,75 @@
             let filteredList = [];
             let catTotals = { '餐飲': 0, '購物': 0, '門票': 0, '交通': 0, '住宿': 0, '其他': 0 };
             
-            // 全新核心對帳指標
-            let totalActualCost = 0; // 我的實際花費 (應付)
-            let totalPaidAmount = 0; // 我已付的金額 (已付 - 包含公費儲值與個人代墊)
+            let myActualCost = 0; // 我的實際花費 (應付)
+            let myPaid = 0;       // 我已付的金額 (已付)
 
             state.expenses.forEach(e => {
-                let amt = Math.round(e.currency === 'TWD' ? e.amount / config.currencyRate : e.amount);
+                const payer = e.payer || '';
+                let amt = e.currency === 'TWD' ? Math.round(e.amount / config.currencyRate) : Math.round(e.amount);
 
                 if (e.cat === '公費入金' || e.cat.includes('入金')) {
-                    const payer = e.payer || '';
-                    if (payer === '兩人' || payer.includes('各出')) {
-                        totalPaidAmount += Math.round(amt / 2);
-                    } else if ((isAndy && (payer.includes('🦁') || payer.includes('Andy'))) || 
-                               (!isAndy && (payer.includes('🐱') || payer.includes('Lynn')))) {
-                        totalPaidAmount += amt;
+                    if (payer.includes(userName) || payer.includes(userEmoji)) {
+                        myPaid += amt;
+                    } else if (payer === '兩人') {
+                        let half = Math.round(amt / 2);
+                        myPaid += (isAndy ? half : amt - half);
                     }
-                    return;
+                    return; 
                 }
                 
-                // 拆算分攤比例 (計算我應該負擔的「實際花費」)
+                // 拆算分攤比例
                 let splitAndy = 0; let splitLynn = 0;
                 if(e.split === '不平均分攤' && e.customSplit) {
-                    splitAndy = Math.round(e.currency === 'TWD' ? e.customSplit.andy / config.currencyRate : e.customSplit.andy);
-                    splitLynn = Math.round(e.currency === 'TWD' ? e.customSplit.lynn / config.currencyRate : e.customSplit.lynn);
+                    splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy);
+                    splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn);
                 } else { 
                     splitAndy = Math.round(amt / 2); 
                     splitLynn = amt - splitAndy; 
                 }
 
-                let myCostPortion = isAndy ? splitAndy : splitLynn;
-                const payer = e.payer || '';
+                let myPortion = isAndy ? splitAndy : splitLynn;
                 
-                // 計算「我代墊/全額支付」的金額
-                let myPaidHere = 0;
-                if ((isAndy && (payer.includes('Andy') || payer.includes('🦁'))) || 
-                    (!isAndy && (payer.includes('Lynn') || payer.includes('🐱')))) {
-                    myPaidHere = amt;
+                // 統計實質花費
+                myActualCost += myPortion;
+                
+                // 統計已付金額 (如果這筆是我代墊的)
+                if (payer.includes(userName) || payer.includes(userEmoji)) {
+                    myPaid += amt;
                 }
 
-                totalActualCost += myCostPortion;
-                totalPaidAmount += myPaidHere;
+                if (myPortion <= 0) return; // 這筆沒有分攤到自己就不顯示在圓餅圖和列表裡
 
-                // 進行下拉選單條件篩選 (只過濾明細顯示與圖表，不影響上方總對帳結算)
-                let skipRender = false;
-                if (state.personalDetailDateFilter !== 'All' && e.date !== state.personalDetailDateFilter) skipRender = true;
-                if (state.personalDetailCatFilter !== 'All' && e.cat !== state.personalDetailCatFilter) skipRender = true;
+                // 進行下拉選單條件篩選
+                if (state.personalDetailDateFilter !== 'All' && e.date !== state.personalDetailDateFilter) return;
+                if (state.personalDetailCatFilter !== 'All' && e.cat !== state.personalDetailCatFilter) return;
 
-                // 如果我有分攤到這筆費用，才列入明細與圖表
-                if (!skipRender && myCostPortion > 0) {
-                    const catGroup = catTotals[e.cat] !== undefined ? e.cat : '其他';
-                    catTotals[catGroup] += myCostPortion;
-                    
-                    // 決定標籤性質
-                    let tagText = '';
-                    let tagColorClass = '';
-                    
-                    if (payer === '公費支付') {
-                        tagText = '公費分攤';
-                        tagColorClass = 'bg-gray-200 text-gray-600 border border-gray-300';
-                    } else if (myPaidHere > 0) {
-                        if (myCostPortion === amt) {
-                            tagText = '個人私費';
-                            tagColorClass = isAndy ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700';
-                        } else {
-                            tagText = '代墊分攤';
-                            tagColorClass = 'bg-yellow-100 text-yellow-700 border border-yellow-300';
-                        }
-                    } else {
-                        tagText = '對方代墊';
-                        tagColorClass = 'bg-red-50 text-red-600 border border-red-200';
-                    }
+                const catGroup = catTotals[e.cat] !== undefined ? e.cat : '其他';
+                catTotals[catGroup] += myPortion;
 
-                    filteredList.push({ ...e, portion: myCostPortion, tagText: tagText, tagColorClass: tagColorClass });
-                }
+                filteredList.push({
+                    ...e,
+                    portion: myPortion,
+                    isUneven: e.split === '不平均分攤',
+                    andyP: splitAndy,
+                    lynnP: splitLynn
+                });
             });
 
-            // 結算結果
-            let balance = totalPaidAmount - totalActualCost;
-            let settlementMessage = '';
-            let settlementColor = '';
+            // 計算目前結算 (已付 - 應付)
+            let balance = myPaid - myActualCost;
+            let balanceText = '';
+            let balanceColor = '';
+            
             if (balance > 0) {
-                settlementMessage = `應退還您 ¥${formatMoney(balance)}`;
-                settlementColor = 'text-sage-dark';
+                balanceText = `公費應退還 ${userEmoji} ¥${formatMoney(balance)}`;
+                balanceColor = 'text-func-blue';
             } else if (balance < 0) {
-                settlementMessage = `您應補繳 ¥${formatMoney(Math.abs(balance))}`;
-                settlementColor = 'text-func-red';
+                balanceText = `${userEmoji} 應補繳 ¥${formatMoney(Math.abs(balance))}`;
+                balanceColor = 'text-func-red';
             } else {
-                settlementMessage = `收支完全平衡 ✨`;
-                settlementColor = 'text-sage-dark';
+                balanceText = '帳目已結清';
+                balanceColor = 'text-sage-dark';
             }
 
             let html = `
@@ -1530,68 +1896,75 @@
                     </button>
                     
                     <div class="ac-card p-5 mb-4 bg-white border-2 border-sage-dark">
-                        <h3 class="text-xl font-black text-text-main mb-4 flex items-center gap-2 justify-center border-b-2 border-dashed border-[#D8D4E1] pb-3">
-                            <span>${userEmoji} ${userName} 的旅遊花費帳冊</span>
+                        <h3 class="text-lg font-black text-sage-dark mb-4 flex items-center justify-center gap-2 pb-3 border-b-2 border-dashed border-[#D8D4E1]">
+                            <i class="fa-solid fa-file-invoice"></i> ${userEmoji} ${userName} 的旅遊花費帳冊
                         </h3>
                         
-                        <div class="space-y-3 mb-5">
-                            <div class="flex justify-between items-center bg-red-50 p-3 rounded-2xl">
-                                <span class="text-sm font-bold text-text-sub flex items-center gap-1.5"><i class="fa-solid fa-receipt opacity-70"></i> 實際花費 (應付)</span>
-                                <span class="text-lg font-black text-func-red">¥${formatMoney(totalActualCost)}</span>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl">
+                                <span class="text-sm font-bold text-text-sub">我的實際花費 (應付)</span>
+                                <span class="font-black text-lg text-text-main">¥${formatMoney(myActualCost)}</span>
                             </div>
-                            <div class="flex justify-between items-center bg-blue-50 p-3 rounded-2xl">
-                                <span class="text-sm font-bold text-text-sub flex items-center gap-1.5"><i class="fa-solid fa-wallet opacity-70"></i> 已付金額 (本金)</span>
-                                <span class="text-lg font-black text-blue-600">¥${formatMoney(totalPaidAmount)}</span>
+                            
+                            <div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl">
+                                <span class="text-sm font-bold text-text-sub">我已付的金額 (已付)</span>
+                                <span class="font-black text-lg text-sage-dark">¥${formatMoney(myPaid)}</span>
                             </div>
-                        </div>
-
-                        <div class="text-center bg-sage-pale rounded-2xl p-4 shadow-inner border border-[#D8D4E1]">
-                            <div class="text-xs text-text-sub font-bold mb-1">⚖️ 目前對帳結算</div>
-                            <div class="text-xl font-black ${settlementColor}">${settlementMessage}</div>
-                            ${balance !== 0 ? `<div class="text-xs text-gray-500 mt-1 font-medium">≈NT$${formatMoney(Math.round(Math.abs(balance)*config.currencyRate))}</div>` : ''}
+                            
+                            <div class="mt-2 pt-3 border-t-2 border-[#D8D4E1] text-center">
+                                <div class="text-xs text-text-sub font-bold mb-1">目前結算</div>
+                                <div class="text-xl font-black ${balanceColor}">${balanceText}</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 mb-4">
-                        <div class="select-wrapper">
-                            <select id="personalDateFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('date', this.value)">
-                                <option value="All" ${state.personalDetailDateFilter==='All'?'selected':''}>📅 所有日期</option>
-                                <option value="06/24" ${state.personalDetailDateFilter==='06/24'?'selected':''}>06/24 (Day 1)</option>
-                                <option value="06/25" ${state.personalDetailDateFilter==='06/25'?'selected':''}>06/25 (Day 2)</option>
-                                <option value="06/26" ${state.personalDetailDateFilter==='06/26'?'selected':''}>06/26 (Day 3)</option>
-                                <option value="06/27" ${state.personalDetailDateFilter==='06/27'?'selected':''}>06/27 (Day 4)</option>
-                                <option value="06/28" ${state.personalDetailDateFilter==='06/28'?'selected':''}>06/28 (Day 5)</option>
-                                <option value="06/29" ${state.personalDetailDateFilter==='06/29'?'selected':''}>06/29 (Day 6)</option>
-                                <option value="06/30" ${state.personalDetailDateFilter==='06/30'?'selected':''}>06/30 (Day 7)</option>
-                            </select>
+                    <div class="ac-card p-5 mb-4 bg-white">
+                        <h4 class="text-base font-black text-text-main mb-3">💰 實際花費分析 (共 ¥${formatMoney(Object.values(catTotals).reduce((a,b)=>a+b,0))})</h4>
+                        
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <div class="select-wrapper">
+                                <select id="personalDateFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('date', this.value)">
+                                    <option value="All" ${state.personalDetailDateFilter==='All'?'selected':''}>📅 所有日期</option>
+                                    <option value="06/24" ${state.personalDetailDateFilter==='06/24'?'selected':''}>06/24 (Day 1)</option>
+                                    <option value="06/25" ${state.personalDetailDateFilter==='06/25'?'selected':''}>06/25 (Day 2)</option>
+                                    <option value="06/26" ${state.personalDetailDateFilter==='06/26'?'selected':''}>06/26 (Day 3)</option>
+                                    <option value="06/27" ${state.personalDetailDateFilter==='06/27'?'selected':''}>06/27 (Day 4)</option>
+                                    <option value="06/28" ${state.personalDetailDateFilter==='06/28'?'selected':''}>06/28 (Day 5)</option>
+                                    <option value="06/29" ${state.personalDetailDateFilter==='06/29'?'selected':''}>06/29 (Day 6)</option>
+                                    <option value="06/30" ${state.personalDetailDateFilter==='06/30'?'selected':''}>06/30 (Day 7)</option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="personalCatFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('cat', this.value)">
+                                    <option value="All" ${state.personalDetailCatFilter==='All'?'selected':''}>🏷️ 所有分類</option>
+                                    ${staticData.categories.map(cat => `<option value="${cat}" ${state.personalDetailCatFilter===cat?'selected':''}>${cat}</option>`).join('')}
+                                </select>
+                            </div>
                         </div>
-                        <div class="select-wrapper">
-                            <select id="personalCatFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('cat', this.value)">
-                                <option value="All" ${state.personalDetailCatFilter==='All'?'selected':''}>🏷️ 所有分類</option>
-                                ${staticData.categories.map(cat => `<option value="${cat}" ${state.personalDetailCatFilter===cat?'selected':''}>${cat}</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="bg-[#FDFCFD] rounded-2xl p-3 border-2 border-dashed border-[#D8D4E1] flex justify-center items-center mb-6 shadow-sm">
-                        <canvas id="personalPieChart" style="width: 100%; height: 160px;"></canvas>
+                        <div class="bg-[#FDFCFD] rounded-2xl p-3 border-2 border-dashed border-[#D8D4E1] flex justify-center items-center mb-4">
+                            <canvas id="personalPieChart" style="width: 100%; height: 160px;"></canvas>
+                        </div>
                     </div>
 
                     <div class="space-y-3">
-                        <h4 class="text-xs font-bold text-text-sub px-2">我的實際花費明細 (${filteredList.length} 筆)</h4>
+                        <h4 class="text-xs font-bold text-text-sub px-2">消費項目 (${filteredList.length} 筆)</h4>
                         ${filteredList.length === 0 ? '<div class="text-center text-text-sub py-8 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 無符合篩選條件的明細</div>' : ''}
                         ${filteredList.map(e => {
                             const payer = e.payer || '';
-                            let splitDisplay = `<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.split}</span>`;
-                            if (e.split === '不平均分攤' && e.customSplit) {
-                                let sA = Math.round(e.currency === 'TWD' ? e.customSplit.andy / config.currencyRate : e.customSplit.andy);
-                                let sL = Math.round(e.currency === 'TWD' ? e.customSplit.lynn / config.currencyRate : e.customSplit.lynn);
-                                splitDisplay = `<span class="bg-[#EBE9F0] text-[#7A6E8C] px-2 py-0.5 rounded-md border border-[#D8D4E1]">🦁 ¥${formatMoney(sA)} | 🐱 ¥${formatMoney(sL)}</span>`;
+                            let labelHtml = '';
+                            if (payer === '公費支付') {
+                                labelHtml = '<span class="bg-sage-pale text-sage-dark px-2 py-0.5 rounded-md">[公費分攤]</span>';
+                            } else {
+                                labelHtml = `<span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-md">[${payer}代墊]</span>`;
                             }
+                            
+                            // 若是不平均分攤，顯示雙方的比例
+                            let unevenLabel = e.isUneven ? `<span class="bg-red-50 text-func-red px-2 py-0.5 rounded-md font-mono text-[9px] border border-red-100">🦁 ¥${e.andyP} | 🐱 ¥${e.lynnP}</span>` : '';
 
                             return `
-                            <div onclick="window.editExpense('${e.id}')" class="ac-card p-3 flex justify-between items-center group relative overflow-hidden cursor-pointer hover:bg-gray-50 transition active:scale-95 border border-[#D8D4E1]">
-                                <div class="absolute left-0 top-0 bottom-0 w-2 ${e.tagText==='公費分攤'?'bg-gray-300':e.tagText==='個人私費'?(isAndy?'bg-blue-400':'bg-red-400'):e.tagText==='對方代墊'?'bg-func-red':'bg-yellow-400'}"></div>
+                            <div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden cursor-pointer hover:bg-gray-50 transition active:scale-95" onclick="window.editExpense('${e.id}')">
+                                <div class="absolute left-0 top-0 bottom-0 w-2 bg-[#D8D4E1]"></div>
                                 <div class="pl-3">
                                     <div class="flex items-center gap-2 mb-0.5">
                                         <span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span>
@@ -1599,15 +1972,14 @@
                                     </div>
                                     <div class="font-bold text-text-main text-base mb-1">${e.name || e.cat}</div>
                                     <div class="flex flex-wrap gap-1 text-[10px] font-bold">
-                                        <span class="px-2 py-0.5 rounded-md ${e.tagColorClass}">${e.tagText}</span>
-                                        <span class="bg-sage-pale text-text-sub px-2 py-0.5 rounded-md border border-[#D8D4E1]">由 ${payer} 支付</span>
-                                        ${splitDisplay}
+                                        ${labelHtml}
+                                        ${unevenLabel}
                                     </div>
                                 </div>
                                 <div class="text-right flex flex-col items-end">
-                                    <span class="text-[10px] text-text-sub font-bold block mb-1">實際花費</span>
-                                    <div class="font-mono font-black text-text-main text-lg">¥${formatMoney(e.portion)}</div>
-                                    <i class="fa-solid fa-pen text-[10px] text-sage-light mt-1 group-hover:text-sage-dark transition"></i>
+                                    <span class="text-[10px] text-text-sub font-bold block mb-1">我的花費</span>
+                                    <div class="font-mono font-black text-text-main text-base">¥${formatMoney(e.portion)}</div>
+                                    <i class="fa-solid fa-pen text-[#D8D4E1] mt-1 text-[10px]"></i>
                                 </div>
                             </div>
                             `;
@@ -1617,21 +1989,46 @@
             `;
             c.innerHTML = html;
             
-            setTimeout(() => { drawPieChart('personalPieChart', catTotals); }, 50);
+            // 非同步延遲繪製圓餅圖，確保 Canvas DOM 正確渲染
+            setTimeout(() => {
+                drawPieChart('personalPieChart', catTotals);
+            }, 50);
         }
 
         function renderShop(c) {
+            // Add a New Item button at the top
+            let html = `
+            <div class="flex justify-between items-center mb-4 fade-in">
+                <button onclick="window.toggleHidePurchased()" class="text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 transition-all ${state.shopHidePurchased ? 'bg-sage-dark text-white border-sage-dark shadow-sm' : 'bg-white text-text-sub border-[#D8D4E1] hover:bg-sage-pale'} active:scale-95">
+                    <i class="fa-solid ${state.shopHidePurchased ? 'fa-eye-slash' : 'fa-eye'}"></i>
+                    ${state.shopHidePurchased ? '已隱藏買完' : '隱藏已買完'}
+                </button>
+                <button onclick="window.openShopAddModal()" class="text-sm bg-sage-dark text-white px-5 py-2 rounded-full font-bold shadow-sm transition active:scale-95"><i class="fa-solid fa-plus mr-1"></i>新增商品</button>
+            </div>`;
+
+            // 套用雙層篩選器邏輯 (Location && Category)
             const list = state.shopProducts.filter(item => {
+                const name = getProductName(item);
                 const loc = (item['Location'] || item['地點'] || '未分類').trim();
                 const cat = (item['Category'] || item['類別'] || '未分類').trim();
+                
                 const locMatch = state.shopLocationFilter === 'All' || loc === state.shopLocationFilter;
                 const catMatch = state.shopCategoryFilter === 'All' || cat === state.shopCategoryFilter;
-                return locMatch && catMatch;
+                
+                // 檢查是否隱藏已買商品
+                const isPurchased = !!state.shopPurchased[name];
+                const hideMatch = state.shopHidePurchased ? !isPurchased : true;
+                
+                return locMatch && catMatch && hideMatch;
             });
             
-            if(list.length === 0) { c.innerHTML = '<div class="text-center text-text-sub mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">尚無商品資料</div>'; return; }
+            if(list.length === 0) { 
+                html += '<div class="text-center text-text-sub mt-6 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">尚無符合條件的商品資料</div>'; 
+                c.innerHTML = html; 
+                return; 
+            }
 
-            let html = `<div class="shop-grid">`;
+            html += `<div class="shop-grid fade-in">`;
             list.forEach(item => {
                 const name = getProductName(item);
                 const desc = item['Description'] || item['描述'] || '';
@@ -1641,26 +2038,54 @@
                 const isPurchased = state.shopPurchased[name];
                 const isEditing = state.editingShopId === name;
                 
-                const safeName = name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                // 將名稱進行 JS 安全編碼，避免單引號報錯
+                const safeName = name.replace(/'/g, "\\'").replace(/"/g, '"');
                 
                 let imgTag = `<div class="w-full h-full bg-sage-pale flex items-center justify-center text-xs text-gray-400">No Image</div>`;
                 if(gid) imgTag = `<img src="https://lh3.googleusercontent.com/d/${gid}=s400" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/200?text=No+Image'">`;
                 else if(imageRaw) imgTag = `<img src="${imageRaw}" class="w-full h-full object-cover" loading="lazy">`;
 
-                html += `<div class="shop-card ${isPurchased && !isEditing ? 'purchased' : ''}">
-                    <div class="shop-card-img-container">${imgTag}<div class="badge-purchased">Purchased</div><div class="check-circle" onclick="window.toggleShopItem(event, '${safeName}')"></div></div>
+                html += `
+                <div class="shop-card ${isPurchased && !isEditing ? 'purchased' : ''}">
+                    <div class="shop-card-img-container">
+                        ${imgTag}
+                        <div class="badge-purchased">Purchased</div>
+                        <div class="check-circle" onclick="window.toggleShopItem(event, '${safeName}')"></div>
+                    </div>
+                    
                     <div class="shop-card-body flex-1 flex flex-col relative">`;
 
                 if (isEditing) {
-                    const currentDesc = escapeStr(desc); const currentPrice = escapeStr(actualPrice);
-                    html += `<div class="mb-2"><label class="text-[10px] text-text-sub font-bold">描述</label><textarea id="edit-desc-${safeName}" class="ac-textarea text-sm py-1 px-2 mt-1" rows="2">${currentDesc}</textarea></div>
-                        <div class="mb-3"><label class="text-[10px] text-text-sub font-bold">實際價格</label><div class="relative mt-1 flex items-center"><span class="absolute left-3 text-text-sub font-bold">¥</span><input id="edit-price-${safeName}" type="number" class="ac-input text-sm py-1.5 pl-8 pr-2" value="${currentPrice}" placeholder="輸入金額"></div></div>
-                        <div class="flex gap-2 mt-auto"><button onclick="window.cancelEditShop()" class="flex-1 py-1.5 text-base font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">❎</button><button onclick="window.saveShopItem('${safeName}')" class="flex-1 py-1.5 text-base font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">✅</button></div>`;
+                    const currentDesc = escapeStr(desc);
+                    const currentPrice = escapeStr(actualPrice);
+                    html += `
+                        <div class="mb-2">
+                            <label class="text-[10px] text-text-sub font-bold">描述</label>
+                            <textarea id="edit-desc-${safeName}" class="ac-textarea text-sm py-1 px-2 mt-1" rows="2">${currentDesc}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-[10px] text-text-sub font-bold">實際價格</label>
+                            <div class="relative mt-1 flex items-center">
+                                <span class="absolute left-3 text-text-sub font-bold">¥</span>
+                                <input id="edit-price-${safeName}" type="number" class="ac-input text-sm py-1.5 pl-8 pr-2" value="${currentPrice}" placeholder="輸入金額">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-auto">
+                            <button onclick="window.cancelEditShop()" class="flex-1 py-1.5 text-base font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">❎</button>
+                            <button onclick="window.saveShopItem('${safeName}')" class="flex-1 py-1.5 text-base font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">✅</button>
+                        </div>
+                    `;
                 } else {
-                    html += `<div class="flex justify-between items-start gap-2 mb-2"><h4 class="text-text-main font-[600] text-sm leading-tight whitespace-normal break-words">${escapeStr(name)}</h4><button onclick="window.startEditShop('${safeName}')" class="text-sage-dark hover:scale-110 flex-shrink-0 bg-sage-pale w-6 h-6 rounded-full flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button></div>
+                    html += `
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h4 class="text-text-main font-[600] text-sm leading-tight whitespace-normal break-words">${escapeStr(name)}</h4>
+                            <button onclick="window.startEditShop('${safeName}')" class="text-sage-dark hover:scale-110 flex-shrink-0 bg-sage-pale w-6 h-6 rounded-full flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                        </div>
                         <p class="text-text-sub text-xs whitespace-normal break-words leading-relaxed mb-2">${escapeStr(desc)}</p>
-                        ${actualPrice ? `<div class="mt-auto text-xs font-bold text-func-red bg-red-50 w-fit px-2 py-0.5 rounded-md border border-red-100 shadow-sm">💰 ¥${escapeStr(actualPrice)}</div>` : ''}`;
+                        ${actualPrice ? `<div class="mt-auto text-xs font-bold text-func-red bg-red-50 w-fit px-2 py-0.5 rounded-md border border-red-100 shadow-sm">💰 ¥${escapeStr(actualPrice)}</div>` : ''}
+                    `;
                 }
+                
                 html += `</div></div>`;
             });
             html += `</div>`;
@@ -1686,17 +2111,37 @@
                 html += `
                 <div class="bg-white rounded-[1.5rem] shadow-sm border-2 border-[#D8D4E1] overflow-hidden transition-all duration-300">
                     <div onclick="window.toggleCategory('${escapeStr(cat)}')" class="flex justify-between items-center p-4 cursor-pointer hover:bg-white transition select-none">
-                        <h3 class="font-black text-lg text-sage-dark flex items-center gap-2"><i class="fa-solid fa-list-check text-base opacity-70"></i> ${cat}<span class="text-xs bg-sage-pale text-sage-dark px-2 py-0.5 rounded-full ml-1">${groups[cat].length}</span></h3>
-                        <div class="w-8 h-8 rounded-full bg-sage-pale flex items-center justify-center text-sage-dark transition-transform duration-300 ${arrowClass}"><i class="fa-solid fa-chevron-down"></i></div>
+                        <h3 class="font-black text-lg text-sage-dark flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-base opacity-70"></i> ${cat}
+                            <span class="text-xs bg-sage-pale text-sage-dark px-2 py-0.5 rounded-full ml-1">${groups[cat].length}</span>
+                        </h3>
+                        <div class="w-8 h-8 rounded-full bg-sage-pale flex items-center justify-center text-sage-dark transition-transform duration-300 ${arrowClass}">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
                     </div>
-                    <div class="${contentClass} px-4 pb-4 pt-0 border-t border-dashed border-[#D8D4E1]"><div class="pt-3 space-y-2">`;
+                    
+                    <div class="${contentClass} px-4 pb-4 pt-0 border-t border-dashed border-[#D8D4E1]">
+                        <div class="pt-3 space-y-2">`;
+                        
                 groups[cat].forEach(itemText => {
                     const checked = state.checkedItems[itemText] ? 'checked' : '';
-                    html += `<label class="cb-container"><input type="checkbox" ${checked} onchange="window.toggleCheck('${escapeStr(itemText)}')"><span class="checkmark"></span><span class="item-text font-bold text-sm text-text-main">${itemText}</span></label>`;
+                    html += `
+                    <label class="cb-container">
+                        <input type="checkbox" ${checked} onchange="window.toggleCheck('${escapeStr(itemText)}')">
+                        <span class="checkmark"></span>
+                        <span class="item-text font-bold text-sm text-text-main">${itemText}</span>
+                    </label>`;
                 });
-                html += `</div></div></div>`;
+                
+                html += `   </div>
+                    </div>
+                </div>`;
             }
-            if(Object.keys(groups).length === 0) html += `<div class="text-center text-gray-400 mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">載入清單中...</div>`;
+            
+            if(Object.keys(groups).length === 0) {
+                html += `<div class="text-center text-gray-400 mt-10 py-10 border-2 border-dashed border-[#D8D4E1] rounded-3xl">載入清單中...</div>`;
+            }
+            
             html += `</div>`;
             c.innerHTML = html;
         }
@@ -1715,6 +2160,7 @@
                 if(shopTabs) shopTabs.classList.add('hidden');
                 app.innerHTML = '';
                 
+                // 優先處理：若是在記帳細項下點擊了個人消費總額，切換到個人消費 sub-view，並隱藏其餘天數選單與 Segment 控制器
                 if(state.activeTab === 'wallet' && state.walletMode === 'details' && state.personalDetailUser !== null) {
                     app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-24";
                     renderPersonalDetails(app);
@@ -1756,6 +2202,7 @@
                 else if(state.activeTab === 'shop') {
                     if(shopTabs) shopTabs.classList.remove('hidden');
                     setupShopTabs();
+                    // 加大頂部間距以容納雙層下拉選單
                     app.className = "safe-top-padding px-4 max-w-md mx-auto relative z-10 pt-[11rem]";
                     renderShop(app);
                 }
@@ -1766,6 +2213,7 @@
             }
         }
 
+        // Attach global functions to window at the end
         window.toggleWalletMode = toggleWalletMode;
         window.toggleCurrency = toggleCurrency;
         window.toggleUneven = toggleUneven;
@@ -1793,24 +2241,39 @@
         window.toggleCheck = toggleCheck;
         window.toggleCategory = toggleCategory;
         
+        // Shop Filters & Actions
         window.filterShopLocation = filterShopLocation;
         window.filterShopCategory = filterShopCategory;
-        
+        window.toggleShopItem = toggleShopItem;
+        window.startEditShop = startEditShop;
+        window.cancelEditShop = cancelEditShop;
+        window.saveShopItem = saveShopItem;
+        window.toggleHidePurchased = toggleHidePurchased;
+
+        // Shop Add Modal & Upload
+        window.openShopAddModal = openShopAddModal;
+        window.closeShopAddModal = closeShopAddModal;
+        window.handleShopAddChange = handleShopAddChange;
+        window.submitShopItem = submitShopItem;
+        window.handleImageUpload = handleImageUpload;
+
+        // Personal Details
         window.openPersonalDetails = openPersonalDetails;
         window.closePersonalDetails = closePersonalDetails;
         window.filterPersonalDetails = filterPersonalDetails;
         
         window.switchDay = switchDay;
-        window.toggleShopItem = toggleShopItem;
-        window.startEditShop = startEditShop;
-        window.cancelEditShop = cancelEditShop;
-        window.saveShopItem = saveShopItem;
         window.router = router;
         window.loadAllData = loadAllData;
         window.render = render;
 
-        try { window.render(); } catch(e) { console.error("Initial setup failed", e); }
-        loadAllData(); 
+        // Init
+        try {
+            // Force immediate render to prevent white screen
+            window.render(); 
+        } catch(e) { console.error("Initial setup failed", e); }
+        
+        loadAllData(); // Then fetch
     </script>
 </body>
 </html>
