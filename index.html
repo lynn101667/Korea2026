@@ -329,9 +329,9 @@
             <h3 class="text-xl font-bold text-text-main mb-4 text-center">💰 公費入金</h3>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="window.setDepositSource('🦁')" class="dep-btn" data-source="🦁">🦁 出資</button>
-                    <button onclick="window.setDepositSource('🐱')" class="dep-btn" data-source="🐱">🐱 出資</button>
-                    <button onclick="window.setDepositSource('兩人')" class="dep-btn col-span-2" data-source="兩人">🤝 各出一半</button>
+                    <button type="button" onclick="window.setDepositSource('🦁')" class="dep-btn" data-source="🦁">🦁 出資</button>
+                    <button type="button" onclick="window.setDepositSource('🐱')" class="dep-btn" data-source="🐱">🐱 出資</button>
+                    <button type="button" onclick="window.setDepositSource('兩人')" class="dep-btn col-span-2" data-source="兩人">🤝 各出一半</button>
                 </div>
                 <input type="hidden" id="depositSource">
                 <div class="relative flex items-center">
@@ -349,12 +349,13 @@
                         <option value="06/30">06/30</option>
                     </select>
                 </div>
-                <button onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-full bg-func-yellow text-[#615C52] shadow-sm hover:opacity-90">確認存入</button>
-                <button onclick="document.getElementById('depositModal').classList.add('hidden')" class="w-full text-text-sub text-sm mt-2 font-bold hover:underline text-center block bg-sage-pale rounded-full py-3 hover:bg-gray-200 transition">取消</button>
+                <button type="button" onclick="window.submitDeposit()" class="ac-btn w-full btn-accent font-bold py-3.5 mt-2 rounded-full bg-func-yellow text-[#615C52] shadow-sm hover:opacity-90">確認存入</button>
+                <button type="button" onclick="document.getElementById('depositModal').classList.add('hidden')" class="w-full text-text-sub text-sm mt-2 font-bold hover:underline text-center block bg-sage-pale rounded-full py-3 hover:bg-gray-200 transition">取消</button>
             </div>
         </div>
     </div>
 
+    <!-- 統一的新增 / 編輯商品表單 Modal -->
     <div id="shopFormModal" class="fixed inset-0 modal-overlay z-[100] hidden flex items-center justify-center p-4 fade-in">
         <div class="ac-card p-6 w-full max-w-sm bg-white rounded-[2.5rem] max-h-[90vh] overflow-y-auto no-scrollbar relative">
             <h3 id="shopModalTitle" class="text-xl font-bold text-text-main mb-4 text-center">🛍️ 新增必買商品</h3>
@@ -377,7 +378,8 @@
                 <div class="relative flex items-center gap-2">
                     <input type="text" id="newShopImg" placeholder="圖片連結網址" class="ac-input text-sm py-2.5 flex-1 min-w-0">
                     <input type="file" id="shopImageUpload" accept="image/*" class="hidden" onchange="window.handleImageUpload(event)">
-                    <button onclick="document.getElementById('shopImageUpload').click()" class="bg-[#94A4C2] text-white rounded-full px-4 py-2.5 text-[11px] font-bold shadow-sm whitespace-nowrap active:scale-95 transition flex-shrink-0">
+                    <!-- 💡 修復照片上傳按鈕：加上 type="button" 避免被誤認，且重新打開時會重置 file 值 -->
+                    <button type="button" onclick="document.getElementById('shopImageUpload').click()" class="bg-[#94A4C2] text-white rounded-full px-4 py-2.5 text-[11px] font-bold shadow-sm whitespace-nowrap active:scale-95 transition flex-shrink-0">
                         <i class="fa-solid fa-cloud-arrow-up mr-1"></i>上傳
                     </button>
                 </div>
@@ -392,9 +394,10 @@
             </div>
             
             <div class="flex gap-2 mt-6">
-                <button id="btnShopDelete" onclick="window.askDeleteShop()" class="hidden py-2.5 px-4 text-sm font-bold rounded-full bg-red-50 text-func-red shadow-sm active:scale-95 transition border border-red-100"><i class="fa-solid fa-trash-can"></i></button>
-                <button onclick="window.closeShopFormModal()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">取消</button>
-                <button onclick="window.submitShopItem()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">儲存</button>
+                <!-- 刪除按鈕 (編輯模式下顯示) -->
+                <button type="button" id="btnShopDelete" onclick="window.askDeleteShop()" class="hidden py-2.5 px-4 text-sm font-bold rounded-full bg-red-50 text-func-red shadow-sm active:scale-95 transition border border-red-100"><i class="fa-solid fa-trash-can"></i></button>
+                <button type="button" onclick="window.closeShopFormModal()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-secondary shadow-sm active:scale-95 transition">取消</button>
+                <button type="button" onclick="window.submitShopItem()" class="flex-1 py-2.5 text-sm font-bold rounded-full btn-primary text-white shadow-sm active:scale-95 transition">儲存</button>
             </div>
         </div>
     </div>
@@ -403,7 +406,7 @@
         <div class="bg-white rounded-t-[2.5rem] p-6 shadow-2xl safe-bottom">
             <div class="flex justify-between items-center mb-6">
                 <span class="text-text-main font-bold text-xl ml-2">🔢 計算機</span>
-                <button onclick="window.closeCalc()" class="w-10 h-10 rounded-full bg-sage-pale text-text-sub hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" onclick="window.closeCalc()" class="w-10 h-10 rounded-full bg-sage-pale text-text-sub hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="bg-[#FDFCFD] border-2 border-[#D8D4E1] p-4 rounded-3xl mb-6 text-right text-4xl font-mono text-text-main h-24 flex items-center justify-end font-bold shadow-inner" id="calcDisplay">0</div>
@@ -437,19 +440,19 @@
     </div>
     
     <nav class="fixed bottom-6 left-6 right-6 bottom-nav bg-nav-bg rounded-[32px] shadow-floating z-50 flex justify-between items-center px-6 border-2 border-nav-border">
-        <button onclick="window.router('plan')" class="nav-btn" data-target="plan">
+        <button type="button" onclick="window.router('plan')" class="nav-btn" data-target="plan">
             <i class="fa-solid fa-calendar-day"></i>
             <span>行程</span>
         </button>
-        <button onclick="window.router('wallet')" class="nav-btn" data-target="wallet">
+        <button type="button" onclick="window.router('wallet')" class="nav-btn" data-target="wallet">
             <i class="fa-solid fa-wallet"></i>
             <span>記帳</span>
         </button>
-        <button onclick="window.router('list')" class="nav-btn" data-target="list">
+        <button type="button" onclick="window.router('list')" class="nav-btn" data-target="list">
             <i class="fa-solid fa-list-check"></i>
             <span>清單</span>
         </button>
-        <button onclick="window.router('shop')" class="nav-btn" data-target="shop">
+        <button type="button" onclick="window.router('shop')" class="nav-btn" data-target="shop">
             <i class="fa-solid fa-bag-shopping"></i>
             <span>必買</span>
         </button>
@@ -486,7 +489,7 @@
             shopLocationFilter: 'All',
             shopCategoryFilter: 'All',
             shopHidePurchased: false,
-            editingShopOriginalName: null, // 用來追蹤編輯模式
+            editingShopOriginalName: null, 
             personalDetailUser: null,
             personalDetailDateFilter: 'All',
             personalDetailCatFilter: 'All',
@@ -776,7 +779,6 @@
                  state.expenses = state.expenses.filter(e => e.id !== state.deleteTargetId);
                  syncData('expense', 'delete', { id: state.deleteTargetId });
              } else if (state.deleteType === 'shop') {
-                 // 刪除商品邏輯
                  state.shopProducts = state.shopProducts.filter(p => getProductName(p) !== state.deleteTargetId);
                  delete state.shopPurchased[state.deleteTargetId];
                  syncShopDelete(state.deleteTargetId);
@@ -862,6 +864,9 @@
             statusTxt.innerText = '';
             document.getElementById('customShopLoc').classList.add('hidden');
             document.getElementById('customShopCat').classList.add('hidden');
+            
+            // 💡 清空 input file 以解決重複選擇同一張照片不觸發 onchange 的問題
+            document.getElementById('shopImageUpload').value = '';
 
             if (mode === 'edit' && itemName) {
                 state.editingShopOriginalName = itemName;
@@ -967,6 +972,9 @@
                     .catch(err => {
                         statusTxt.innerText = '❌ 網路錯誤詳細原因: ' + err.message;
                         statusTxt.classList.replace('text-ac-blue', 'text-func-red');
+                    })
+                    .finally(() => {
+                        event.target.value = ''; // 確保清除狀態
                     });
                 };
                 img.src = e.target.result;
@@ -993,24 +1001,18 @@
             const newItem = { "Name": name, "Location": loc, "Category": cat, "Image": img, "Description": desc, "actual price": price, "Status": "" };
 
             if (state.editingShopOriginalName) {
-                // 編輯模式
                 const oldName = state.editingShopOriginalName;
                 const existingIndex = state.shopProducts.findIndex(p => getProductName(p) === oldName);
-                if (existingIndex >= 0) {
-                    state.shopProducts[existingIndex] = newItem;
-                }
+                if (existingIndex >= 0) state.shopProducts[existingIndex] = newItem;
                 
-                // 如果更換了名字，也要同步轉移已購買狀態
                 if (oldName !== name) {
                     if (state.shopPurchased[oldName] !== undefined) {
                         state.shopPurchased[name] = state.shopPurchased[oldName];
                         delete state.shopPurchased[oldName];
                     }
                 }
-
                 syncShopUpdate(oldName, { name: name, location: loc, category: cat, image: img, description: desc, actualPrice: price });
             } else {
-                // 新增模式
                 state.shopPurchased[name] = false;
                 const existingIndex = state.shopProducts.findIndex(p => getProductName(p) === name);
                 if(existingIndex >= 0) state.shopProducts[existingIndex] = newItem;
@@ -1325,7 +1327,7 @@
              if (!day) return;
              day.events.sort((a, b) => { if (!a.time) return -1; if (!b.time) return 1; return a.time.localeCompare(b.time); });
              
-            let html = `<div class="mb-5 fade-in flex justify-between items-end"><div class="flex items-center gap-2"><h2 class="text-3xl font-black text-text-main font-title">${day.date} ${day.day}</h2></div><button onclick="window.addEvent()" class="text-xs btn-accent px-4 py-2 rounded-full font-bold transition"><i class="fa-solid fa-plus mr-1"></i>新增</button></div><div class="space-y-4 fade-in pb-20">`;
+            let html = `<div class="mb-5 fade-in flex justify-between items-end"><div class="flex items-center gap-2"><h2 class="text-3xl font-black text-text-main font-title">${day.date} ${day.day}</h2></div><button type="button" onclick="window.addEvent()" class="text-xs btn-accent px-4 py-2 rounded-full font-bold transition"><i class="fa-solid fa-plus mr-1"></i>新增</button></div><div class="space-y-4 fade-in pb-20">`;
             day.events.forEach((evt) => {
                 const isExp = state.expandedEvents.includes(evt.id); const isEditing = state.editingEventId === evt.id;
                 let displayTime = evt.time || '未定';
@@ -1347,9 +1349,9 @@
                 html += `<div class="ac-card ${isExp?'expanded':''} relative"><div class="p-4 flex items-center gap-3 cursor-pointer" onclick="window.toggleEvent('${evt.id}')"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="bg-sage-pale text-text-sub text-xs font-bold px-2 py-0.5 rounded-full">${displayTime}</span></div><h3 class="font-bold text-text-main text-lg break-words whitespace-pre-wrap leading-tight">${evt.title}</h3>${evt.transport ? `<div class="text-xs text-text-sub mt-1 break-words">${evt.transport}</div>` : ''}</div><div class="text-[#D8D4E1]"><i class="fa-solid fa-angle-down transition-transform ${isExp?'rotate-180':''}"></i></div></div><div class="plan-detail ${isExp?'expanded':''}"><div class="px-5 pb-5 space-y-4 pt-2">`;
 
                 if (isEditing) {
-                    html += `<div class="grid grid-cols-2 gap-3"><div><label class="text-[10px] font-bold text-text-sub">時間</label><input class="ac-input px-2" type="text" value="${evt.time}" placeholder="例如: 09:00 - 10:30" onchange="window.updateVal('${evt.id}','time',this.value)"></div><div><label class="text-[10px] font-bold text-text-sub">費用</label><input class="ac-input px-2" type="text" value="${evt.cost}" placeholder="費用" onchange="window.updateVal('${evt.id}','cost',this.value)"></div></div><textarea class="ac-textarea font-bold" rows="2" placeholder="請輸入行程標題" onchange="window.updateVal('${evt.id}','title',this.value)">${evt.title}</textarea><textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入交通方式 (可換行)" onchange="window.updateVal('${evt.id}','transport',this.value)">${evt.transport}</textarea><textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入餐飲資訊 (可換行)" onchange="window.updateVal('${evt.id}','food',this.value)">${evt.food || ''}</textarea><textarea class="ac-textarea mt-2 resize-y text-func-blue" rows="2" placeholder="網址 (空一格自訂名稱，多個連結請換行)" onchange="window.updateVal('${evt.id}','link',this.value)">${evt.link || ''}</textarea><textarea class="ac-input mt-2" rows="3" placeholder="請輸入備註..." onchange="window.updateVal('${evt.id}','note',this.value)">${evt.note}</textarea><div class="flex justify-between pt-2"><button onclick="window.askDelete('${evt.id}')" class="px-4 py-2 text-xs bg-sage-pale text-func-red rounded-full font-bold">刪除</button><button onclick="window.saveAndClose('${evt.id}')" class="px-8 py-2 text-sm btn-primary rounded-full font-bold active:scale-95">儲存</button></div>`;
+                    html += `<div class="grid grid-cols-2 gap-3"><div><label class="text-[10px] font-bold text-text-sub">時間</label><input class="ac-input px-2" type="text" value="${evt.time}" placeholder="例如: 09:00 - 10:30" onchange="window.updateVal('${evt.id}','time',this.value)"></div><div><label class="text-[10px] font-bold text-text-sub">費用</label><input class="ac-input px-2" type="text" value="${evt.cost}" placeholder="費用" onchange="window.updateVal('${evt.id}','cost',this.value)"></div></div><textarea class="ac-textarea font-bold" rows="2" placeholder="請輸入行程標題" onchange="window.updateVal('${evt.id}','title',this.value)">${evt.title}</textarea><textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入交通方式 (可換行)" onchange="window.updateVal('${evt.id}','transport',this.value)">${evt.transport}</textarea><textarea class="ac-textarea mt-2 resize-y" rows="2" placeholder="請輸入餐飲資訊 (可換行)" onchange="window.updateVal('${evt.id}','food',this.value)">${evt.food || ''}</textarea><textarea class="ac-textarea mt-2 resize-y text-func-blue" rows="2" placeholder="網址 (空一格自訂名稱，多個連結請換行)" onchange="window.updateVal('${evt.id}','link',this.value)">${evt.link || ''}</textarea><textarea class="ac-input mt-2" rows="3" placeholder="請輸入備註..." onchange="window.updateVal('${evt.id}','note',this.value)">${evt.note}</textarea><div class="flex justify-between pt-2"><button type="button" onclick="window.askDelete('${evt.id}')" class="px-4 py-2 text-xs bg-sage-pale text-func-red rounded-full font-bold">刪除</button><button type="button" onclick="window.saveAndClose('${evt.id}')" class="px-8 py-2 text-sm btn-primary rounded-full font-bold active:scale-95">儲存</button></div>`;
                 } else {
-                    html += `<div class="space-y-2 text-text-main"><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">費用</span><span>${evt.cost || '--'}</span></div><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">交通</span><span class="break-words whitespace-pre-wrap flex-1">${evt.transport || '--'}</span></div><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">餐飲</span><span class="break-words whitespace-pre-wrap flex-1">${evt.food || '--'}</span></div>${linksHtml}<div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">備註</span><span class="whitespace-pre-wrap break-words flex-1 bg-sage-pale p-2 rounded-xl text-text-sub">${evt.note || '無'}</span></div></div><div class="flex justify-end pt-2"><button onclick="window.startEdit('${evt.id}')" class="w-10 h-10 rounded-full bg-sage-light text-sage-dark shadow-sm flex items-center justify-center hover:scale-110 transition border border-sage-dark"><i class="fa-solid fa-pen"></i></button></div>`;
+                    html += `<div class="space-y-2 text-text-main"><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">費用</span><span>${evt.cost || '--'}</span></div><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">交通</span><span class="break-words whitespace-pre-wrap flex-1">${evt.transport || '--'}</span></div><div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">餐飲</span><span class="break-words whitespace-pre-wrap flex-1">${evt.food || '--'}</span></div>${linksHtml}<div class="flex gap-2 text-sm"><span class="text-sage-dark font-bold min-w-[3rem]">備註</span><span class="whitespace-pre-wrap break-words flex-1 bg-sage-pale p-2 rounded-xl text-text-sub">${evt.note || '無'}</span></div></div><div class="flex justify-end pt-2"><button type="button" onclick="window.startEdit('${evt.id}')" class="w-10 h-10 rounded-full bg-sage-light text-sage-dark shadow-sm flex items-center justify-center hover:scale-110 transition border border-sage-dark"><i class="fa-solid fa-pen"></i></button></div>`;
                 }
                 html += `</div></div></div>`;
             });
@@ -1358,9 +1360,20 @@
 
         function renderWalletRecord(c) {
             const defaultDate = state.itinerary[state.activeDay].date;
-            let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="06/24" ${defaultDate==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${defaultDate==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${defaultDate==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${defaultDate==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${defaultDate==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${defaultDate==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${defaultDate==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
-            let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-[#D8D4E1] pb-1 focus-within:border-sage-dark transition"><button onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-[#EBE9F0]">${state.expenseCurrency==='JPY'?'¥':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)"><option value="平均分攤" selected>平均分攤</option><option value="不平均分攤">不平均分攤</option></select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D8D4E1]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
-            let h3 = `<div class="grid grid-cols-12 gap-3"><div class="select-wrapper col-span-7"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><div class="col-span-5 relative"><input type="time" id="exTime" class="ac-input text-center font-mono time-input-fix"></div></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-full bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
+            
+            let splitValue = '平均分攤';
+            if(state.editingId) {
+                const item = state.expenses.find(e => e.id === state.editingId);
+                if (item && item.split) splitValue = item.split;
+            }
+
+            let h1 = `<div class="ac-card p-6 relative bg-white fade-in"><h3 class="text-base font-black text-sage-dark mb-4 flex justify-between items-center"><span>${state.editingId ? '✏️ 編輯記帳' : '📝 新增消費'}</span>${state.editingId ? `<button type="button" onclick="window.cancelEdit()" class="text-text-sub hover:text-func-red"><i class="fa-solid fa-xmark"></i></button>` : ''}</h3><div class="space-y-4"><div class="grid grid-cols-2 gap-3"><div class="select-wrapper col-span-2"><label class="text-xs font-bold text-text-sub ml-2">消費日期</label><select id="exDate" class="ac-select"><option value="06/24" ${defaultDate==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${defaultDate==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${defaultDate==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${defaultDate==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${defaultDate==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${defaultDate==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${defaultDate==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="exPayer" class="ac-select"><option value="公費支付" selected>公費支付</option>${staticData.payers.filter(p=>p!=='公費支付').map(p=>`<option>${p}</option>`).join('')}</select></div><div class="select-wrapper"><select id="exMethod" class="ac-select"><option value="現金" selected>現金</option>${staticData.paymentMethods.filter(m=>m!=='現金').map(m=>`<option>${m}</option>`).join('')}</select></div></div>`;
+            let h2 = `<div class="relative"><div class="flex items-center gap-2 border-b-2 border-[#D8D4E1] pb-1 focus-within:border-sage-dark transition"><button type="button" onclick="window.toggleCurrency()" id="currBtn" class="flex-shrink-0 w-12 text-sm font-bold text-text-sub px-2 py-1 hover:text-sage-dark transition border-r-2 border-[#EBE9F0]">${state.expenseCurrency==='JPY'?'¥':'NT$'}</button><input type="number" id="exAmt" placeholder="0" class="flex-1 min-w-0 text-xl font-bold text-right outline-none bg-transparent" oninput="window.autoCalcSplit('total')"><button type="button" onclick="window.openCalc()" class="flex-shrink-0 w-10 text-text-sub hover:text-sage-dark p-2"><i class="fa-solid fa-calculator text-lg"></i></button></div></div><div class="select-wrapper"><select id="exSplit" class="ac-select" onchange="window.toggleUneven(this.value)">
+                <option value="平均分攤" ${splitValue==='平均分攤'?'selected':''}>平均分攤</option>
+                <option value="不平均分攤" ${splitValue==='不平均分攤'?'selected':''}>不平均分攤</option>
+                <option value="全額自付" ${splitValue==='全額自付'?'selected':''}>全額自付</option>
+            </select></div><div id="unevenBox" class="hidden grid grid-cols-2 gap-3 bg-sage-pale p-3 rounded-3xl border-2 border-dashed border-[#D8D4E1]"><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🦁 Andy</label><input type="number" id="spAndy" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-ac-blue" oninput="window.autoCalcSplit('andy')"></div><div><label class="text-xs font-bold text-text-sub mb-1 pl-1">🐱 Lynn</label><input type="number" id="spLynn" class="w-full bg-white rounded-full p-2 text-sm text-center border-2 border-[#D8D4E1] font-bold outline-none focus:border-func-red" oninput="window.autoCalcSplit('lynn')"></div></div>`;
+            let h3 = `<div class="grid grid-cols-12 gap-3"><div class="select-wrapper col-span-7"><select id="exCat" class="ac-select"><option value="餐飲" selected>餐飲</option>${staticData.categories.filter(c=>c!=='餐飲').map(c=>`<option>${c}</option>`).join('')}</select></div><div class="col-span-5 relative"><input type="time" id="exTime" class="ac-input text-center font-mono time-input-fix"></div></div><input type="text" id="exName" placeholder="品項名稱 (選填)" class="ac-input input-gray-border text-base"><textarea id="exNote" class="ac-input input-gray-border" rows="2" placeholder="備註..."></textarea><button type="button" onclick="window.submitExpense()" id="btnSubmit" class="ac-btn w-full btn-primary py-3.5 text-lg rounded-full bg-sage-dark text-white shadow-md hover:opacity-90 active:scale-95 transition border-2 border-sage-dark">${state.editingId ? '更新紀錄' : '確認送出'}</button></div></div><div class="text-center mt-6"><button type="button" onclick="window.openDepositModal()" class="text-sm font-bold text-ac-brown underline hover:text-sage-dark">💰 公費入金</button></div>`;
             c.innerHTML = h1 + h2 + h3;
             
             if(state.editingId) {
@@ -1370,7 +1383,7 @@
                     document.getElementById('exAmt').value = item.amount;
                     document.getElementById('exName').value = item.name || ''; document.getElementById('exCat').value = item.cat;
                     document.getElementById('exPayer').value = item.payer; document.getElementById('exMethod').value = item.method;
-                    document.getElementById('exTime').value = item.time; document.getElementById('exSplit').value = item.split;
+                    document.getElementById('exTime').value = item.time; 
                     if(item.split === '不平均分攤') { document.getElementById('unevenBox').classList.remove('hidden'); if(item.customSplit) { document.getElementById('spAndy').value = item.customSplit.andy; document.getElementById('spLynn').value = item.customSplit.lynn; } }
                     if(item.note) document.getElementById('exNote').value = item.note;
                     state.expenseCurrency = item.currency || 'JPY'; document.getElementById('currBtn').innerText = state.expenseCurrency === 'JPY' ? '¥' : 'NT$';
@@ -1391,8 +1404,16 @@
                     else if (payer === '兩人') { let half = Math.round(amt / 2); andyPaid += half; lynnPaid += (amt - half); }
                 } else {
                     let splitAndy = 0; let splitLynn = 0;
-                    if(e.split === '不平均分攤' && e.customSplit) { splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy); splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn); } 
-                    else { splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; }
+                    if(e.split === '不平均分攤' && e.customSplit) { 
+                        splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy); 
+                        splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn); 
+                    } else if (e.split === '全額自付') {
+                        if (payer.includes('Andy') || payer.includes('🦁')) { splitAndy = amt; splitLynn = 0; }
+                        else if (payer.includes('Lynn') || payer.includes('🐱')) { splitAndy = 0; splitLynn = amt; }
+                        else { splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; }
+                    } else { 
+                        splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; 
+                    }
 
                     andyActualCost += splitAndy; lynnActualCost += splitLynn;
 
@@ -1418,7 +1439,15 @@
             depositList.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
 
             let html = `
-                <div class="fade-in pb-24"><div class="ac-card p-5 mb-4 bg-white"><div class="flex justify-between items-center mb-3 pb-3 border-b-2 border-[#D8D4E1]"><div><div class="text-xs text-text-sub font-bold">💰 公費餘額</div><div class="text-xl font-black text-sage-dark">¥${formatMoney(publicFundTotal)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(Math.round(publicFundTotal*config.currencyRate))}</span></div></div></div><div class="mb-4 pb-3 border-b-2 border-[#D8D4E1] text-center bg-sage-pale rounded-2xl p-3 shadow-inner"><div class="text-xs text-text-sub font-bold mb-1">🤝 結算 (代墊應還)</div>${settlementAmount > 0 ? `<div class="text-sm font-bold text-text-main">${settlementText}</div><div class="text-lg font-black ${settlementColor}">¥${formatMoney(settlementAmount)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(settlementTwd)}</span></div>` : `<div class="text-sm font-bold text-sage-dark mt-1">目前雙方無欠款 ✨</div>`}</div><div class="grid grid-cols-2 gap-4 text-center"><div onclick="window.openPersonalDetails('andy')" class="border-r-2 border-[#D8D4E1] cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl"><div class="text-lg mb-1">🦁</div><div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div><div class="text-sm font-black text-text-main">¥${formatMoney(andyActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(andyActualCost*config.currencyRate))}</span></div></div><div onclick="window.openPersonalDetails('lynn')" class="cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl"><div class="text-lg mb-1">🐱</div><div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div><div class="text-sm font-black text-text-main">¥${formatMoney(lynnActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(lynnActualCost*config.currencyRate))}</span></div></div></div></div><div class="space-y-3"><div class="flex justify-between items-end px-2 mb-2"><h4 class="text-xs font-bold text-text-sub">${displayTitle}</h4><span class="text-xs font-black text-ac-brown bg-sage-light px-2 py-1 rounded-lg">小計: ¥${formatMoney(dailyTotal)} <span class="text-[10px] text-gray-500">≈NT$${formatMoney(dailyTotalTwd)}</span></span></div>${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}${list.map(e => { const payer = e.payer || ''; const method = e.method || ''; const twdVal = e.currency === 'JPY' ? Math.round(e.amount * config.currencyRate) : null; let displayLabel = ''; let labelColor = 'bg-gray-100 text-[#433E4A]'; if (payer === '公費支付') { displayLabel = '[公費扣除]'; labelColor = 'bg-sage-pale text-sage-dark'; } else { displayLabel = `[${payer}代墊] ${method}`; labelColor = payer.includes('Andy') ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-red-50 text-red-600 border border-red-100'; } return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden"><div class="absolute left-0 top-0 bottom-0 w-2 ${payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300'}"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1 flex items-center gap-1">${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] font-bold"><span class="${labelColor} px-2 py-0.5 rounded-md">${displayLabel}</span>${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}</div></div><div class="text-right"><div class="font-mono font-black text-func-red text-lg">${e.currency} ${formatMoney(Math.round(e.amount))}</div>${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}<div class="flex gap-2 justify-end mt-2 items-center"><button onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button></div></div></div>`; }).join('')}</div><div class="mt-10 mb-8 px-2"><h4 class="text-sm font-black text-sage-dark mb-4 flex items-center gap-2 border-b-2 border-dashed border-[#D8D4E1] pb-2 w-fit pr-4"><i class="fa-solid fa-piggy-bank"></i> 公費儲值紀錄</h4><div class="space-y-3">${depositList.length > 0 ? depositList.map(e => `<div class="bg-func-yellow/10 border-2 border-func-yellow/20 rounded-2xl p-3 flex justify-between items-center relative overflow-hidden"><div class="absolute right-0 top-0 text-6xl text-func-yellow/10 -mr-2 -mt-2"><i class="fa-solid fa-coins"></i></div><div class="relative z-10"><div><span class="text-[10px] font-mono text-func-yellow bg-white/80 px-2 py-0.5 rounded-md">${e.date}</span></div><div class="font-bold text-text-main text-sm mt-1">公費入金</div><div class="text-[10px] text-text-sub mt-0.5 opacity-70">${e.payer}</div></div><div class="text-right relative z-10"><div class="font-black text-func-yellow text-lg">¥${formatMoney(Math.round(e.amount))}</div><button onclick="window.deleteExpense('${e.id}')" class="text-func-red text-xs mt-1 hover:underline opacity-60 hover:opacity-100">刪除</button></div></div>`).join('') : '<div class="text-center text-gray-400 text-xs py-4 border-2 border-dashed border-[#D8D4E1] rounded-2xl">無儲值紀錄</div>'}</div></div></div>`;
+                <div class="fade-in pb-24"><div class="ac-card p-5 mb-4 bg-white"><div class="flex justify-between items-center mb-3 pb-3 border-b-2 border-[#D8D4E1]"><div><div class="text-xs text-text-sub font-bold">💰 公費餘額</div><div class="text-xl font-black text-sage-dark">¥${formatMoney(publicFundTotal)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(Math.round(publicFundTotal*config.currencyRate))}</span></div></div></div><div class="mb-4 pb-3 border-b-2 border-[#D8D4E1] text-center bg-sage-pale rounded-2xl p-3 shadow-inner"><div class="text-xs text-text-sub font-bold mb-1">🤝 結算</div>${settlementAmount > 0 ? `<div class="text-sm font-bold text-text-main">${settlementText}</div><div class="text-lg font-black ${settlementColor}">¥${formatMoney(settlementAmount)} <span class="text-xs text-gray-400 font-medium">≈NT$${formatMoney(settlementTwd)}</span></div>` : `<div class="text-sm font-bold text-sage-dark mt-1">目前雙方無欠款 ✨</div>`}</div><div class="grid grid-cols-2 gap-4 text-center"><div onclick="window.openPersonalDetails('andy')" class="border-r-2 border-[#D8D4E1] cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl"><div class="text-lg mb-1">🦁</div><div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div><div class="text-sm font-black text-text-main">¥${formatMoney(andyActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(andyActualCost*config.currencyRate))}</span></div></div><div onclick="window.openPersonalDetails('lynn')" class="cursor-pointer hover:bg-sage-pale/50 active:scale-95 transition-all p-2 rounded-2xl"><div class="text-lg mb-1">🐱</div><div class="text-[10px] text-text-sub font-bold flex items-center justify-center gap-1">個人旅遊對帳單 <i class="fa-solid fa-file-invoice text-[9px] text-sage-dark"></i></div><div class="text-sm font-black text-text-main">¥${formatMoney(lynnActualCost)} <span class="text-[10px] text-gray-400 block sm:inline">≈NT$${formatMoney(Math.round(lynnActualCost*config.currencyRate))}</span></div></div></div></div><div class="space-y-3"><div class="flex justify-between items-end px-2 mb-2"><h4 class="text-xs font-bold text-text-sub">${displayTitle}</h4><span class="text-xs font-black text-ac-brown bg-sage-light px-2 py-1 rounded-lg">小計: ¥${formatMoney(dailyTotal)} <span class="text-[10px] text-gray-500">≈NT$${formatMoney(dailyTotalTwd)}</span></span></div>${list.length === 0 ? '<div class="text-center text-text-sub py-6 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 尚無消費紀錄</div>' : ''}${list.map(e => { 
+                             const payer = e.payer || ''; const method = e.method || ''; const twdVal = e.currency === 'JPY' ? Math.round(e.amount * config.currencyRate) : null; 
+                             let displayLabel = ''; let labelColor = 'bg-gray-100 text-[#433E4A]'; 
+                             
+                             if (payer === '公費支付') { displayLabel = '[公費支付]'; labelColor = 'bg-sage-pale text-sage-dark'; } 
+                             else { displayLabel = `[${payer}支付] ${method}`; labelColor = payer.includes('Andy') ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-red-50 text-red-600 border border-red-100'; } 
+                             
+                             return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden"><div class="absolute left-0 top-0 bottom-0 w-2 ${payer.includes('Andy')?'bg-ac-blue':payer.includes('Lynn')?'bg-func-red':'bg-gray-300'}"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1 flex items-center gap-1">${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] font-bold"><span class="${labelColor} px-2 py-0.5 rounded-md">${displayLabel}</span>${e.note?`<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-md">${e.note}</span>`:''}</div></div><div class="text-right"><div class="font-mono font-black text-func-red text-lg">${e.currency} ${formatMoney(Math.round(e.amount))}</div>${twdVal ? `<div class="text-[10px] text-gray-400 font-bold">≈NT$${formatMoney(twdVal)}</div>` : ''}<div class="flex gap-2 justify-end mt-2 items-center"><button type="button" onclick="window.editExpense('${e.id}')" class="text-sage-dark hover:scale-110 mr-1"><i class="fa-solid fa-pen"></i></button><button type="button" onclick="window.deleteExpense('${e.id}')" class="text-func-red hover:scale-110 mr-2"><i class="fa-solid fa-trash-can"></i></button></div></div></div>`; 
+                         }).join('')}</div><div class="mt-10 mb-8 px-2"><h4 class="text-sm font-black text-sage-dark mb-4 flex items-center gap-2 border-b-2 border-dashed border-[#D8D4E1] pb-2 w-fit pr-4"><i class="fa-solid fa-piggy-bank"></i> 公費儲值紀錄</h4><div class="space-y-3">${depositList.length > 0 ? depositList.map(e => `<div class="bg-func-yellow/10 border-2 border-func-yellow/20 rounded-2xl p-3 flex justify-between items-center relative overflow-hidden"><div class="absolute right-0 top-0 text-6xl text-func-yellow/10 -mr-2 -mt-2"><i class="fa-solid fa-coins"></i></div><div class="relative z-10"><div><span class="text-[10px] font-mono text-func-yellow bg-white/80 px-2 py-0.5 rounded-md">${e.date}</span></div><div class="font-bold text-text-main text-sm mt-1">公費入金</div><div class="text-[10px] text-text-sub mt-0.5 opacity-70">${e.payer}</div></div><div class="text-right relative z-10"><div class="font-black text-func-yellow text-lg">¥${formatMoney(Math.round(e.amount))}</div><button type="button" onclick="window.deleteExpense('${e.id}')" class="text-func-red text-xs mt-1 hover:underline opacity-60 hover:opacity-100">刪除</button></div></div>`).join('') : '<div class="text-center text-gray-400 text-xs py-4 border-2 border-dashed border-[#D8D4E1] rounded-2xl">無儲值紀錄</div>'}</div></div></div>`;
             c.innerHTML = html;
         }
 
@@ -1437,8 +1466,16 @@
                 }
                 
                 let splitAndy = 0; let splitLynn = 0;
-                if(e.split === '不平均分攤' && e.customSplit) { splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy); splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn); } 
-                else { splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; }
+                if(e.split === '不平均分攤' && e.customSplit) { 
+                    splitAndy = e.currency==='TWD' ? Math.round(e.customSplit.andy/config.currencyRate) : Math.round(e.customSplit.andy); 
+                    splitLynn = e.currency==='TWD' ? Math.round(e.customSplit.lynn/config.currencyRate) : Math.round(e.customSplit.lynn); 
+                } else if (e.split === '全額自付') {
+                    if (payer.includes('Andy') || payer.includes('🦁')) { splitAndy = amt; splitLynn = 0; }
+                    else if (payer.includes('Lynn') || payer.includes('🐱')) { splitAndy = 0; splitLynn = amt; }
+                    else { splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; }
+                } else { 
+                    splitAndy = Math.round(amt / 2); splitLynn = amt - splitAndy; 
+                }
 
                 let myPortion = isAndy ? splitAndy : splitLynn;
                 myActualCost += myPortion;
@@ -1459,13 +1496,24 @@
             else { balanceText = '帳目已結清'; balanceColor = 'text-sage-dark'; }
 
             let html = `
-                <div class="fade-in pb-24"><button onclick="window.closePersonalDetails()" class="mb-4 flex items-center gap-2 text-sm font-bold text-sage-dark bg-white px-4 py-2 rounded-full border border-[#D8D4E1] shadow-sm hover:bg-sage-pale transition active:scale-95"><i class="fa-solid fa-arrow-left"></i> 返回公費明細</button><div class="ac-card p-5 mb-4 bg-white border-2 border-sage-dark"><h3 class="text-lg font-black text-sage-dark mb-4 flex items-center justify-center gap-2 pb-3 border-b-2 border-dashed border-[#D8D4E1]"><i class="fa-solid fa-file-invoice"></i> ${userEmoji} ${userName} 的旅遊花費帳冊</h3><div class="space-y-4"><div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl"><span class="text-sm font-bold text-text-sub">我的實際花費 (應付)</span><span class="font-black text-lg text-text-main">¥${formatMoney(myActualCost)}</span></div><div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl"><span class="text-sm font-bold text-text-sub">我已付的金額 (已付)</span><span class="font-black text-lg text-sage-dark">¥${formatMoney(myPaid)}</span></div><div class="mt-2 pt-3 border-t-2 border-[#D8D4E1] text-center"><div class="text-xs text-text-sub font-bold mb-1">目前結算</div><div class="text-xl font-black ${balanceColor}">${balanceText}</div></div></div></div><div class="ac-card p-5 mb-4 bg-white"><h4 class="text-base font-black text-text-main mb-3">💰 實際花費分析 (共 ¥${formatMoney(Object.values(catTotals).reduce((a,b)=>a+b,0))})</h4><div class="grid grid-cols-2 gap-2 mb-4"><div class="select-wrapper"><select id="personalDateFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('date', this.value)"><option value="All" ${state.personalDetailDateFilter==='All'?'selected':''}>📅 所有日期</option><option value="06/24" ${state.personalDetailDateFilter==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${state.personalDetailDateFilter==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${state.personalDetailDateFilter==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${state.personalDetailDateFilter==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${state.personalDetailDateFilter==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${state.personalDetailDateFilter==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${state.personalDetailDateFilter==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="personalCatFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('cat', this.value)"><option value="All" ${state.personalDetailCatFilter==='All'?'selected':''}>🏷️ 所有分類</option>${staticData.categories.map(cat => `<option value="${cat}" ${state.personalDetailCatFilter===cat?'selected':''}>${cat}</option>`).join('')}</select></div></div><div class="bg-[#FDFCFD] rounded-2xl p-3 border-2 border-dashed border-[#D8D4E1] flex justify-center items-center mb-4"><canvas id="personalPieChart" style="width: 100%; height: 160px;"></canvas></div></div><div class="space-y-3"><h4 class="text-xs font-bold text-text-sub px-2">消費項目 (${filteredList.length} 筆)</h4>${filteredList.length === 0 ? '<div class="text-center text-text-sub py-8 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 無符合篩選條件的明細</div>' : ''}${filteredList.map(e => { const payer = e.payer || ''; let labelHtml = ''; if (payer === '公費支付') { labelHtml = '<span class="bg-sage-pale text-sage-dark px-2 py-0.5 rounded-md">[公費分攤]</span>'; } else { labelHtml = `<span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-md">[${payer}代墊]</span>`; } let unevenLabel = e.isUneven ? `<span class="bg-red-50 text-func-red px-2 py-0.5 rounded-md font-mono text-[9px] border border-red-100">🦁 ¥${e.andyP} | 🐱 ¥${e.lynnP}</span>` : ''; return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden cursor-pointer hover:bg-gray-50 transition active:scale-95" onclick="window.editExpense('${e.id}')"><div class="absolute left-0 top-0 bottom-0 w-2 bg-[#D8D4E1]"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1">${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] font-bold">${labelHtml}${unevenLabel}</div></div><div class="text-right flex flex-col items-end"><span class="text-[10px] text-text-sub font-bold block mb-1">我的花費</span><div class="font-mono font-black text-text-main text-base">¥${formatMoney(e.portion)}</div><i class="fa-solid fa-pen text-[#D8D4E1] mt-1 text-[10px]"></i></div></div>`; }).join('')}</div></div>`;
+                <div class="fade-in pb-24"><button type="button" onclick="window.closePersonalDetails()" class="mb-4 flex items-center gap-2 text-sm font-bold text-sage-dark bg-white px-4 py-2 rounded-full border border-[#D8D4E1] shadow-sm hover:bg-sage-pale transition active:scale-95"><i class="fa-solid fa-arrow-left"></i> 返回公費明細</button><div class="ac-card p-5 mb-4 bg-white border-2 border-sage-dark"><h3 class="text-lg font-black text-sage-dark mb-4 flex items-center justify-center gap-2 pb-3 border-b-2 border-dashed border-[#D8D4E1]"><i class="fa-solid fa-file-invoice"></i> ${userEmoji} ${userName} 的旅遊花費帳冊</h3><div class="space-y-4"><div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl"><span class="text-sm font-bold text-text-sub">我的實際花費 (應付)</span><span class="font-black text-lg text-text-main">¥${formatMoney(myActualCost)}</span></div><div class="flex justify-between items-center bg-gray-50 px-3 py-2 rounded-xl"><span class="text-sm font-bold text-text-sub">我已付的金額 (已付)</span><span class="font-black text-lg text-sage-dark">¥${formatMoney(myPaid)}</span></div><div class="mt-2 pt-3 border-t-2 border-[#D8D4E1] text-center"><div class="text-xs text-text-sub font-bold mb-1">目前結算</div><div class="text-xl font-black ${balanceColor}">${balanceText}</div></div></div></div><div class="ac-card p-5 mb-4 bg-white"><h4 class="text-base font-black text-text-main mb-3">💰 實際花費分析 (共 ¥${formatMoney(Object.values(catTotals).reduce((a,b)=>a+b,0))})</h4><div class="grid grid-cols-2 gap-2 mb-4"><div class="select-wrapper"><select id="personalDateFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('date', this.value)"><option value="All" ${state.personalDetailDateFilter==='All'?'selected':''}>📅 所有日期</option><option value="06/24" ${state.personalDetailDateFilter==='06/24'?'selected':''}>06/24 (Day 1)</option><option value="06/25" ${state.personalDetailDateFilter==='06/25'?'selected':''}>06/25 (Day 2)</option><option value="06/26" ${state.personalDetailDateFilter==='06/26'?'selected':''}>06/26 (Day 3)</option><option value="06/27" ${state.personalDetailDateFilter==='06/27'?'selected':''}>06/27 (Day 4)</option><option value="06/28" ${state.personalDetailDateFilter==='06/28'?'selected':''}>06/28 (Day 5)</option><option value="06/29" ${state.personalDetailDateFilter==='06/29'?'selected':''}>06/29 (Day 6)</option><option value="06/30" ${state.personalDetailDateFilter==='06/30'?'selected':''}>06/30 (Day 7)</option></select></div><div class="select-wrapper"><select id="personalCatFilter" class="ac-select text-center text-xs font-bold" onchange="window.filterPersonalDetails('cat', this.value)"><option value="All" ${state.personalDetailCatFilter==='All'?'selected':''}>🏷️ 所有分類</option>${staticData.categories.map(cat => `<option value="${cat}" ${state.personalDetailCatFilter===cat?'selected':''}>${cat}</option>`).join('')}</select></div></div><div class="bg-[#FDFCFD] rounded-2xl p-3 border-2 border-dashed border-[#D8D4E1] flex justify-center items-center mb-4"><canvas id="personalPieChart" style="width: 100%; height: 160px;"></canvas></div></div><div class="space-y-3"><h4 class="text-xs font-bold text-text-sub px-2">消費項目 (${filteredList.length} 筆)</h4>${filteredList.length === 0 ? '<div class="text-center text-text-sub py-8 text-sm font-bold border-2 border-dashed border-[#D8D4E1] rounded-3xl">🪻 無符合篩選條件的明細</div>' : ''}${filteredList.map(e => { 
+                            const payer = e.payer || ''; 
+                            let labelHtml = ''; 
+                            if (payer === '公費支付') { labelHtml = '<span class="bg-sage-pale text-sage-dark px-2 py-0.5 rounded-md">[公費支付]</span>'; } 
+                            else { labelHtml = `<span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded-md">[${payer}支付]</span>`; } 
+                            
+                            let unevenLabel = '';
+                            if (e.split === '不平均分攤') { unevenLabel = `<span class="bg-red-50 text-func-red px-2 py-0.5 rounded-md font-mono text-[9px] border border-red-100">🦁 ¥${e.andyP} | 🐱 ¥${e.lynnP}</span>`; }
+                            else if (e.split === '全額自付') { unevenLabel = `<span class="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-md font-mono text-[9px] border border-yellow-100">全額自付</span>`; }
+                            
+                            return `<div class="ac-card p-3 flex justify-between items-center group relative overflow-hidden cursor-pointer hover:bg-gray-50 transition active:scale-95" onclick="window.editExpense('${e.id}')"><div class="absolute left-0 top-0 bottom-0 w-2 bg-[#D8D4E1]"></div><div class="pl-3"><div class="flex items-center gap-2 mb-0.5"><span class="text-[10px] text-text-sub font-mono bg-gray-100 px-1.5 rounded">${e.date}</span><span class="text-[10px] text-text-sub font-mono">${e.time || '--:--'}</span></div><div class="font-bold text-text-main text-base mb-1">${e.name || e.cat}</div><div class="flex flex-wrap gap-1 text-[10px] font-bold">${labelHtml}${unevenLabel}</div></div><div class="text-right flex flex-col items-end"><span class="text-[10px] text-text-sub font-bold block mb-1">我的花費</span><div class="font-mono font-black text-text-main text-base">¥${formatMoney(e.portion)}</div><i class="fa-solid fa-pen text-[#D8D4E1] mt-1 text-[10px]"></i></div></div>`; 
+                        }).join('')}</div></div>`;
             c.innerHTML = html;
             setTimeout(() => { drawPieChart('personalPieChart', catTotals); }, 50);
         }
 
         function renderShop(c) {
-            let html = `<div class="flex justify-between items-center mb-4 fade-in"><button onclick="window.toggleHidePurchased()" class="text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 transition-all ${state.shopHidePurchased ? 'bg-sage-dark text-white border-sage-dark shadow-sm' : 'bg-white text-text-sub border-[#D8D4E1] hover:bg-sage-pale'} active:scale-95"><i class="fa-solid ${state.shopHidePurchased ? 'fa-eye-slash' : 'fa-eye'}"></i>${state.shopHidePurchased ? '已隱藏買完' : '隱藏已買完'}</button><button onclick="window.openShopFormModal('add')" class="text-sm bg-sage-dark text-white px-5 py-2 rounded-full font-bold shadow-sm transition active:scale-95"><i class="fa-solid fa-plus mr-1"></i>新增商品</button></div>`;
+            let html = `<div class="flex justify-between items-center mb-4 fade-in"><button type="button" onclick="window.toggleHidePurchased()" class="text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 transition-all ${state.shopHidePurchased ? 'bg-sage-dark text-white border-sage-dark shadow-sm' : 'bg-white text-text-sub border-[#D8D4E1] hover:bg-sage-pale'} active:scale-95"><i class="fa-solid ${state.shopHidePurchased ? 'fa-eye-slash' : 'fa-eye'}"></i>${state.shopHidePurchased ? '已隱藏買完' : '隱藏已買完'}</button><button type="button" onclick="window.openShopFormModal('add')" class="text-sm bg-sage-dark text-white px-5 py-2 rounded-full font-bold shadow-sm transition active:scale-95"><i class="fa-solid fa-plus mr-1"></i>新增商品</button></div>`;
 
             const list = state.shopProducts.filter(item => {
                 const name = getProductName(item);
@@ -1504,7 +1552,7 @@
                     <div class="shop-card-body flex-1 flex flex-col relative">
                         <div class="flex justify-between items-start gap-2 mb-2">
                             <h4 class="text-text-main font-[600] text-sm leading-tight whitespace-normal break-words">${escapeStr(name)}</h4>
-                            <button onclick="window.openShopFormModal('edit', '${safeName}')" class="text-sage-dark hover:scale-110 flex-shrink-0 bg-sage-pale w-6 h-6 rounded-full flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                            <button type="button" onclick="window.openShopFormModal('edit', '${safeName}')" class="text-sage-dark hover:scale-110 flex-shrink-0 bg-sage-pale w-6 h-6 rounded-full flex items-center justify-center transition shadow-sm"><i class="fa-solid fa-pen text-[10px]"></i></button>
                         </div>
                         <p class="text-text-sub text-xs whitespace-normal break-words leading-relaxed mb-2">${escapeStr(desc)}</p>
                         ${actualPrice ? `<div class="mt-auto text-xs font-bold text-func-red bg-red-50 w-fit px-2 py-0.5 rounded-md border border-red-100 shadow-sm">💰 ¥${escapeStr(actualPrice)}</div>` : ''}
